@@ -329,7 +329,12 @@ impl TypeChecker {
     /// Type check a statement
     fn check_stmt(&mut self, stmt: &Stmt) -> Result<()> {
         match stmt {
-            Stmt::Let { name, ty, value, mutable } => {
+            Stmt::Let {
+                name,
+                ty,
+                value,
+                mutable,
+            } => {
                 let value_type = if let Some(v) = value {
                     self.check_expr(v)?
                 } else {

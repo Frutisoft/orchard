@@ -478,7 +478,12 @@ impl Parser {
                     None
                 };
                 self.expect(&TokenKind::Semicolon)?;
-                Ok(Some(Stmt::Let { name, ty, value, mutable }))
+                Ok(Some(Stmt::Let {
+                    name,
+                    ty,
+                    value,
+                    mutable,
+                }))
             }
             TokenKind::Return => {
                 self.advance();
