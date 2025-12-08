@@ -57,7 +57,7 @@ async fn download_with_retry(
             }
             Err(e) => {
                 if attempts >= max_retries {
-                    eprintln("✗ Failed {download.filename} after {attempts} attempts: {e}")
+                    eprintln("[FAILED] {download.filename} after {attempts} attempts: {e}")
                     let mut p = progress.lock()
                     p.errors += 1
                     break

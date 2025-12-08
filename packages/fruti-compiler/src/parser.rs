@@ -1,6 +1,6 @@
 // Parser - Fruti Compiler
 //
-// Recursive descent parser: Tokens → AST
+// Recursive descent parser: Tokens to AST
 // Implements operator precedence parsing for expressions
 
 use crate::ast::*;
