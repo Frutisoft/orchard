@@ -6,8 +6,8 @@ authors = ["Jameson Jones"]
 description = "The Fruti programming language compiler"
 license = "MIT"
 repository = "https://github.com/Frutisoft/frutisoft"
-homepage = "https://frutisoft.github.io"
-documentation = "https://frutisoft.github.io/docs"
+homepage = "https://github.com/Frutisoft/frutisoft"
+documentation = "https://github.com/Frutisoft/frutisoft/tree/main/docs"
 
 [dependencies]
 # Command-line parsing
