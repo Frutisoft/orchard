@@ -47,10 +47,10 @@ frutisoft/                    # Root monorepo
 │   ├── aero/                 # Aero OS docs
 │   │   ├── os/               # Architecture and guides
 │   │   └── Aero-OS-Technical-Spec.md
-│   ├── project/              # Project management
 │   ├── resources/            # Production readiness guides
-│   ├── assets/               # Logos, images, media
-│   └── archive/              # Historical documents
+│   ├── archive/              # Historical documents
+│   ├── PHASE-1-COMPLETE.md   # Phase 1 completion record
+│   └── README.md
 │
 ├── examples/                 # Working code samples
 │   ├── hello-world.fruti     # Basic Fruti program
@@ -118,7 +118,7 @@ cargo run -- check ../../examples/basic-features.fruti
 1. Read the [Language Design Decisions](./docs/fruti/Language-Design-Decisions.md)
 2. Explore [Code Examples](./examples/)
 3. Review the [OS Architecture Spec](./docs/aero/Aero-OS-Technical-Spec.md)
-4. Check [Phase 1 MVP Status](./docs/project/management/PHASE-1-MVP-COMPLETE.md)
+4. Check [Phase 1 Complete Status](./docs/PHASE-1-COMPLETE.md)
 
 **Current State:**
 - [x] Phase 1 MVP Complete (Fruti Compiler)

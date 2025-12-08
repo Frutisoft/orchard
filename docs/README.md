@@ -2,52 +2,44 @@
 
 **Comprehensive documentation for Fruti programming language and Aero OS**
 
-Last Updated: December 7, 2025
+Last Updated: December 8, 2025
+
+---
+
+## Quick Links
+
+- **[Fruti Language Design](./fruti/Language-Design-Decisions.md)** - All syntax and semantic choices
+- **[Quick Start Guide](./fruti/language/Guides/Quick-Start.md)** - Get started in 10 minutes
+- **[Aero OS Specification](./aero/Aero-OS-Technical-Spec.md)** - Kernel architecture
+- **[Phase 1 Complete](./PHASE-1-COMPLETE.md)** - Fruti compiler Phase 1 status
 
 ---
 
 ## Documentation Structure
 
-This directory contains all documentation, resources, and historical materials for the Frutisoft project.
-
 ### [Fruti Language](./fruti/)
-A general-purpose programming language designed to learn from existing languages' pain points
+General-purpose programming language
 
-- **[Language Design Decisions](./fruti/Language-Design-Decisions.md)** - All syntax and semantic choices
-- **[Quick Start Guide](./fruti/language/Guides/Quick-Start.md)** - Get started in 10 minutes
-- **[Language Reference](./fruti/language/Reference/)** - Complete language specification
-- **[Standard Library](./fruti/language/Reference/Standard-Library.md)** - Built-in modules and APIs
-- **[Examples](./fruti/examples/)** - Code examples and patterns
-- **[Guides](./fruti/language/Guides/)** - Tutorials and how-tos
+- **Language Reference** - Complete specification
+- **Standard Library** - Built-in modules and APIs
+- **Examples** - Code patterns and use cases
+- **Guides** - Tutorials and deep dives
 
 ### [Aero Operating System](./aero/)
-Everything about Aero OS
+Microkernel OS design
 
-- **[Technical Specification](./aero/Aero-OS-Technical-Spec.md)** - Kernel architecture and implementation
-- **[Architecture](./aero/os/Architecture/)** - System design and internals
-- **[Developer Guide](./aero/os/Developer%20Guide/)** - Building for Aero OS
-- **[User Guide](./aero/os/User%20Guide/)** - Using Aero OS
-
-### [Project Management](./project/)
-Project status and milestones
-
-- **[Phase 1 MVP Complete](./project/management/PHASE-1-MVP-COMPLETE.md)** - Fruti compiler Phase 1 status
-- **[Project Status](./project/management/README.md)** - Current status and timeline
+- **Technical Specification** - Architecture and implementation
+- **Developer Guide** - Building for Aero OS
+- **User Guide** - Using Aero OS
 
 ### [Resources](./resources/)
-Production readiness guides and development resources
+Development references
 
-- **[Language Development Resources](./resources/lang/)** - Guides for building production-ready compilers
-- **[OS Development Resources](./resources/os/)** - System readiness checklists and best practices
-
-### [Assets](./assets/)
-Visual assets, logos, and media
-
-- Brand materials and design resources
-- Project logos and icons
+- Language evaluation criteria and production readiness guides
+- OS development checklists and best practices
 
 ### [Archive](./archive/)
-Historical documents and original design notes
+Original design documents from early 2025
 
 - Original Fruti language design documents
 - Original Aero OS architecture notes
