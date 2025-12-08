@@ -51,8 +51,9 @@ jobs:
       with:
         target: ${{ matrix.target }}
     
-    - name: Build
-      run: cd fruti-compiler && cargo build --release --target ${{ matrix.target }}
+    - name: Build Release
+      working-directory: packages/fruti-compiler
+      run: cargo build --release --target ${{ matrix.target }}
     
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
@@ -60,37 +61,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.create-release.outputs.upload_url }}
-        asset_path: ./fruti-compiler/target/${{ matrix.target }}/release/${{ matrix.artifact_name }}
+        asset_path: ./packages/fruti-compiler/target/${{ matrix.target }}/release/${{ matrix.artifact_name }}
         asset_name: ${{ matrix.asset_name }}
         asset_content_type: application/octet-stream
 
-  build-kernel:
-    name: Build Kernel ISO
-    needs: create-release
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y nasm xorriso grub-pc-bin
-    
-    - name: Install Rust nightly
-      uses: dtolnay/rust-toolchain@nightly
-      with:
-        components: rust-src
-    
-    - name: Build kernel ISO
-      run: cd aero-kernel && make iso
-    
-    - name: Upload ISO
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ needs.create-release.outputs.upload_url }}
-        asset_path: ./aero-kernel/aero.iso
-        asset_name: aero-os.iso
-        asset_content_type: application/octet-stream
+  # Kernel builds excluded until Phase 3 (requires no_std configuration and custom toolchain)
