@@ -7,7 +7,7 @@
 // Keywords test
 fn test_function(x: i32, y: f64) -> bool {
     let immutable = 42;
-    var mutable = 3.14;
+    let mut mutable = 3.14;
     const CONSTANT = 100;
     
     // Control flow keywords
@@ -145,7 +145,7 @@ fn test_bitwise(a: i32, b: i32) -> i32 {
 
 // Operators - Assignment
 fn test_assignment() {
-    var x = 10;
+    let mut x = 10;
     x += 5;
     x -= 3;
     x *= 2;
