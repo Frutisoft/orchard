@@ -177,7 +177,7 @@ See `docs/archive/` for historical records of these validation processes.
 
 ### Code Statistics (Phase 1)
 
-- **Total Lines:** ~3,800 (excluding tests and generated code)
+- **Total Lines:** 3,858 (excluding tests and generated code)
 - **Modules:** 9 core modules
 - **Test Programs:** 3 comprehensive test files
 - **Documentation:** 20+ documents

@@ -27,10 +27,10 @@ frutisoft/                    # Root monorepo
 ├── packages/                 # Main projects
 │   ├── fruti-compiler/       # Fruti compiler (Rust bootstrap)
 │   │   ├── src/              # Compiler source code
-│   │   │   ├── lexer.rs      # Tokenization (600 lines)
-│   │   │   ├── parser.rs     # AST generation (1,200 lines)
-│   │   │   ├── semantic.rs   # Type checking (620 lines)
-│   │   │   └── codegen.rs    # LLVM IR generation (285 lines)
+│   │   │   ├── lexer.rs      # Tokenization (553 lines)
+│   │   │   ├── parser.rs     # AST generation (1,096 lines)
+│   │   │   ├── semantic.rs   # Type checking (653 lines)
+│   │   │   └── codegen.rs    # LLVM IR generation (308 lines)
 │   │   ├── tests/            # Compiler tests
 │   │   └── Cargo.toml        # Package manifest
 │   │

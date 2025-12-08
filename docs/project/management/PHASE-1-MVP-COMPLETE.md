@@ -417,18 +417,18 @@ declare void @print(ptr)
 ```
 Module              Lines    Complexity    Status
 ------------------------------------------------
-main.rs             305      Medium        Complete
-lexer.rs            620      Medium        Complete
-token.rs            300      Low           Complete
-ast.rs              500      Medium        Complete
-parser.rs           1,200    High          Complete
-semantic.rs         620      High          Complete
-codegen.rs          290      Medium        Complete
-error.rs            150      Low           Complete
-span.rs             80       Low           Complete
-lib.rs              50       Low           Complete
+main.rs             348      Medium        Complete
+lexer.rs            553      Medium        Complete
+token.rs            299      Low           Complete
+ast.rs              482      Medium        Complete
+parser.rs           1,096    High          Complete
+semantic.rs         653      High          Complete
+codegen.rs          308      Medium        Complete
+error.rs            46       Low           Complete
+span.rs             54       Low           Complete
+lib.rs              19       Low           Complete
 ------------------------------------------------
-Total               ~4,115   -             Complete
+Total               3,858    -             Complete
 ```
 
 ### Test Coverage
