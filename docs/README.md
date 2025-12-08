@@ -108,25 +108,25 @@ Working code samples demonstrating features and patterns.
 ### "I want to..."
 
 **Learn Fruti from scratch**
-- [Quick Start](./Language/Guides/Quick-Start.md) - [Basic Tutorial](./Language/Guides/Basic-Syntax.md)
+- [Quick Start](./fruti/language/Guides/Quick-Start.md) - [Ownership Deep Dive](./fruti/language/Guides/Ownership-Deep-Dive.md)
 
 **Understand ownership and borrowing**
-- [Ownership Model](./Language/Reference/Ownership.md) - [Design Decision Doc](./Specifications/Language-Design-Decisions.md#2-ownership-and-memory)
+- [Ownership Deep Dive](./fruti/language/Guides/Ownership-Deep-Dive.md) - [Design Decision Doc](./fruti/Language-Design-Decisions.md#2-ownership-and-memory)
 
 **Write an async program**
-- [Async Guide](./Language/Guides/Async-Programming.md) - [Async Examples](./Language/Examples/Async-Examples.md)
+- [Async Examples](./fruti/examples/concurrent-downloader.fruti) - [Standard Library](./fruti/language/Reference/Standard-Library.md)
 
 **Build a web server**
-- [Web Server Example](./Language/Examples/Web-Server.md) - [HTTP Library Docs](./Language/Reference/Standard-Library.md#http)
+- [Web Server Example](./fruti/examples/web-server.fruti) - [HTTP Library Docs](./fruti/language/Reference/Standard-Library.md#http)
 
 **Understand Aero OS design**
-- [OS Overview](./Operating%20System/Architecture/Overview.md) - [Technical Spec](./Specifications/Aero-OS-Technical-Spec.md)
+- [OS Overview](./aero/os/Architecture/) - [Technical Spec](./aero/Aero-OS-Technical-Spec.md)
 
 **Write a device driver**
-- [Driver Development Guide](./Operating%20System/Developer%20Guide/Driver-Development.md)
+- [Driver Development Guide](./aero/os/Developer%20Guide/) (coming soon)
 
 **Port software to Aero**
-- [Compatibility Guide](./Operating%20System/Developer%20Guide/Compatibility.md)
+- [Compatibility Guide](./aero/os/Developer%20Guide/) (coming soon)
 
 ---
 

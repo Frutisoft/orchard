@@ -554,9 +554,9 @@ fruti run
 
 ## Additional Resources
 
-- [Language Reference](../Language/Reference/)
-- [Standard Library](../Language/Reference/Standard-Library.md)
-- [Quick Start Guide](../Language/Guides/Quick-Start.md)
+- [Language Reference](../language/Reference/)
+- [Standard Library](../language/Reference/Standard-Library.md)
+- [Quick Start Guide](../language/Guides/Quick-Start.md)
 - [Language Design Decisions](../Language-Design-Decisions.md)
 
 ---

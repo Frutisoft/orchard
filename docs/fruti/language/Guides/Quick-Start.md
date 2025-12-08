@@ -254,7 +254,7 @@ async fn main() {
 
 ## Next Steps
 
-- **[Language Reference](../Reference/README.md)** - Complete language documentation
+- **[Language Reference](../Reference/Standard-Library.md)** - Complete language documentation
 - **[Standard Library](../Reference/Standard-Library.md)** - Built-in modules and functions
 - **[Examples](../../examples/)** - More code examples
 - **[Language Design Decisions](../../Language-Design-Decisions.md)** - Complete design rationale
