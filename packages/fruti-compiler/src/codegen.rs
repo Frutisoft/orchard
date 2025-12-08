@@ -54,8 +54,10 @@ impl CodeGen {
         let mut ir = String::new();
 
         // Function signature
-        let return_ty = if func.return_type.is_some() {
-            "i32" // Simplified: all functions return i32 for now
+        // Main function always returns i32 in LLVM by convention
+        // For simplicity, all typed functions return i32 in Phase 1
+        let return_ty = if func.name.value == "main" || func.return_type.is_some() {
+            "i32"
         } else {
             "void"
         };

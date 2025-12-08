@@ -140,24 +140,27 @@ Source Code (.fruti)
 - Function overload checking
 - Type resolution
 
-### 6. **Code Generator** (`src/codegen.rs`) - 308 lines [COMPLETE]
+### 6. **Code Generator** (`src/codegen.rs`) - 308 lines [COMPLETE - MVP Stub]
 
 **LLVM IR Generation:**
 
-**Expressions:**
-- Arithmetic operations
-- Logical operations
-- Comparison operations
-- Variable references
-- Function calls
-- Type conversions
+**Implemented (Phase 1):**
+- Valid LLVM IR module structure
+- Function signature generation with correct types
+- Parameter declarations
+- Entry block creation
+- Built-in function declarations (printf, puts)
+- Main function return type handling (i32 by LLVM convention)
+- Stub return values for all functions
 
-**Statements:**
-- Variable declarations
-- Assignments
-- Control flow (if/else)
-- Loops (while, for)
-- Return statements
+**Note:** Phase 1 generates syntactically correct LLVM IR structure, but function bodies contain placeholder return statements. Actual implementation of expressions, control flow, and operations is planned for Phase 2.
+
+**Planned for Phase 2:**
+- Expression evaluation (arithmetic, logical, comparison)
+- Variable storage and access
+- Control flow (if/else, loops)
+- Function call implementation
+- Actual return value computation
 
 **Functions:**
 - Function definition
@@ -207,43 +210,42 @@ Options:
 
 ## Test Programs
 
-### `hello.fruti` - Hello World
+### `hello-world.fruti` - Hello World
 
 ```fruti
-fn main() -> i32 {
-    let message: str = "Hello, World!";
-    print(message);
-    return 0;
+fn main() {
+    println("Hello, World!");
 }
 ```
 
-**Status:** Compiles successfully, generates correct LLVM IR
+**Status:** ✅ Parses successfully, generates valid LLVM IR structure (stub implementation)
 
-### `test.fruti` - Feature Demo
+### `basic-features.fruti` - Feature Demo
 
 **Tests:**
-- Variable declarations
-- Type annotations
-- Arithmetic operations
-- Function definitions
-- Control flow (if/else)
-- Loops (while, for)
-- Function calls
-- Return values
+- Variable declarations (parsed)
+- Type annotations (parsed)
+- Arithmetic operations (parsed)
+- Function definitions (IR signatures generated)
+- Control flow (if/else, loops) (parsed)
+- Function calls (parsed)
+- Return values (parsed)
 
-**Status:** Compiles successfully, all features working
+**Status:** ✅ All syntax parses correctly, type checking passes, LLVM IR structure generated
+
+**Note:** Phase 1 generates valid IR structure but function bodies contain placeholder returns. Actual code generation for expressions, control flow, and operations is planned for Phase 2.
 
 ### `test_comprehensive.fruti` - Full Language Test
 
 **Coverage:**
-- All data types
-- Complex expressions
-- Nested control flow
-- Multiple functions
-- Edge cases
-- Error conditions
+- All data types (tokens and AST)
+- Complex expressions (parsed)
+- Nested control flow (parsed)
+- Multiple functions (signatures generated)
+- Edge cases (error handling)
+- Error conditions (comprehensive testing)
 
-**Status:** Comprehensive validation complete
+**Status:** ✅ Comprehensive parsing and type checking validation complete
 
 ## Phase 1 Pipeline Status
 
