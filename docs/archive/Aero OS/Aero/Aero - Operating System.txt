@@ -1,0 +1,899 @@
+Aero OS: The Next-Generation Operating System
+Frutisoft's vision for an operating system that reimagines how users and developers interact with computing—built from the ground up in Fruti for maximum performance, security, and usability.
+________________
+
+
+1. Core Vision
+
+Aero OS is not just another Unix clone or Windows alternative. It's a fundamental rethinking of what an operating system should be in the modern era:
+
+**For Users:**
+- Instant boot (< 2 seconds to desktop)
+- Zero configuration needed
+- Self-healing and auto-updating
+- Complete privacy by default
+- Beautiful, consistent interface
+- Works offline-first
+
+**For Developers:**
+- Native Fruti development environment
+- System APIs that make sense
+- Real-time performance profiling built-in
+- Containers without Docker
+- Web and native apps use the same APIs
+- Zero-downtime updates
+
+**For Everyone:**
+- Runs on anything (ARM, x86, RISC-V)
+- Full compatibility with existing software
+- Energy-efficient (2x battery life vs traditional OS)
+- Secure by architecture, not by patching
+- Open source with commercial support
+________________
+
+
+2. Technical Architecture
+
+2.1 Microkernel Design
+Unlike monolithic kernels (Linux, Windows) or hybrid kernels (macOS), Aero uses a pure microkernel:
+
+```
+User Space:
+├── Applications
+├── System Services
+├── Device Drivers
+└── File Systems
+
+Microkernel (< 50,000 lines):
+├── Process Management
+├── Memory Management  
+├── IPC (Inter-Process Communication)
+├── Basic Scheduling
+└── Hardware Abstraction
+```
+
+**Benefits:**
+- Driver crashes don't crash the system
+- Update drivers without rebooting
+- Formal verification possible for kernel
+- Better security isolation
+- Truly modular architecture
+
+2.2 Memory Management
+```
+// Aero memory model
+Virtual Address Space:
+├── User Space (0x0000_0000 - 0x7FFF_FFFF_FFFF_FFFF)
+│   ├── Program Code
+│   ├── Heap (managed by Fruti runtime)
+│   ├── Stack (auto-growing)
+│   └── Memory-mapped files
+└── Kernel Space (0x8000_0000_0000_0000 - 0xFFFF_FFFF_FFFF_FFFF)
+    ├── Kernel Code
+    ├── Kernel Heap
+    └── Device Memory
+```
+
+**Features:**
+- No swap by default (compression instead)
+- Memory deduplication for reduced RAM usage
+- NUMA-aware allocation
+- Huge page support automatic
+- Memory encrypted by default (security)
+
+2.3 Process Model
+```
+Process:
+├── Capabilities (fine-grained permissions)
+├── Virtual Memory Space
+├── File Descriptors
+├── Network Sockets
+├── IPC Channels
+└── Threads
+    ├── CPU Affinity
+    ├── Priority
+    └── Stack
+```
+
+**Innovation:**
+- Capability-based security (no root user!)
+- Process can only access explicitly granted resources
+- Sandboxing built into every process
+- Parent process controls child permissions
+- No privilege escalation exploits possible
+
+2.4 File System: AeroFS
+```
+AeroFS Features:
+├── Copy-on-write (like ZFS/btrfs)
+├── Built-in compression (transparent)
+├── Snapshots (instant, zero-cost)
+├── Checksums for data integrity
+├── Self-healing (auto-repair corruption)
+├── Online defragmentation
+└── Encryption (per-file or full-disk)
+
+Directory Structure:
+/
+├── apps/          # Installed applications
+├── system/        # OS files
+├── users/         # User home directories
+├── data/          # Shared data
+├── dev/           # Device files
+└── config/        # System configuration
+```
+
+**No more scattered config files!**
+- All config in `/config` (not `/etc`, `/usr/share`, etc.)
+- Human-readable TOML format
+- Versioned changes (rollback any config)
+- Live reload without restarts
+
+2.5 Scheduler
+```
+Aero Scheduler:
+├── Real-time threads (FIFO/Round-Robin)
+├── Interactive threads (low latency)
+├── Batch processing (throughput)
+└── Idle (power saving)
+
+Algorithm: BFS (Brain-Friendly Scheduler)
+- Latency-focused for desktop responsiveness
+- Topology-aware (NUMA, SMT)
+- Automatic CPU affinity
+- Power-aware (P-states, C-states)
+```
+
+**Results:**
+- 60 FPS GUI even under heavy load
+- Audio never stutters
+- Video playback always smooth
+- Background tasks don't slow foreground
+________________
+
+
+3. Security Model
+
+3.1 Capability-Based Security
+```
+Traditional OS (e.g., Linux):
+User -> Groups -> Permissions on files
+Problem: Any process as user has ALL user permissions
+
+Aero OS:
+Process -> Explicit Capabilities
+Each process only has capabilities granted at launch
+
+Example:
+Text editor launched by user:
+✓ Read/write specific file being edited
+✓ Access clipboard
+✗ Network access
+✗ Access to other files
+✗ Camera/microphone
+```
+
+3.2 Sandboxing by Default
+```
+Application Container:
+├── Allowed capabilities
+├── File system view (only what's needed)
+├── Network policy (if any)
+├── Resource limits (CPU, RAM, disk)
+└── IPC channels (explicitly granted)
+
+// Fruti code to launch sandboxed app
+let app = Process::spawn("text-editor")
+    .capability(Capability::ReadFile(path))
+    .capability(Capability::WriteFile(path))
+    .capability(Capability::Clipboard)
+    .resource_limit(Memory::megabytes(500))
+    .start()?
+```
+
+3.3 No More Malware
+Traditional malware vectors blocked:
+- ❌ DLL injection - not possible (no shared libraries in process space)
+- ❌ Registry manipulation - no registry
+- ❌ Startup items - capability required
+- ❌ Keylogging - no global keyboard access
+- ❌ Screen capture - explicit permission required
+- ❌ Network backdoors - network capability required
+
+3.4 Verified Boot
+```
+Boot Chain:
+1. CPU firmware (immutable)
+2. Bootloader (signed, verified)
+3. Kernel (signed, verified, measured)
+4. System services (signed, verified)
+5. Applications (optional signing)
+
+Each step cryptographically verifies the next
+Compromise detected = boot fails safely
+```
+________________
+
+
+4. User Interface: Aero Desktop
+
+4.1 Design Principles
+- **Beautiful by default**: No configuration needed to look good
+- **Consistent**: Every app follows same patterns
+- **Fast**: 60 FPS animations, instant response
+- **Adaptive**: Dark/light mode, accessibility built-in
+- **Productive**: Keyboard-first, but touch-friendly
+
+4.2 Visual Themes
+```
+Built-in Themes:
+├── Aero Light (default) - Modern, clean
+├── Aero Dark - Easy on eyes
+├── Metro Light/Dark - Flat, minimalist
+├── Cyber Light/Dark - Futuristic, high contrast
+├── Corporate Light/Dark - Professional
+├── Eco Light/Dark - Nature-inspired, warm
+├── Aurora Light/Dark - Vibrant, colorful
+└── Vectorflourish Light/Dark - Artistic, expressive
+
+Each theme:
+- Light and dark variants
+- High contrast accessibility mode
+- Colorblind-friendly options
+- Custom accent colors
+```
+
+4.3 Window Management
+```
+Window Operations:
+├── Tiling (automatic, configurable)
+├── Stacking (traditional windows)
+├── Tabbing (like browser tabs)
+├── Fullscreen
+└── Picture-in-picture
+
+Keyboard Shortcuts (intuitive):
+Super + Arrow keys -> Tile windows
+Super + Tab -> Switch apps
+Super + Space -> Command palette
+Super + / -> Search everything
+```
+
+4.4 Desktop Features
+- **Universal search**: Find files, apps, settings, commands instantly
+- **Clipboard history**: Never lose copied text again
+- **Virtual desktops**: Organize work contexts
+- **Notification center**: All notifications in one place, not distracting
+- **Quick settings**: Volume, brightness, WiFi, Bluetooth one click away
+- **Activity monitor**: See what's using resources in real-time
+________________
+
+
+5. Application Model
+
+5.1 Universal Apps (Not "Native" vs "Web")
+```
+Aero Application:
+├── Fruti code (logic)
+├── Declarative UI (Aero.UI framework)
+├── Permissions manifest
+└── Resources (icons, assets)
+
+Runs:
+✓ Native desktop (optimal performance)
+✓ Web browser (via WASM compilation)
+✓ Mobile (iOS, Android via Aero runtime)
+✓ Server (headless mode)
+
+ONE codebase, EVERYWHERE
+```
+
+5.2 Aero.UI Framework
+```
+import aero.ui
+
+fn main() {
+    Window::new()
+        .title("Hello Aero")
+        .content(
+            VStack([
+                Text("Hello, World!")
+                    .font_size(24),
+                Button("Click Me")
+                    .on_click(fn { 
+                        println("Clicked!") 
+                    })
+            ])
+        )
+        .show()
+}
+```
+
+**Features:**
+- Declarative (like SwiftUI, Flutter)
+- Reactive (state changes auto-update UI)
+- Hardware accelerated (GPU rendering)
+- Accessible by default (screen readers, keyboard nav)
+- Themable (respects system theme)
+
+5.3 Package Manager: `aero pkg`
+```
+# Install application
+aero pkg install firefox
+aero pkg install vscode
+
+# Update all applications
+aero pkg update
+
+# Remove application
+aero pkg remove firefox
+
+# Search applications
+aero pkg search editor
+
+# Install from source
+aero pkg install github.com/user/project
+```
+
+**Features:**
+- Dependency resolution automatic
+- Sandboxed installations
+- Delta updates (only changed files)
+- Rollback any update
+- No administrator required
+________________
+
+
+6. Developer Experience
+
+6.1 System APIs (Fruti)
+```
+import aero.system
+
+// File I/O
+let file = File::open("document.txt")?
+let content = file.read_all()?
+
+// Networking
+let response = http::get("https://api.example.com").await?
+
+// Processes
+let output = Process::run("command", ["arg1", "arg2"]).await?
+
+// IPC
+let channel = IPC::channel("service-name")
+channel.send(Message { data: "hello" })?
+
+// System info
+let cpu_count = System::cpu_count()
+let memory_total = System::memory_total()
+
+// Notifications
+Notification::new()
+    .title("Task Complete")
+    .body("Your file has been processed")
+    .show()
+```
+
+6.2 Driver Development
+```
+import aero.driver
+
+@driver
+struct MyDriver {
+    device: Device
+}
+
+impl MyDriver {
+    fn init(device: Device) -> Result<Self> {
+        // Initialize hardware
+        Ok(MyDriver { device })
+    }
+    
+    fn read(self, offset: u64, buffer: mut [u8]) -> Result<usize> {
+        // Read from device
+    }
+    
+    fn write(self, offset: u64, data: [u8]) -> Result<usize> {
+        // Write to device
+    }
+}
+```
+
+**No more C drivers!**
+- Type-safe, memory-safe
+- Easier to write and debug
+- Hot-reload during development
+- Crash isolation (driver crash != kernel crash)
+
+6.3 Debugging Tools
+```
+# System profiler
+aero profile record --pid 1234
+aero profile analyze profile.data
+
+# Memory analyzer
+aero mem inspect --pid 1234
+aero mem leaks --pid 1234
+
+# Trace system calls
+aero trace --process firefox
+
+# Live kernel debugging
+aero debug kernel --live
+```
+
+6.4 IDE Integration
+- **VS Code extension**: Full Fruti and Aero API support
+- **IntelliJ plugin**: For JetBrains users
+- **Aero Studio**: Native IDE built in Fruti
+  - Integrated debugger
+  - UI designer
+  - Performance profiler
+  - Package manager GUI
+________________
+
+
+7. Hardware Support
+
+7.1 Supported Architectures
+```
+Tier 1 (Full support, tested):
+├── x86_64 (Intel, AMD)
+├── ARM64 (Apple Silicon, Raspberry Pi 4+)
+└── RISC-V (SiFive, StarFive)
+
+Tier 2 (Builds work, limited testing):
+├── ARM32 (Raspberry Pi 3, older)
+└── PowerPC (experimental)
+
+Tier 3 (Compiles, may not work):
+└── MIPS, SPARC (community-maintained)
+```
+
+7.2 Minimum Requirements
+```
+Desktop:
+- CPU: 1 GHz dual-core
+- RAM: 2 GB
+- Storage: 8 GB
+- GPU: Any with OpenGL 3.3+
+
+Laptop:
+- Same as desktop
+- Battery life: ~2x vs Windows/macOS
+
+Server:
+- CPU: 1 core minimum
+- RAM: 512 MB minimum
+- Storage: 4 GB minimum
+
+Embedded:
+- CPU: 100 MHz ARM Cortex-M
+- RAM: 256 KB
+- Storage: 1 MB Flash
+```
+
+7.3 Driver Ecosystem
+**Included in base system:**
+- All common hardware (WiFi, Bluetooth, USB, etc.)
+- Graphics (Intel, AMD, NVIDIA via open drivers)
+- Storage (NVMe, SATA, USB)
+- Audio (ALSA, PulseAudio compatibility layer)
+- Printers (IPP, network printers)
+
+**Linux driver compatibility:**
+- Binary compatibility layer for Linux modules
+- Automatic translation of kernel APIs
+- Existing drivers work with minimal changes
+________________
+
+
+8. Application Compatibility
+
+8.1 Native Aero Apps
+- Built with Fruti and Aero.UI
+- Best performance and integration
+- Full system API access (with permissions)
+
+8.2 Linux Application Compatibility
+```
+Runtime translation layer:
+- ELF binary loader
+- System call translation
+- Library compatibility (libc, etc.)
+- X11 and Wayland support
+
+Result:
+Most Linux apps run without modification
+Performance: 95-100% of native Linux
+```
+
+8.3 Windows Application Compatibility
+```
+Wine-based compatibility:
+- DirectX to Vulkan translation
+- Win32 API implementation
+- .NET Framework support
+- Registry emulation
+
+Gaming:
+- Steam Proton integration
+- Anti-cheat compatibility
+- Controller support
+- VR headset support
+```
+
+8.4 Web Applications
+```
+Modern browser included:
+- Chromium-based rendering
+- V8 JavaScript engine
+- WebAssembly support
+- Progressive Web Apps
+
+Web apps treated as first-class applications
+```
+________________
+
+
+9. Networking
+
+9.1 Network Stack
+```
+Aero Network Stack:
+├── Application Layer
+│   ├── HTTP/3 (QUIC)
+│   ├── DNS over HTTPS
+│   └── WebSocket
+├── Transport Layer
+│   ├── TCP (custom implementation, faster)
+│   ├── UDP
+│   └── QUIC (built-in)
+├── Network Layer
+│   ├── IPv6 (preferred)
+│   └── IPv4 (legacy support)
+└── Link Layer
+    ├── Ethernet
+    ├── WiFi 6E
+    └── Bluetooth 5.3
+```
+
+9.2 Privacy Features
+- **DNS over HTTPS default**: ISP can't see your queries
+- **VPN built-in**: No third-party apps needed
+- **Firewall default deny**: Apps must request network access
+- **Tracker blocking**: System-wide ad and tracker blocking
+- **Encrypted by default**: All network traffic encrypted where possible
+
+9.3 Zero Configuration Networking
+- Automatic IP configuration (DHCP, IPv6 SLAAC)
+- mDNS/DNS-SD for local service discovery
+- Bluetooth pairing automatic where possible
+- WiFi saved credentials encrypted in secure enclave
+________________
+
+
+10. Performance Characteristics
+
+10.1 Boot Time
+```
+Cold boot (power button to desktop):
+- UEFI initialization: ~500ms
+- Bootloader: ~100ms
+- Kernel load: ~200ms
+- System services: ~500ms
+- Desktop ready: ~700ms
+Total: < 2 seconds
+
+Resume from suspend: ~500ms
+Resume from hibernation: ~2 seconds
+```
+
+10.2 Resource Usage
+```
+Idle system (desktop visible, no apps):
+- RAM: ~400 MB (vs 2-4 GB on Windows/macOS)
+- CPU: ~0.5% (vs 5-10% on Windows/macOS)
+- Disk: 4 GB install (vs 20-40 GB)
+
+With browser (10 tabs), editor, music:
+- RAM: ~1.5 GB
+- CPU: ~10-20%
+```
+
+10.3 Battery Life
+```
+Laptop battery life (same hardware):
+Aero OS: ~12 hours
+macOS: ~10 hours
+Windows 11: ~6 hours
+Linux: ~8 hours
+
+Why?
+- Better power management
+- Efficient scheduler
+- No background telemetry
+- Aggressive sleep for idle processes
+```
+________________
+
+
+11. System Services
+
+11.1 Core Services
+```
+System Service Architecture:
+├── init (PID 1) - Process lifecycle
+├── device-manager - Hardware detection
+├── network-manager - Connectivity
+├── window-manager - Display and input
+├── audio-server - Sound mixing
+├── notification-service - User alerts
+├── clipboard-service - Copy/paste
+├── search-indexer - File indexing
+└── update-manager - System updates
+```
+
+All services written in Fruti, memory-safe and sandboxed
+
+11.2 Background Tasks
+```
+Task scheduler:
+- Cron-like scheduling
+- Event triggers (USB inserted, network connected)
+- Resource-aware (don't run on battery < 20%)
+- User-visible (see all scheduled tasks)
+
+Example:
+Schedule::daily("backup")
+    .at("02:00")
+    .only_on_ac_power()
+    .run(fn { backup_files() })
+```
+________________
+
+
+12. Updates and Maintenance
+
+12.1 System Updates
+```
+Update model:
+- Atomic updates (all-or-nothing)
+- A/B partitioning (dual-boot internally)
+- Automatic rollback on failure
+- Delta updates (download only changes)
+- Background downloads
+- Install on shutdown/reboot only
+
+User experience:
+1. Update available notification
+2. Download in background (no interruption)
+3. "Restart to update" prompt when ready
+4. Reboot takes same time as normal
+5. New version boots, or auto-rollback on error
+```
+
+12.2 Self-Healing
+```
+Automatic repair:
+- File corruption detected -> restored from checksums
+- Service crash -> automatic restart
+- Driver failure -> fallback to safe mode
+- Disk full -> compress/clean automatically
+- Memory leak -> process restart suggestion
+
+System health monitor:
+- Continuous self-testing
+- Predictive failure detection
+- Automated diagnostics
+- One-click fixes for common issues
+```
+________________
+
+
+13. Enterprise Features
+
+13.1 Management
+```
+Aero Enterprise Manager:
+├── Centralized policy management
+├── Application deployment
+├── Security compliance monitoring
+├── Usage analytics (privacy-preserving)
+├── Remote support tools
+└── License management
+
+API for integration:
+- Active Directory compatible
+- MDM protocol support
+- Custom policy injection
+```
+
+13.2 Deployment
+```
+# Automated deployment
+aero-deploy create-image \
+    --base system \
+    --apps "office,browser,vpn" \
+    --config corporate-config.toml \
+    --output corporate-aero.img
+
+# Network boot (PXE)
+aero-deploy pxe-server --image corporate-aero.img
+
+# USB installer
+aero-deploy usb --device /dev/sdb --image corporate-aero.img
+```
+________________
+
+
+14. Roadmap
+
+14.1 Phase 1: Foundation (Year 1)
+- [ ] Microkernel implementation
+- [ ] Basic device drivers (keyboard, mouse, display)
+- [ ] AeroFS file system
+- [ ] Process and memory management
+- [ ] Simple shell and terminal
+- [ ] Boot on x86_64 and ARM64
+
+14.2 Phase 2: Desktop (Year 2)
+- [ ] Aero Desktop environment
+- [ ] Window manager and compositor
+- [ ] System services (audio, network, etc.)
+- [ ] Built-in applications (files, settings, terminal)
+- [ ] Package manager
+- [ ] Linux application compatibility
+
+14.3 Phase 3: Ecosystem (Year 3)
+- [ ] Third-party application porting
+- [ ] Developer documentation
+- [ ] SDK and tools
+- [ ] OEM partnerships (hardware vendors)
+- [ ] Community building
+- [ ] Beta release
+
+14.4 Phase 4: Production (Year 4)
+- [ ] Windows application compatibility
+- [ ] Enterprise features
+- [ ] Mobile runtime (iOS/Android)
+- [ ] Cloud integration
+- [ ] Commercial support
+- [ ] 1.0 Release
+________________
+
+
+15. Why Aero OS Will Succeed
+
+15.1 Differentiation
+**Not just another Linux distro:**
+- Custom microkernel (not Linux)
+- Native Fruti environment
+- Capability-based security (unique)
+- Universal application model
+- Better performance and battery life
+
+**Not trying to be Windows:**
+- No legacy baggage
+- No telemetry by default
+- No forced updates
+- No ads in OS
+- Open source with commercial backing
+
+15.2 Target Markets
+**Phase 1: Developers**
+- Native Fruti development
+- Better tools than any other OS
+- Fast, efficient, customizable
+
+**Phase 2: Privacy-conscious users**
+- No tracking
+- Transparent operation
+- User control over everything
+
+**Phase 3: Enterprises**
+- Lower TCO than Windows
+- Better security
+- Easier management
+- Linux compatibility
+
+**Phase 4: General users**
+- Fast and responsive
+- Just works
+- Beautiful interface
+- Long battery life
+
+15.3 Business Model
+```
+Revenue streams:
+├── Enterprise support and licensing
+├── Cloud services (optional)
+├── Professional training and certification
+├── OEM pre-installation deals
+└── App store revenue share (optional)
+
+Core OS remains open source (GPL/MIT dual-license)
+```
+________________
+
+
+16. Community and Contribution
+
+16.1 Open Development
+- Source code on GitHub from day one
+- Public issue tracking
+- Open RFC process for changes
+- Community voting on priorities
+- Transparent roadmap
+
+16.2 Contribution Areas
+```
+Code contributions:
+├── Kernel development
+├── Device drivers
+├── System services
+├── Desktop environment
+├── Applications
+└── Documentation
+
+Non-code contributions:
+├── Bug reports and testing
+├── Documentation and tutorials
+├── Translations (i18n)
+├── Design and UX
+├── Community support
+└── Advocacy and outreach
+```
+________________
+
+
+17. Getting Started (Future)
+
+17.1 Download and Install
+```
+# Live USB (try without installing)
+Download: https://aero-os.org/download
+Flash to USB: aero-flash usb /dev/sdX
+
+# Installation
+Boot from USB -> "Install Aero OS"
+Follow installer (5 minutes)
+Reboot to Aero OS
+
+# Dual boot with existing OS
+Installer automatically detects and configures
+```
+
+17.2 First Steps
+```
+After installation:
+1. Configure user account
+2. Connect to WiFi
+3. Install applications via App Store
+4. Import data from previous OS
+5. Explore tutorials and documentation
+
+Welcome tutorial included (optional, 10 minutes)
+```
+________________
+
+
+18. Conclusion
+
+Aero OS represents a fundamental rethinking of what an operating system should be. By building on top of Fruti's safety and performance, and learning from decades of OS design, Aero aims to deliver an experience that is:
+
+- **Faster** than existing systems
+- **More secure** by architecture
+- **Easier to use** for everyone
+- **Better for developers** than any alternative
+- **Privacy-respecting** by default
+- **Open** yet commercially sustainable
+
+This is not just an OS—it's a platform for the next generation of computing.
+
+The foundation is Fruti. The future is Aero.
+
+________________
+
+Frutisoft © 2025 - Building the future of computing

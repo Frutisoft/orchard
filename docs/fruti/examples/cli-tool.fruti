@@ -1,0 +1,143 @@
+// Command-Line Tool Example
+// Demonstrates: Argument parsing, file I/O, error handling, piping
+
+import std.io
+import std.fs
+import std.env
+
+struct Config {
+    input: Option<String>
+    output: Option<String>
+    count: bool
+    lines: bool
+    words: bool
+}
+
+fn parse_args(args: Vec<String>) -> Result<Config> {
+    let mut config = Config {
+        input: None,
+        output: None,
+        count: false,
+        lines: false,
+        words: false
+    }
+    
+    let mut i = 1  // Skip program name
+    while i < args.len() {
+        match args[i] {
+            "-c" | "--count" => config.count = true,
+            "-l" | "--lines" => config.lines = true,
+            "-w" | "--words" => config.words = true,
+            "-o" | "--output" => {
+                i += 1
+                if i >= args.len() {
+                    return Err("Missing value for --output")
+                }
+                config.output = Some(args[i])
+            }
+            "-h" | "--help" => {
+                print_help()
+                return Err("Help requested")
+            }
+            arg if arg.starts_with("-") => {
+                return Err("Unknown option: {arg}")
+            }
+            file => {
+                if config.input.is_some() {
+                    return Err("Multiple input files not supported")
+                }
+                config.input = Some(file)
+            }
+        }
+        i += 1
+    }
+    
+    Ok(config)
+}
+
+fn print_help() {
+    println("Usage: wc [OPTIONS] [FILE]")
+    println("")
+    println("Count lines, words, and characters in a file or stdin")
+    println("")
+    println("Options:")
+    println("  -l, --lines    Count lines")
+    println("  -w, --words    Count words")
+    println("  -c, --count    Count characters")
+    println("  -o, --output   Output file (default: stdout)")
+    println("  -h, --help     Show this help")
+    println("")
+    println("Examples:")
+    println("  wc file.txt")
+    println("  wc -l -w file.txt")
+    println("  cat file.txt | wc -c")
+    println("  wc -l file.txt -o counts.txt")
+}
+
+struct Stats {
+    lines: Int
+    words: Int
+    chars: Int
+}
+
+fn count_text(text: String) -> Stats {
+    let lines = text.lines().count()
+    let words = text.split_whitespace().count()
+    let chars = text.len()
+    
+    Stats { lines, words, chars }
+}
+
+fn format_output(stats: Stats, config: Config) -> String {
+    let mut parts = Vec::new()
+    
+    if config.lines or (!config.lines and !config.words and !config.count) {
+        parts.push("{stats.lines} lines")
+    }
+    
+    if config.words or (!config.lines and !config.words and !config.count) {
+        parts.push("{stats.words} words")
+    }
+    
+    if config.count or (!config.lines and !config.words and !config.count) {
+        parts.push("{stats.chars} chars")
+    }
+    
+    parts.join(", ")
+}
+
+fn main() -> Result<()> {
+    let args = env.args().collect()
+    let config = parse_args(args)?
+    
+    // Read input from file or stdin
+    let text = match config.input {
+        Some(file) => {
+            fs.read_text(&file)
+                .map_err(|e| "Failed to read {file}: {e}")?
+        }
+        None => {
+            io.stdin().read_all()
+                .map_err(|e| "Failed to read stdin: {e}")?
+        }
+    }
+    
+    // Count statistics
+    let stats = count_text(text)
+    
+    // Format output
+    let output = format_output(stats, config)
+    
+    // Write output to file or stdout
+    match config.output {
+        Some(file) => {
+            fs.write_text(&file, &output)
+                .map_err(|e| "Failed to write {file}: {e}")?
+        }
+        None => {
+            println(output)
+        }
+    }
+    
+    Ok(())
+}

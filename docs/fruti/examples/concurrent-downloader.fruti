@@ -1,0 +1,169 @@
+// Concurrent File Downloader
+// Demonstrates: Async, concurrency, channels, progress tracking
+
+import std.http
+import std.fs
+import std.async
+import std.sync.{Mutex, Arc}
+import std.collections.Vec
+import std.time
+
+struct Download {
+    url: String
+    filename: String
+}
+
+struct Progress {
+    total: Int
+    completed: Int
+    errors: Int
+}
+
+async fn download_file(url: String, filename: String) -> Result<()> {
+    println("Downloading {filename}...")
+    
+    let response = http.get(&url).await
+        .map_err(|e| "Failed to fetch {url}: {e}")?
+    
+    if response.status() != 200 {
+        return Err("HTTP {response.status()} for {url}")
+    }
+    
+    let bytes = response.bytes().await
+        .map_err(|e| "Failed to read response: {e}")?
+    
+    fs.write_bytes(&filename, &bytes)
+        .map_err(|e| "Failed to write {filename}: {e}")?
+    
+    println("✓ Downloaded {filename} ({bytes.len()} bytes)")
+    Ok(())
+}
+
+async fn download_with_retry(
+    download: Download,
+    max_retries: Int,
+    progress: Arc<Mutex<Progress>>
+) {
+    let mut attempts = 0
+    
+    loop {
+        attempts += 1
+        
+        match download_file(download.url.clone(), download.filename.clone()).await {
+            Ok(_) => {
+                let mut p = progress.lock()
+                p.completed += 1
+                break
+            }
+            Err(e) => {
+                if attempts >= max_retries {
+                    eprintln("✗ Failed {download.filename} after {attempts} attempts: {e}")
+                    let mut p = progress.lock()
+                    p.errors += 1
+                    break
+                }
+                
+                eprintln("Retry {attempts}/{max_retries} for {download.filename}: {e}")
+                async.sleep(1s).await
+            }
+        }
+    }
+}
+
+async fn print_progress(progress: Arc<Mutex<Progress>>) {
+    loop {
+        async.sleep(500ms).await
+        
+        let p = progress.lock()
+        let total = p.total
+        let completed = p.completed
+        let errors = p.errors
+        drop(p)  // Release lock
+        
+        let pct = if total > 0 {
+            (completed * 100) / total
+        } else {
+            0
+        }
+        
+        print("\rProgress: {completed}/{total} ({pct}%) | Errors: {errors}")
+        io.flush()
+        
+        if completed + errors >= total {
+            println("")
+            break
+        }
+    }
+}
+
+async fn main() -> Result<()> {
+    let downloads = vec![
+        Download {
+            url: "https://example.com/file1.pdf",
+            filename: "downloads/file1.pdf"
+        },
+        Download {
+            url: "https://example.com/file2.jpg",
+            filename: "downloads/file2.jpg"
+        },
+        Download {
+            url: "https://example.com/file3.zip",
+            filename: "downloads/file3.zip"
+        },
+        Download {
+            url: "https://example.com/file4.mp4",
+            filename: "downloads/file4.mp4"
+        },
+        Download {
+            url: "https://example.com/file5.txt",
+            filename: "downloads/file5.txt"
+        }
+    ]
+    
+    // Create output directory
+    fs.create_dir_all("downloads")?
+    
+    // Shared progress tracker
+    let progress = Arc::new(Mutex::new(Progress {
+        total: downloads.len(),
+        completed: 0,
+        errors: 0
+    }))
+    
+    // Spawn progress printer
+    let progress_task = async.spawn(print_progress(progress.clone()))
+    
+    // Download all files concurrently (max 3 at a time)
+    let max_concurrent = 3
+    let max_retries = 3
+    
+    let tasks = downloads.into_iter()
+        .map(|download| {
+            let progress = progress.clone()
+            async.spawn(download_with_retry(download, max_retries, progress))
+        })
+        .collect::<Vec<_>>()
+    
+    // Process in batches
+    for chunk in tasks.chunks(max_concurrent) {
+        async.join_all(chunk).await
+    }
+    
+    // Wait for progress printer to finish
+    progress_task.await
+    
+    // Final summary
+    let p = progress.lock()
+    println("")
+    println("=" * 50)
+    println("Download Summary:")
+    println("  Total: {p.total}")
+    println("  Completed: {p.completed}")
+    println("  Errors: {p.errors}")
+    
+    if p.errors > 0 {
+        Err("Some downloads failed")
+    } else {
+        Ok(())
+    }
+}

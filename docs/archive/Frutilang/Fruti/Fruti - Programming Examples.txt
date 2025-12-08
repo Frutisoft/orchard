@@ -1,0 +1,1058 @@
+﻿Fruti Programming Examples
+Comprehensive examples demonstrating Fruti's syntax, features, and capabilities across different programming domains.
+________________
+
+
+1. Basic Syntax Examples
+
+1.1 Hello World
+```
+import io
+
+fn main() {
+    io.println("Hello, Fruti!")
+}
+```
+
+1.2 Variables and Types
+```
+import io
+
+fn main() {
+    // Immutable by default
+    let name = "Alice"
+    let age = 30
+    let height = 5.6
+    let is_student = false
+    
+    // Mutable when needed
+    var counter = 0
+    counter += 1
+    
+    // Type annotations (optional with inference)
+    let explicit_number: Int = 42
+    let explicit_string: String = "Hello"
+    
+    // Constants (compile-time)
+    const MAX_SIZE = 1024
+    const PI = 3.14159
+    
+    io.println("Name: {name}, Age: {age}, Counter: {counter}")
+}
+```
+
+1.3 Functions
+```
+import io
+
+// Simple function
+fn greet(name: String) -> String {
+    "Hello, {name}!"
+}
+
+// Multiple parameters
+fn add(a: Int, b: Int) -> Int {
+    a + b
+}
+
+// Named return values
+fn divide(numerator: Int, denominator: Int) -> (quotient: Int, remainder: Int) {
+    (numerator / denominator, numerator % denominator)
+}
+
+// Default parameters
+fn connect(host: String, port: Int = 8080, timeout: Int = 30) {
+    io.println("Connecting to {host}:{port} with timeout {timeout}s")
+}
+
+// Generic function
+fn max<T: Comparable>(a: T, b: T) -> T {
+    if a > b then a else b
+}
+
+fn main() {
+    io.println(greet("World"))
+    io.println(add(5, 3))
+    
+    let (q, r) = divide(17, 5)
+    io.println("17 / 5 = {q} remainder {r}")
+    
+    connect("example.com")
+    connect("example.com", port: 9000)
+    
+    io.println(max(10, 20))
+    io.println(max("apple", "banana"))
+}
+```
+
+________________
+
+
+2. Data Structures
+
+2.1 Structs
+```
+import io
+
+// Basic struct
+struct Person {
+    name: String
+    age: Int
+    email: String
+}
+
+// Struct with methods
+struct Rectangle {
+    width: Float
+    height: Float
+}
+
+impl Rectangle {
+    // Constructor
+    fn new(width: Float, height: Float) -> Rectangle {
+        Rectangle { width, height }
+    }
+    
+    // Method
+    fn area(self) -> Float {
+        self.width * self.height
+    }
+    
+    // Method with mutable self
+    fn scale(self, factor: Float) {
+        self.width *= factor
+        self.height *= factor
+    }
+}
+
+// Struct with visibility
+struct BankAccount {
+    public id: String
+    public balance: Float
+    private pin: String
+}
+
+fn main() {
+    let person = Person {
+        name: "Alice",
+        age: 30,
+        email: "alice@example.com"
+    }
+    
+    io.println("Person: {person.name}, {person.age}")
+    
+    var rect = Rectangle::new(10.0, 20.0)
+    io.println("Area: {rect.area()}")
+    
+    rect.scale(2.0)
+    io.println("Scaled area: {rect.area()}")
+}
+```
+
+2.2 Enums and Pattern Matching
+```
+import io
+
+// Simple enum
+enum Status {
+    Pending
+    Approved
+    Rejected
+}
+
+// Enum with data
+enum Result<T, E> {
+    Ok(T)
+    Error(E)
+}
+
+enum Option<T> {
+    Some(T)
+    None
+}
+
+// Complex enum
+enum Message {
+    Quit
+    Move { x: Int, y: Int }
+    Write(String)
+    ChangeColor(Int, Int, Int)
+}
+
+fn process_message(msg: Message) {
+    match msg {
+        Message::Quit -> {
+            io.println("Quitting...")
+        }
+        Message::Move { x, y } -> {
+            io.println("Moving to ({x}, {y})")
+        }
+        Message::Write(text) -> {
+            io.println("Writing: {text}")
+        }
+        Message::ChangeColor(r, g, b) -> {
+            io.println("Changing color to RGB({r}, {g}, {b})")
+        }
+    }
+}
+
+fn divide_safe(a: Int, b: Int) -> Result<Int, String> {
+    if b == 0 {
+        Result::Error("Division by zero")
+    } else {
+        Result::Ok(a / b)
+    }
+}
+
+fn main() {
+    let status = Status::Approved
+    
+    match status {
+        Status::Pending -> io.println("Still pending")
+        Status::Approved -> io.println("Approved!")
+        Status::Rejected -> io.println("Rejected")
+    }
+    
+    let result = divide_safe(10, 2)
+    match result {
+        Result::Ok(value) -> io.println("Result: {value}")
+        Result::Error(msg) -> io.println("Error: {msg}")
+    }
+    
+    // Using question mark operator
+    fn calculate() -> Result<Int, String> {
+        let a = divide_safe(20, 2)?
+        let b = divide_safe(30, 3)?
+        Result::Ok(a + b)
+    }
+    
+    process_message(Message::Write("Hello"))
+    process_message(Message::Move { x: 10, y: 20 })
+}
+```
+
+________________
+
+
+3. Collections
+
+3.1 Lists
+```
+import io
+
+fn main() {
+    // List literals
+    let numbers = [1, 2, 3, 4, 5]
+    let empty: List<Int> = []
+    
+    // List methods
+    io.println("Length: {numbers.len()}")
+    io.println("First: {numbers.first()}")
+    io.println("Last: {numbers.last()}")
+    
+    // List comprehension
+    let squares = [x * x for x in numbers]
+    let evens = [x for x in numbers if x % 2 == 0]
+    
+    io.println("Squares: {squares}")
+    io.println("Evens: {evens}")
+    
+    // Mutable operations
+    var list = [1, 2, 3]
+    list.push(4)
+    list.insert(0, 0)
+    let popped = list.pop()
+    
+    io.println("Modified list: {list}")
+    
+    // Iteration
+    for num in numbers {
+        io.println(num)
+    }
+    
+    // Map, filter, reduce
+    let doubled = numbers.map(fn(x) { x * 2 })
+    let filtered = numbers.filter(fn(x) { x > 2 })
+    let sum = numbers.reduce(0, fn(acc, x) { acc + x })
+    
+    io.println("Sum: {sum}")
+}
+```
+
+3.2 Maps (Dictionaries)
+```
+import io
+
+fn main() {
+    // Map literals
+    let ages = {
+        "Alice": 30,
+        "Bob": 25,
+        "Carol": 27
+    }
+    
+    // Map operations
+    io.println("Alice's age: {ages["Alice"]}")
+    
+    var map = Map::new()
+    map["key1"] = "value1"
+    map["key2"] = "value2"
+    
+    // Safe access
+    if let Some(value) = map.get("key1") {
+        io.println("Found: {value}")
+    }
+    
+    // Iteration
+    for (key, value) in ages {
+        io.println("{key}: {value}")
+    }
+    
+    // Keys and values
+    let names = ages.keys()
+    let age_values = ages.values()
+}
+```
+
+3.3 Sets
+```
+import io
+
+fn main() {
+    let set1 = Set::from([1, 2, 3, 4])
+    let set2 = Set::from([3, 4, 5, 6])
+    
+    // Set operations
+    let union = set1.union(set2)
+    let intersection = set1.intersection(set2)
+    let difference = set1.difference(set2)
+    
+    io.println("Union: {union}")
+    io.println("Intersection: {intersection}")
+    io.println("Difference: {difference}")
+    
+    // Membership
+    if set1.contains(2) {
+        io.println("Set contains 2")
+    }
+}
+```
+
+________________
+
+
+4. Control Flow
+
+4.1 Conditionals
+```
+import io
+
+fn main() {
+    let age = 20
+    
+    // If expressions
+    let status = if age >= 18 {
+        "adult"
+    } else {
+        "minor"
+    }
+    
+    io.println("Status: {status}")
+    
+    // If with multiple conditions
+    let score = 85
+    let grade = if score >= 90 {
+        "A"
+    } else if score >= 80 {
+        "B"
+    } else if score >= 70 {
+        "C"
+    } else {
+        "F"
+    }
+    
+    io.println("Grade: {grade}")
+    
+    // Ternary-style (natural in Fruti)
+    let result = if true then "yes" else "no"
+}
+```
+
+4.2 Loops
+```
+import io
+
+fn main() {
+    // While loop
+    var i = 0
+    while i < 5 {
+        io.println(i)
+        i += 1
+    }
+    
+    // For loop with range
+    for i in 0..5 {
+        io.println("Number: {i}")
+    }
+    
+    // For loop with collection
+    let fruits = ["apple", "banana", "cherry"]
+    for fruit in fruits {
+        io.println("Fruit: {fruit}")
+    }
+    
+    // Loop with index
+    for (index, fruit) in fruits.enumerate() {
+        io.println("{index}: {fruit}")
+    }
+    
+    // Labeled breaks
+    outer: for i in 0..3 {
+        for j in 0..3 {
+            if i == 1 and j == 1 {
+                break outer
+            }
+            io.println("({i}, {j})")
+        }
+    }
+    
+    // Loop with return value
+    let result = outer: for i in 0..10 {
+        if i == 5 {
+            break outer with i * 2
+        }
+    }
+    
+    io.println("Result: {result}")
+}
+```
+
+________________
+
+
+5. Traits and Generics
+
+5.1 Defining Traits
+```
+import io
+
+// Simple trait
+trait Printable {
+    fn to_string(self) -> String
+}
+
+// Trait with default implementation
+trait Describable {
+    fn describe(self) -> String
+    
+    fn print_description(self) {
+        io.println(self.describe())
+    }
+}
+
+// Struct implementing traits
+struct Person {
+    name: String
+    age: Int
+}
+
+impl Printable for Person {
+    fn to_string(self) -> String {
+        "{self.name} ({self.age} years old)"
+    }
+}
+
+impl Describable for Person {
+    fn describe(self) -> String {
+        "This is {self.name}, who is {self.age} years old"
+    }
+}
+
+fn main() {
+    let person = Person { name: "Alice", age: 30 }
+    io.println(person.to_string())
+    person.print_description()
+}
+```
+
+5.2 Generic Types
+```
+import io
+
+// Generic struct
+struct Container<T> {
+    value: T
+}
+
+impl<T> Container<T> {
+    fn new(value: T) -> Container<T> {
+        Container { value }
+    }
+    
+    fn get(self) -> T {
+        self.value
+    }
+}
+
+// Generic with trait bounds
+struct Pair<T: Comparable> {
+    first: T
+    second: T
+}
+
+impl<T: Comparable> Pair<T> {
+    fn max(self) -> T {
+        if self.first > self.second {
+            self.first
+        } else {
+            self.second
+        }
+    }
+}
+
+// Generic function
+fn swap<T>(a: T, b: T) -> (T, T) {
+    (b, a)
+}
+
+fn main() {
+    let int_container = Container::new(42)
+    io.println(int_container.get())
+    
+    let string_container = Container::new("Hello")
+    io.println(string_container.get())
+    
+    let pair = Pair { first: 10, second: 20 }
+    io.println("Max: {pair.max()}")
+    
+    let (x, y) = swap(1, 2)
+    io.println("Swapped: {x}, {y}")
+}
+```
+
+________________
+
+
+6. Async Programming
+
+6.1 Basic Async/Await
+```
+import io
+import time
+import http
+
+async fn fetch_data(url: String) -> Result<String, Error> {
+    let response = http.get(url).await?
+    response.text().await
+}
+
+async fn process_user(id: Int) -> User {
+    let profile = fetch_profile(id).await
+    let settings = fetch_settings(id).await
+    
+    User { profile, settings }
+}
+
+async fn main() {
+    let data = fetch_data("https://api.example.com/data").await
+    
+    match data {
+        Result::Ok(content) -> io.println("Fetched: {content}")
+        Result::Error(err) -> io.println("Error: {err}")
+    }
+}
+```
+
+6.2 Concurrent Execution
+```
+import io
+import async
+
+async fn task1() -> Int {
+    io.println("Task 1 starting")
+    time.sleep(1s).await
+    io.println("Task 1 done")
+    return 1
+}
+
+async fn task2() -> Int {
+    io.println("Task 2 starting")
+    time.sleep(2s).await
+    io.println("Task 2 done")
+    return 2
+}
+
+async fn main() {
+    // Run tasks concurrently
+    let (result1, result2) = join!(task1(), task2())
+    
+    io.println("Results: {result1}, {result2}")
+    
+    // Race multiple tasks
+    let winner = race!(task1(), task2())
+    io.println("Winner: {winner}")
+    
+    // Timeout
+    let result = timeout(5s) {
+        fetch_data("https://slow-api.com").await
+    }
+    
+    match result {
+        Result::Ok(data) -> io.println("Got data: {data}")
+        Result::Error(Timeout) -> io.println("Request timed out")
+    }
+}
+```
+
+________________
+
+
+7. Error Handling
+
+7.1 Result Type
+```
+import io
+import fs
+
+fn read_file(path: String) -> Result<String, IOError> {
+    let file = fs.open(path)?
+    let content = file.read_all()?
+    Result::Ok(content)
+}
+
+fn parse_number(s: String) -> Result<Int, ParseError> {
+    if s.is_empty() {
+        return Result::Error(ParseError::Empty)
+    }
+    
+    // ... parsing logic
+    Result::Ok(42)
+}
+
+fn main() {
+    // Using match
+    let result = read_file("data.txt")
+    match result {
+        Result::Ok(content) -> io.println(content)
+        Result::Error(err) -> io.println("Error: {err}")
+    }
+    
+    // Using question mark
+    fn process() -> Result<(), Error> {
+        let content = read_file("data.txt")?
+        let number = parse_number(content)?
+        io.println("Number: {number}")
+        Result::Ok(())
+    }
+    
+    // Try block
+    let data = try {
+        let file = fs.open("config.json")?
+        let text = file.read_all()?
+        json.parse(text)?
+    } catch error {
+        io.println("Failed to load config: {error}")
+        return default_config()
+    }
+}
+```
+
+________________
+
+
+8. Advanced Examples
+
+8.1 Web Server
+```
+import http
+import json
+import database
+
+struct User {
+    id: Int
+    name: String
+    email: String
+}
+
+async fn get_user(id: Int) -> Result<User, Error> {
+    database.query_one(
+        "SELECT * FROM users WHERE id = $1",
+        [id]
+    ).await
+}
+
+async fn create_user(name: String, email: String) -> Result<User, Error> {
+    database.execute(
+        "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *",
+        [name, email]
+    ).await
+}
+
+async fn main() {
+    let app = http.Server::new("0.0.0.0:8080")
+    
+    app.get("/users/:id", async fn(req) {
+        let id = req.params.get("id")?.parse<Int>()?
+        let user = get_user(id).await?
+        req.json(user)
+    })
+    
+    app.post("/users", async fn(req) {
+        let body = req.json<CreateUserRequest>().await?
+        let user = create_user(body.name, body.email).await?
+        req.status(201).json(user)
+    })
+    
+    io.println("Server listening on :8080")
+    app.listen().await
+}
+```
+
+8.2 Command Line Tool
+```
+import io
+import fs
+import cli
+
+struct Args {
+    input: String
+    output: String
+    verbose: bool
+}
+
+fn process_file(input: String, output: String, verbose: bool) -> Result<(), Error> {
+    if verbose {
+        io.println("Reading {input}...")
+    }
+    
+    let content = fs.read_text(input)?
+    let processed = content.to_upper()
+    
+    if verbose {
+        io.println("Writing to {output}...")
+    }
+    
+    fs.write_text(output, processed)?
+    
+    if verbose {
+        io.println("Done!")
+    }
+    
+    Result::Ok(())
+}
+
+fn main() {
+    let args = cli.parse<Args>() or {
+        io.println("Usage: program <input> <output> [--verbose]")
+        return
+    }
+    
+    match process_file(args.input, args.output, args.verbose) {
+        Result::Ok(()) -> {}
+        Result::Error(err) -> {
+            io.eprintln("Error: {err}")
+            exit(1)
+        }
+    }
+}
+```
+
+8.3 Multithreading
+```
+import io
+import thread
+import sync
+
+fn main() {
+    // Channels
+    let (sender, receiver) = channel<Int>()
+    
+    thread.spawn(fn {
+        for i in 0..10 {
+            sender.send(i)
+        }
+    })
+    
+    for value in receiver {
+        io.println("Received: {value}")
+    }
+    
+    // Shared state with mutex
+    let counter = Mutex::new(0)
+    
+    let handles = []
+    for _ in 0..10 {
+        let counter_clone = counter.clone()
+        let handle = thread.spawn(fn {
+            for _ in 0..100 {
+                counter_clone.lock().increment()
+            }
+        })
+        handles.push(handle)
+    }
+    
+    for handle in handles {
+        handle.join()
+    }
+    
+    io.println("Final count: {counter.lock().value}")
+    
+    // Atomic operations
+    let atomic_counter = Atomic::new(0)
+    
+    parallel for _ in 0..1000 {
+        atomic_counter.increment()
+    }
+    
+    io.println("Atomic count: {atomic_counter.get()}")
+}
+```
+
+________________
+
+
+9. Real-World Application
+
+9.1 REST API with Database
+```
+import http
+import json
+import database
+import auth
+import validation
+
+struct User {
+    id: Int
+    username: String
+    email: String
+    created_at: Timestamp
+}
+
+struct CreateUserRequest {
+    username: String
+    email: String
+    password: String
+}
+
+struct LoginRequest {
+    email: String
+    password: String
+}
+
+async fn authenticate(req: http.Request) -> Result<User, Error> {
+    let token = req.headers.get("Authorization")?
+    let user_id = auth.verify_token(token)?
+    database.get_user(user_id).await
+}
+
+async fn main() {
+    // Initialize database
+    database.connect("postgres://localhost/myapp").await?
+    database.migrate().await?
+    
+    let app = http.Server::new("0.0.0.0:8080")
+    
+    // Middleware
+    app.use(http.middleware.cors())
+    app.use(http.middleware.logger())
+    app.use(http.middleware.json())
+    
+    // Public routes
+    app.post("/auth/register", async fn(req) {
+        let body = req.json<CreateUserRequest>().await?
+        
+        // Validation
+        validation.validate_email(body.email)?
+        validation.validate_password(body.password)?
+        
+        // Check if user exists
+        if database.user_exists(body.email).await? {
+            return req.status(400).json({ "error": "User already exists" })
+        }
+        
+        // Hash password
+        let password_hash = auth.hash_password(body.password)
+        
+        // Create user
+        let user = database.create_user(
+            body.username,
+            body.email,
+            password_hash
+        ).await?
+        
+        req.status(201).json(user)
+    })
+    
+    app.post("/auth/login", async fn(req) {
+        let body = req.json<LoginRequest>().await?
+        
+        let user = database.get_user_by_email(body.email).await?
+        
+        if not auth.verify_password(body.password, user.password_hash) {
+            return req.status(401).json({ "error": "Invalid credentials" })
+        }
+        
+        let token = auth.create_token(user.id)
+        
+        req.json({ "token": token, "user": user })
+    })
+    
+    // Protected routes
+    app.get("/api/profile", async fn(req) {
+        let user = authenticate(req).await?
+        req.json(user)
+    })
+    
+    app.put("/api/profile", async fn(req) {
+        let user = authenticate(req).await?
+        let updates = req.json<UpdateUserRequest>().await?
+        
+        let updated_user = database.update_user(user.id, updates).await?
+        req.json(updated_user)
+    })
+    
+    io.println("API server running on :8080")
+    app.listen().await
+}
+```
+
+________________
+
+These examples demonstrate Fruti's clean syntax, powerful type system, and comprehensive feature set across different programming domains.
+
+Frutisoft © 2025
+
+
+/// A person with a name and age
+[public]
+struct Person {
+  name: String,
+  age: Int
+}
+
+
+/// A to-do task record
+[public]
+struct Task {
+  id: Int,
+  desc: String,
+  done: Bool
+}
+
+
+/// Can be converted to a String for display
+trait Printable {
+  fn to_string(self) -> String;
+}
+
+
+impl Printable for Person {
+  fn to_string(self) -> String {
+    { self.name + " (" + self.age.to_string() + ")" }
+  }
+}
+
+
+/// Return the larger of two comparable values
+fn max<T>(a: T, b: T) where T: Ord -> T {
+  if a > b { a } else { b }
+}
+
+
+/// Compute the average of a list of integers
+fn average(ages: [Int]) -> Float {
+  var sum: Int = 0;
+  for a in ages {
+    sum = sum + a;
+  }
+  sum.to_float() / ages.length()
+}
+
+
+/// This function is deprecated and will be removed
+[deprecated]
+fn old_fn() {
+  io.print("This function is deprecated");
+}
+
+
+/// Count how many tasks are already done
+async fn process_tasks(tasks: [Task]) -> Int {
+  var completed: Int = 0;
+
+
+  outer: for t in tasks {
+    match t.done {
+      true => {
+        completed = completed + 1;
+      },
+      false => {
+        continue outer;
+      }
+    }
+  }
+
+
+  completed
+}
+
+
+fn main() {
+  // Define some people
+  let people = [
+    Person { name: "Alice", age: 30 },
+    Person { name: "Bob",   age: 25 },
+    Person { name: "Carol", age: 27 }
+  ];
+
+
+  // Extract ages via comprehension
+  let ages = [ p.age for p in people ];
+
+
+  // Compute and print the average age
+  let avg_age = average(ages);
+  io.print("Average age: " + avg_age.to_string());
+
+
+  // List “senior” people (age ≥ 28)
+  io.print("Seniors:");
+  outer: for p in people {
+    if p.age < 28 {
+      continue outer;
+    }
+    io.print(" • " + p.to_string());
+  }
+
+
+  // Prepare some tasks
+  let tasks = [
+    Task { id: 1, desc: "Write report", done: false },
+    Task { id: 2, desc: "Review code",  done: true },
+    Task { id: 3, desc: "Update docs",  done: true }
+  ];
+
+
+  // Process tasks asynchronously and print how many are done
+  let completed = process_tasks(tasks).await;
+  io.print("Completed tasks: " + completed.to_string());
+
+
+  // Demonstrate the generic `max` function
+  let a = 42;
+  let b = 58;
+  let m = max(a, b);
+  io.print("Max of " + a.to_string() + " and " + b.to_string() + " is " + m.to_string());
+
+
+  // Call the deprecated function
+  old_fn();
+
+
+  // Example of formatter-driven indentation mode
+  #pragma indent
+      var x = 1;
+      var y = 2;
+      io.print("Pragma block sum: " + (x + y).to_string());
+}
+This program demonstrates Fruti’s style by keeping declarations concise (let/var with optional types), leveraging control-as-expressions (the if in max), and using comprehensions for clarity. We mark public APIs and docs with ///, while inline comments remain //. Ownership and borrowing aren’t shown here, but the async task loop and explicit await illustrate Fruti’s non-blocking model. Traits and where-clauses provide type-safe generics, and the @deprecated attribute shows how Fruti handles evolution and tooling hooks. Everything above maps directly to the refined syntax and grammar, giving you a fully faithful Fruti sample.

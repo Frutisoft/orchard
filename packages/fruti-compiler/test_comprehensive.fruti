@@ -1,0 +1,202 @@
+// Comprehensive Lexer Test - All Token Types
+
+/* Multi-line comment
+   testing block comments
+   with multiple lines */
+
+// Keywords test
+fn test_function(x: i32, y: f64) -> bool {
+    let immutable = 42;
+    var mutable = 3.14;
+    const CONSTANT = 100;
+    
+    // Control flow keywords
+    if x > 0 {
+        return true;
+    } else if x == 0 {
+        return false;
+    } else {
+        return false;
+    }
+    
+    // Loop keywords
+    while mutable < 10.0 {
+        mutable = mutable + 1.0;
+    }
+    
+    for i in 0..10 {
+        continue;
+    }
+    
+    loop {
+        break;
+    }
+    
+    // Match keyword
+    match x {
+        _ => {}
+    }
+}
+
+// Type keywords
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+enum Option {
+    Some(i32),
+    None,
+}
+
+trait Display {
+    fn display(self);
+}
+
+impl Display for Point {
+    fn display(self) {
+        print("Point");
+    }
+}
+
+// Module keywords
+mod utils {
+    pub fn helper() {}
+    use super::Point;
+}
+
+import std::io;
+
+// Async/await
+async fn fetch_data() -> i32 {
+    await some_future();
+    return 0;
+}
+
+// Boolean literals and operators
+fn test_booleans() {
+    let t = true;
+    let f = false;
+    let and_op = t and f;
+    let or_op = t or f;
+    let not_op = not t;
+    let symbolic_and = t && f;
+    let symbolic_or = t || f;
+    let symbolic_not = !t;
+}
+
+// Number literals
+fn test_numbers() {
+    let dec = 42;
+    let hex = 0xFF;
+    let oct = 0o77;
+    let bin = 0b1010;
+    let float1 = 3.14;
+    let float2 = 2.5e10;
+    let float3 = 1.0e-5;
+}
+
+// String literals with interpolation
+fn test_strings() {
+    let name = "Fruti";
+    let age = 25;
+    let simple = "Hello, World!";
+    let interpolated = "My name is {name} and I am {age} years old";
+    let escaped = "Line1\nLine2\tTabbed";
+    let quote = "She said \"Hello\"";
+}
+
+// Character literals
+fn test_chars() {
+    let ch1 = 'a';
+    let ch2 = '\n';
+    let ch3 = '\t';
+    let ch4 = '\\';
+    let ch5 = '\'';
+}
+
+// Operators - Arithmetic
+fn test_arithmetic(a: i32, b: i32) -> i32 {
+    let add = a + b;
+    let sub = a - b;
+    let mul = a * b;
+    let div = a / b;
+    let rem = a % b;
+}
+
+// Operators - Comparison
+fn test_comparison(x: i32, y: i32) -> bool {
+    let eq = x == y;
+    let ne = x != y;
+    let lt = x < y;
+    let le = x <= y;
+    let gt = x > y;
+    let ge = x >= y;
+}
+
+// Operators - Bitwise
+fn test_bitwise(a: i32, b: i32) -> i32 {
+    let bit_and = a & b;
+    let bit_or = a | b;
+    let bit_xor = a ^ b;
+    let shl = a << 2;
+    let shr = a >> 2;
+}
+
+// Operators - Assignment
+fn test_assignment() {
+    var x = 10;
+    x += 5;
+    x -= 3;
+    x *= 2;
+    x /= 4;
+    x %= 3;
+}
+
+// Range operators
+fn test_ranges() {
+    for i in 0..10 {}      // Exclusive range
+    for i in 0..=10 {}     // Inclusive range
+}
+
+// Punctuation and delimiters
+fn test_punctuation() {
+    let arr = [1, 2, 3];
+    let tuple = (1, "two", 3.0);
+    let dict = {key: "value"};
+    
+    // Arrow and dot
+    let lambda = |x| -> i32 { x + 1 };
+    let method_call = obj.method();
+    
+    // Scope resolution
+    let path = module::Type::function();
+    
+    // Question mark for error propagation
+    let result = might_fail()?;
+}
+
+// Type annotations
+fn typed_function(x: i32, y: f64, z: &str) -> (i32, bool) {
+    return (x, true);
+}
+
+// Generics (just syntax test)
+fn generic<T>(value: T) -> T {
+    return value;
+}
+
+// Underscore wildcard
+fn test_wildcard() {
+    let _ = some_function();
+    match x {
+        _ => {}
+    }
+}
+
+// Self keyword
+impl Point {
+    fn new() -> Self {
+        return Self { x: 0, y: 0 };
+    }
+}

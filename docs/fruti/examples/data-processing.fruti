@@ -1,0 +1,227 @@
+// Data Processing Pipeline Example
+// Demonstrates: Functional programming, iterators, parallelism, CSV parsing
+
+import std.fs
+import std.collections.{Vec, HashMap}
+import std.thread
+
+// Data structures
+struct Record {
+    date: String
+    category: String
+    amount: Float
+    description: String
+}
+
+struct Summary {
+    total: Float
+    count: Int
+    average: Float
+    min: Float
+    max: Float
+}
+
+// CSV parsing
+fn parse_csv(content: String) -> Result<Vec<Record>> {
+    let lines = content.lines().skip(1)  // Skip header
+    
+    lines.map(|line| {
+        let parts = line.split(',').collect::<Vec<_>>()
+        if parts.len() != 4 {
+            return Err("Invalid CSV line: {line}")
+        }
+        
+        Ok(Record {
+            date: parts[0].trim().to_string(),
+            category: parts[1].trim().to_string(),
+            amount: parts[2].trim().parse()?,
+            description: parts[3].trim().to_string()
+        })
+    }).collect()
+}
+
+// Data analysis
+fn analyze_category(records: &[Record]) -> Summary {
+    let amounts = records.iter()
+        .map(|r| r.amount)
+        .collect::<Vec<_>>()
+    
+    let total = amounts.iter().sum()
+    let count = amounts.len()
+    let average = if count > 0 { total / count as Float } else { 0.0 }
+    let min = amounts.iter().min().unwrap_or(0.0)
+    let max = amounts.iter().max().unwrap_or(0.0)
+    
+    Summary { total, count, average, min, max }
+}
+
+fn group_by_category(records: Vec<Record>) -> HashMap<String, Vec<Record>> {
+    let mut groups = HashMap::new()
+    
+    for record in records {
+        groups.entry(record.category.clone())
+            .or_insert(Vec::new())
+            .push(record)
+    }
+    
+    groups
+}
+
+// Parallel processing
+fn process_parallel(files: Vec<String>) -> Result<HashMap<String, Summary>> {
+    let results = files.par_iter()  // Parallel iterator
+        .map(|file| {
+            let content = fs.read_text(file)?
+            let records = parse_csv(content)?
+            Ok(records)
+        })
+        .collect::<Result<Vec<Vec<Record>>>>()?
+    
+    // Flatten all records
+    let all_records: Vec<Record> = results.into_iter()
+        .flatten()
+        .collect()
+    
+    // Group by category
+    let groups = group_by_category(all_records)
+    
+    // Analyze each group in parallel
+    let summaries = groups.into_par_iter()
+        .map(|(category, records)| {
+            let summary = analyze_category(&records)
+            (category, summary)
+        })
+        .collect()
+    
+    Ok(summaries)
+}
+
+// Filtering and transformations
+fn filter_and_transform(records: Vec<Record>) -> Vec<Record> {
+    records.into_iter()
+        // Filter: Only positive amounts in last 30 days
+        .filter(|r| r.amount > 0.0)
+        .filter(|r| is_recent(&r.date, 30))
+        // Transform: Normalize descriptions
+        .map(|mut r| {
+            r.description = r.description.to_lower().trim().to_string()
+            r
+        })
+        // Sort by amount (descending)
+        .sorted_by(|a, b| b.amount.cmp(&a.amount))
+        .collect()
+}
+
+fn is_recent(date: &str, days: Int) -> bool {
+    // Simplified date comparison
+    // In real code, use proper date parsing
+    true
+}
+
+// Advanced queries using method chaining
+fn top_expenses(records: &[Record], n: usize) -> Vec<(String, Float)> {
+    records.iter()
+        .filter(|r| r.amount < 0.0)  // Negative = expense
+        .map(|r| (r.description.clone(), r.amount.abs()))
+        .sorted_by(|(_, a), (_, b)| b.cmp(a))
+        .take(n)
+        .collect()
+}
+
+fn monthly_totals(records: &[Record]) -> HashMap<String, Float> {
+    records.iter()
+        .map(|r| {
+            let month = r.date[..7].to_string()  // "YYYY-MM"
+            (month, r.amount)
+        })
+        .fold(HashMap::new(), |mut acc, (month, amount)| {
+            *acc.entry(month).or_insert(0.0) += amount
+            acc
+        })
+}
+
+// Statistical operations
+fn calculate_percentile(values: &mut [Float], percentile: Float) -> Float {
+    values.sort()
+    let index = ((values.len() as Float) * percentile / 100.0) as usize
+    values[index.min(values.len() - 1)]
+}
+
+fn moving_average(values: &[Float], window_size: usize) -> Vec<Float> {
+    values.windows(window_size)
+        .map(|window| window.iter().sum::<Float>() / window_size as Float)
+        .collect()
+}
+
+// Main pipeline
+fn main() -> Result<()> {
+    println("Loading data...")
+    
+    // Load CSV files
+    let files = vec![
+        "data/transactions_2024_01.csv",
+        "data/transactions_2024_02.csv",
+        "data/transactions_2024_03.csv"
+    ]
+    
+    // Process in parallel
+    let summaries = process_parallel(files)?
+    
+    // Print category summaries
+    println("\nCategory Summaries:")
+    println("{:=<60}", "")
+    
+    for (category, summary) in summaries.iter()
+        .sorted_by(|(_, a), (_, b)| b.total.cmp(&a.total)) {
+        println("{:20} | Total: ${:10.2} | Avg: ${:8.2} | Count: {:4}",
+            category,
+            summary.total,
+            summary.average,
+            summary.count
+        )
+    }
+    
+    // Load single file for detailed analysis
+    let content = fs.read_text("data/transactions_2024_01.csv")?
+    let records = parse_csv(content)?
+    
+    // Top 10 expenses
+    println("\nTop 10 Expenses:")
+    println("{:=<60}", "")
+    for (i, (desc, amount)) in top_expenses(&records, 10).enumerate() {
+        println("{:2}. {:40} ${:8.2}", i + 1, desc, amount)
+    }
+    
+    // Monthly totals
+    println("\nMonthly Totals:")
+    println("{:=<60}", "")
+    for (month, total) in monthly_totals(&records).iter()
+        .sorted_by(|(a, _), (b, _)| a.cmp(b)) {
+        println("{}: ${:.2}", month, total)
+    }
+    
+    // Statistical analysis
+    let mut amounts: Vec<Float> = records.iter()
+        .map(|r| r.amount)
+        .collect()
+    
+    let p50 = calculate_percentile(&mut amounts, 50.0)
+    let p90 = calculate_percentile(&mut amounts, 90.0)
+    let p99 = calculate_percentile(&mut amounts, 99.0)
+    
+    println("\nPercentiles:")
+    println("  50th: ${:.2}", p50)
+    println("  90th: ${:.2}", p90)
+    println("  99th: ${:.2}", p99)
+    
+    // Moving average
+    let daily_totals = vec![100.0, 150.0, 120.0, 180.0, 140.0, 160.0, 130.0]
+    let ma = moving_average(&daily_totals, 3)
+    
+    println("\n7-Day Moving Average (window=3):")
+    for (i, avg) in ma.enumerate() {
+        println("  Day {}: ${:.2}", i + 3, avg)
+    }
+    
+    Ok(())
+}

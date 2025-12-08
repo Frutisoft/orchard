@@ -1,0 +1,243 @@
+// Systems Programming Example
+// Demonstrates: Low-level APIs, unsafe code, FFI, memory management
+
+import std.mem
+import std.ptr
+import std.ffi
+
+// C interop
+extern "C" {
+    fn malloc(size: usize) -> *mut u8
+    fn free(ptr: *mut u8)
+    fn memcpy(dest: *mut u8, src: *const u8, n: usize) -> *mut u8
+}
+
+// Custom allocator example
+struct Arena {
+    buffer: *mut u8
+    capacity: usize
+    offset: usize
+}
+
+impl Arena {
+    fn new(capacity: usize) -> Self {
+        let buffer = unsafe { malloc(capacity) }
+        if buffer.is_null() {
+            panic("Failed to allocate arena")
+        }
+        
+        Arena {
+            buffer,
+            capacity,
+            offset: 0
+        }
+    }
+    
+    fn alloc(mut self, size: usize, align: usize) -> Option<*mut u8> {
+        // Align offset
+        let padding = (align - (self.offset % align)) % align
+        let aligned_offset = self.offset + padding
+        
+        // Check capacity
+        if aligned_offset + size > self.capacity {
+            return None
+        }
+        
+        // Calculate pointer
+        let ptr = unsafe {
+            self.buffer.offset(aligned_offset as isize)
+        }
+        
+        self.offset = aligned_offset + size
+        Some(ptr)
+    }
+    
+    fn reset(mut self) {
+        self.offset = 0
+    }
+}
+
+impl Drop for Arena {
+    fn drop(mut self) {
+        if !self.buffer.is_null() {
+            unsafe { free(self.buffer) }
+        }
+    }
+}
+
+// Zero-copy buffer handling
+struct Buffer {
+    data: *mut u8
+    len: usize
+    capacity: usize
+}
+
+impl Buffer {
+    fn with_capacity(capacity: usize) -> Self {
+        let data = unsafe { malloc(capacity) }
+        Buffer { data, len: 0, capacity }
+    }
+    
+    fn push(mut self, byte: u8) -> Result<()> {
+        if self.len >= self.capacity {
+            return Err("Buffer full")
+        }
+        
+        unsafe {
+            *self.data.offset(self.len as isize) = byte
+        }
+        self.len += 1
+        Ok(())
+    }
+    
+    fn as_slice(self) -> &[u8] {
+        unsafe {
+            std.slice.from_raw_parts(self.data, self.len)
+        }
+    }
+    
+    fn as_mut_slice(mut self) -> &mut [u8] {
+        unsafe {
+            std.slice.from_raw_parts_mut(self.data, self.len)
+        }
+    }
+}
+
+impl Drop for Buffer {
+    fn drop(mut self) {
+        if !self.data.is_null() {
+            unsafe { free(self.data) }
+        }
+    }
+}
+
+// Memory-mapped file
+struct MemoryMap {
+    ptr: *mut u8
+    len: usize
+}
+
+impl MemoryMap {
+    fn open(path: String) -> Result<Self> {
+        // Platform-specific implementation
+        #[cfg(target_os = "aero")]
+        {
+            use std.aero.mmap
+            let fd = fs.open(path, fs.READ)?
+            let len = fs.file_size(fd)?
+            let ptr = mmap.map(fd, 0, len, mmap.READ)?
+            Ok(MemoryMap { ptr, len })
+        }
+        
+        #[cfg(not(target_os = "aero"))]
+        {
+            Err("Memory mapping not supported on this platform")
+        }
+    }
+    
+    fn as_slice(self) -> &[u8] {
+        unsafe {
+            std.slice.from_raw_parts(self.ptr, self.len)
+        }
+    }
+}
+
+// Atomic reference counting (like Arc)
+struct ArcInner<T> {
+    data: T
+    ref_count: Atomic<usize>
+}
+
+struct Arc<T> {
+    ptr: *mut ArcInner<T>
+}
+
+impl<T> Arc<T> {
+    fn new(data: T) -> Self {
+        let inner = Box::new(ArcInner {
+            data,
+            ref_count: Atomic::new(1)
+        })
+        
+        Arc {
+            ptr: Box::into_raw(inner)
+        }
+    }
+    
+    fn clone(self) -> Self {
+        let inner = unsafe { &*self.ptr }
+        inner.ref_count.fetch_add(1)
+        Arc { ptr: self.ptr }
+    }
+    
+    fn strong_count(self) -> usize {
+        let inner = unsafe { &*self.ptr }
+        inner.ref_count.load()
+    }
+}
+
+impl<T> Deref for Arc<T> {
+    type Target = T
+    
+    fn deref(self) -> &T {
+        let inner = unsafe { &*self.ptr }
+        &inner.data
+    }
+}
+
+impl<T> Drop for Arc<T> {
+    fn drop(mut self) {
+        let inner = unsafe { &*self.ptr }
+        let old_count = inner.ref_count.fetch_sub(1)
+        
+        if old_count == 1 {
+            // Last reference, deallocate
+            unsafe {
+                Box::from_raw(self.ptr)
+            }
+        }
+    }
+}
+
+// Example usage
+fn main() {
+    // Arena allocator
+    let mut arena = Arena::new(1024)
+    
+    let ptr1 = arena.alloc(100, 8).expect("Allocation failed")
+    let ptr2 = arena.alloc(200, 8).expect("Allocation failed")
+    
+    println("Allocated at: {ptr1:?} and {ptr2:?}")
+    
+    arena.reset()
+    println("Arena reset, can allocate again")
+    
+    // Zero-copy buffer
+    let mut buffer = Buffer::with_capacity(256)
+    for i in 0..10 {
+        buffer.push(i).expect("Buffer push failed")
+    }
+    
+    println("Buffer contents: {buffer.as_slice():?}")
+    
+    // Memory-mapped file
+    match MemoryMap::open("large_file.dat") {
+        Ok(map) => {
+            let data = map.as_slice()
+            println("Mapped {data.len()} bytes")
+            
+            // Process without copying into memory
+            let sum: u64 = data.iter().map(|&b| b as u64).sum()
+            println("Sum of bytes: {sum}")
+        }
+        Err(e) => eprintln("Failed to map file: {e}")
+    }
+    
+    // Atomic reference counting
+    let data = Arc::new(vec![1, 2, 3, 4, 5])
+    let data2 = data.clone()
+    let data3 = data.clone()
+    
+    println("Strong count: {data.strong_count()}")  // 3
+    println("Data: {data:?}")
+}

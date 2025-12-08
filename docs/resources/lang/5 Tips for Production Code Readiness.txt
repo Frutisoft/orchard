@@ -1,0 +1,40 @@
+5 Tips for Production Code Readiness
+John Pollock
+When moving code to production, you always want to ensure things are as thoroughly tested as possible before a production update is put into place. Not having good testing and procedures in place can lead to service outages, broken apps, and lots of unneeded stress for you and your team.
+
+While getting new features or fixes out quickly is important, it is a good idea to ensure that you take the time to do all of the change control, reviewing, testing, and preparation that will be needed for a production release. Ideally, such a release is something in which you will have a high degree of confidence of being successful and not presenting any new problems for you or your users.
+
+Use Code Branches
+When changing the codebase, you should use a tool such as Git to track changes. Basically, such tools are used for version control, which allows you to easily roll back a change that was made if something goes wrong.
+
+Branching with a service like this gives you the opportunity to keep a “master” branch that should always be tested and working properly, while developers can be making changes in their own ”feature” branches. The individual branches can then be merged into the master branch as they become ready.
+
+As a result, if a feature branch gets merged into master and something stops working, the changes from the feature branch can be rolled back so that your master branch is again in a working state.
+
+Use Unit Testing
+Unit testing should be used to help ensure particular modules or functions are doing what they are supposed to be doing. For example, if a function should return a positive integer and a unit test shows that it can return a string, then that unexpected result can be fixed so that it does not occur or can be accounted for as one of the expected results.
+
+As you can see, this can help catch potential problems early in the development process, and that is always better than finding them in production. This also ensures that if changes are made that affect your existing code in a way that breaks something, particular unit tests should fail and the developer will be able to go back and fix any issues that might be causing the failures.
+
+Oftentimes, unit tests are run automatically when a developer performs a certain action. For example making a commit, building, sending a pull request, or other similar actions could all be used to trigger the test runner. Thus, you could be unit testing at any or all of these types of points where changes are potentially being introduced.
+
+Use Load and QA Testing
+You always want to be sure that any changes to your code don’t introduce any speed or other user experience problems. Both load testing and QA (Quality Assurance) testing can be used to help further ensure that everything is in good working order before being deployed to production.
+
+With load testing, you find out at what point your system cannot handle any further simultaneous traffic or transactions such as large database queries. If a change to the code introduces enough of a slowdown from your previous load test, it is likely a good idea to take another look at the potential change to see if anything can be optimized.
+
+QA testing is a way to allow one or more people to use the system as a potential user would. With this, any odd bugs can be found and fixed before an actual user is introduced to them, which helps avoid such things as unexpected hotfixes or rollbacks.
+
+Use Linting Tools for Non-compile Languages
+
+
+Compiled languages ensure that your syntax is checked by a compiler before being allowed to run. Non-compiled languages often do not have such a feature, so it is recommended to use some type of linting tool as part of your testing process to ensure that any changed code meets the standards it needs to in order to help avoid any potential problems.
+
+For example, JavaScript is often minified, but this process can break the code if a developer missed the insertion of a standard semicolon somewhere. This oversight is possible because JavaScript has a feature to automatically insert missing semicolons at line breaks at runtime. This will hide the missing semicolon from a developer testing the code, but won’t hide it once the code is minified for production. A good linting tool can find this as well as a number of other things that could cause problems if not fixed.
+
+A linting tool working inside of a code editor. Source: Treehouse.
+
+Use Code Reviews
+Having one or more other developers review the code before merging the changes into the master branch can be another helpful method of avoiding problems when moving to production. A human reviewer can oftentimes find optimizations or potentially bad practices in the code that can be remedied quickly and help ensure that those issues aren’t merged into the master branch.
+
+When making sure your code is ready for production, all of these techniques can be extremely helpful for finding and fixing any issues before your production release.

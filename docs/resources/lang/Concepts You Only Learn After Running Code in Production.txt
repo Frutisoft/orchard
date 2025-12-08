@@ -1,0 +1,284 @@
+Concepts You Only Learn After Running Code in Production
+The Unwritten Rules of Production-Grade Software
+Skilled Coder
+Skilled Coder
+
+Follow
+7 min read
+·
+Jun 19, 2025
+98
+
+
+2
+
+
+
+
+
+Press enter or click to view image in full size
+
+Photo by Jonathan on Unsplash
+Writing correct code is only step one.
+Keeping it alive, fast, and resilient in production is a different game.
+These lessons aren’t just theory -they’re the hard truths that every backend developer learns after their first real outage, rollback, or midnight PagerDuty call.
+
+Read them before production teaches them to you the hard way.
+
+1. Production readiness involves more than code correctness
+Just because your code compiles and passes tests doesn’t mean it’s ready for production. True readiness requires operational support: monitoring, alerting, scaling, security, and performance.
+
+Example:
+You deploy a new service to prod. The logic works, but there’s no alerting on CPU/memory spikes. It goes down at midnight, and no one knows until users start complaining next morning.
+
+Checklist to consider:
+
+Is there an SLA/SLO defined?
+Are alerts configured for error rates, latency, memory, CPU?
+Is there a fallback or graceful degradation?
+2. Structured logging is essential for debugging
+Plain text logs like Something went wrong are useless. Structured logs (e.g., JSON with trace IDs, timestamps, severity levels) allow automated parsing and correlation.
+
+Example:
+During a spike in 500 errors, you can’t trace which request failed where. But if logs include fields like trace_id, user_id, service, error_code, you can group and search easily.
+
+Good structured log:
+
+{
+  "timestamp": "2025-06-19T10:22:10Z",
+  "level": "ERROR",
+  "service": "payment-service",
+  "trace_id": "abcd1234",
+  "message": "Payment gateway timeout"
+}
+3. Every network call should have a timeout
+If you call another service without a timeout, your thread could hang indefinitely, leading to thread pool exhaustion and cascading failures.
+
+Scenario:
+Service A calls Service B. B gets slow. A keeps waiting. All threads in A get stuck → A becomes unresponsive → everything collapses.
+
+Fix
+Set timeouts at:
+
+HTTP client (e.g., OkHttp, RestTemplate)
+DB queries (JDBC socket timeout)
+Redis or Kafka clients
+4. Rate limiting is critical, even for internal services
+Internal systems can be misused or buggy. Rate limiting guards against flood or misuse — intentional or not.
+
+Scenario:
+An internal batch job starts hammering the notification service with 10K requests/sec due to a bug. Notification service goes down. Now even real users can’t get OTPs.
+
+Fix:
+Apply per-client or per-service rate limits using:
+
+API Gateway (e.g., Kong, NGINX)
+Service mesh (e.g., Istio)
+App-level logic (bucket/token/leaky bucket)
+5. High latency impacts user experience as much as downtime
+A slow service feels broken to users. Latency can degrade engagement, increase bounce rate, or trigger retries/load spikes.
+
+Scenario:
+Login API is up but takes 5s to respond due to DB slowness. Users refresh, causing even more load → full outage.
+
+Fix:
+
+Track 95th/99th percentile latency.
+Add caching or DB query optimization.
+Offload heavy work to background jobs.
+6. Retries should be bounded and controlled
+Automatic retries can worsen an outage if uncontrolled — this is called a retry storm.
+
+Scenario:
+Service A retries B on failure every 100ms. B is already slow. Now it’s even more overloaded and goes into a full crash.
+
+Fix:
+
+Use exponential backoff and jitter.
+Cap retry attempts (e.g., max 3).
+Add circuit breakers (e.g., Resilience4j, Hystrix).
+7. Observability is more than just logs
+You need logs, metrics, and traces (the “three pillars”) for full observability.
+
+Scenario:
+A request is slow. Without traces, you don’t know if DB, Redis, or another service is the bottleneck. Logs alone can’t answer this.
+
+Fix:
+
+Logs → for deep inspection
+Metrics → for monitoring trends (e.g., Prometheus)
+Traces → for request flow (e.g., OpenTelemetry, Jaeger)
+8. Feature flags must be maintained and cleaned up
+Feature flags help with controlled rollout, but forgotten flags add tech debt and risk.
+
+Scenario:
+A bug is fixed but old flags still exist in code. Devs misunderstand logic later → reintroduce same bug.
+
+Fix:
+
+Document flags (who owns them, expiry date)
+Use tooling like LaunchDarkly or Unleash
+Add flag cleanup checklist post-release
+9. Every system has a performance bottleneck
+No matter how optimized your code is, some component (DB, network, cache, CPU, etc.) will limit the system’s throughput or latency.
+
+Scenario:
+You scale your API horizontally but still hit latency issues. Root cause? A slow SQL join that’s CPU-bound and unindexed.
+
+Fixes:
+
+Use tools like flame graphs, APM (e.g., New Relic), or p99 profiling.
+Continuously measure throughput vs. response time under load.
+Don’t guess bottlenecks — measure first.
+10. Safe deployments require rollback mechanisms
+If a release breaks production, you need a way to undo quickly, ideally with zero downtime.
+
+Scenario:
+A new release introduces a subtle bug in pricing logic. No one notices until revenue drops. But rollback is slow due to DB schema changes.
+
+Best Practices:
+
+Use blue/green or canary deployments.
+Avoid irreversible migrations or release them behind a feature flag.
+Keep one-click rollback in your CI/CD pipeline.
+11. Real-world failures differ from test failures
+Staging ≠ prod. In production, you face network partitions, DNS failures, dirty data, and zombie jobs that tests never covered.
+
+Scenario:
+A service worked fine in staging. But in production, a downstream call times out on certain ISPs due to MTU mismatch — something tests never simulated.
+
+Takeaways:
+
+Simulate chaos (e.g., Chaos Monkey).
+Validate under production-like load and data.
+Collect failure patterns from prod incidents.
+12. API versioning is necessary for evolution
+As APIs evolve, old clients must still work. Breaking changes without versioning = breaking everyone at once.
+
+Scenario:
+You change the payload format or rename a field. Suddenly, old mobile app clients start crashing.
+
+Solutions:
+
+Use versioned URLs (/v1/user, /v2/user) or headers.
+Keep multiple versions live and sunset them gradually.
+Version your OpenAPI spec to stay in sync.
+13. Avoid exposing internal error messages to users
+Detailed stack traces or DB errors give attackers insight and confuse users.
+
+Bad Example:
+
+500 Internal Server Error: org.hibernate.JDBCException: could not execute statement
+Fix:
+
+Show users friendly messages: “Oops! Something went wrong.”
+Log the internal error for engineers with request/trace ID.
+Apply exception mapping at controller boundaries.
+14. Databases often become the scalability bottleneck
+Most backends are read/write bound to a DB. Poor indexing, large joins, and lack of sharding are killers at scale.
+
+Scenario:
+As traffic grows, your Postgres query latency spikes. You realize a table with 50M rows isn’t partitioned and has no composite index.
+
+Fixes:
+
+Design tables with future volume in mind.
+Regularly monitor slow queries.
+Add read replicas, caching layers, or move to scalable DBs (e.g., DynamoDB, CockroachDB).
+15. Scheduled tasks must be monitored
+Cron jobs or background workers often get no attention — until they stop running silently.
+
+Scenario:
+A cleanup job stops due to a bug in one row’s data. No alert. After a month, your DB is bloated, app is slow.
+
+Fix:
+
+Log success/failure of every run.
+Set up alerts if job doesn’t run or fails X times.
+Use dashboards for job duration trends.
+16. Rolling back code doesn’t undo external effects
+Deploying an old version doesn’t rollback side effects like:
+
+DB rows written
+Emails sent
+Payments processed
+Scenario:
+A broken release sends duplicate invoices to 10K users. You roll back, but those emails are already in their inbox.
+
+Best Practices:
+
+Use compensating transactions (e.g., “void invoice”).
+Track side effects with IDs (e.g., for retry safety).
+Keep side-effect actions behind flags or queues so they can be paused.
+17. Caching systems and CDNs can become points of failure
+We think of caches and CDNs as performance boosters — but they can break things just as easily. Stale data, cache stampedes, CDN outages — all can silently impact users.
+
+Scenarios:
+
+A product price was updated, but due to CDN cache delay, users still see old pricing → trust issue.
+Redis goes down → app crashes because no fallback or TTL was handled.
+Mitigation:
+
+Always set proper TTLs and cache headers.
+Implement cache fallback logic (e.g., fetch from DB if Redis fails).
+Invalidate cache explicitly after writes.
+Monitor cache hit ratios and propagation delays.
+18. System behavior can change unexpectedly due to external dependencies
+Your system is only as stable as what it depends on. Third-party APIs, DNS providers, TLS certs, cloud infra updates — any can break your flow without you changing a single line of code.
+
+Scenario:
+A payment provider silently changes their API response format → your parser crashes. Or their cert expires → your SSL handshake fails → transactions drop.
+
+Precautions:
+
+Implement fallback logic and error categorization for third-party calls.
+Monitor dependency latency/availability as first-class metrics.
+Set alerts for cert expiration, DNS resolution, etc.
+Use contract testing or canary calls to detect API changes early.
+19. High availability requires planning for failure modes
+Explanation:
+Redundancy isn’t optional. Systems will fail — the question is how gracefully you handle it.
+
+Scenario:
+Your DB goes down. No failover exists. Users hit a 500 wall for hours.
+
+Design for HA:
+
+Replicate data across zones/regions.
+Add load balancer + health checks.
+Regularly test failover drills and chaos scenarios.
+20. Cumulative latency across services adds up
+Even if each service is “fast” (say 50ms), calling 5 such services adds 250ms. This hurts UX.
+
+Scenario:
+Your checkout page calls pricing, inventory, offers, and tax services — each <100ms. Combined latency = sluggish experience.
+
+Fix:
+
+Run calls in parallel wherever possible.
+Use local caches for static data.
+Measure end-to-end latency, not just per-service metrics.
+These aren’t just best practices — they’re survival strategies.
+The sooner you internalize them, the fewer post-mortems you’ll write.
+Whether you’re building APIs, backend systems, or distributed apps, treat this list as a checklist for production maturity.
+
+Because writing code is easy. Running it at scale, safely? That’s where real engineering begins.
+
+Follow me on X or subscribe to my weekly newsletter
+
+Software Development
+Programming
+Software Engineering
+Coding
+DevOps
+98
+
+Skilled Coder
+Written by Skilled Coder
+2.9K followers
+·
+1 following
+Sharing content and inspiration on programming. Coding Blogs theskilledcoder.com
+
+Follow
+

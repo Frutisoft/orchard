@@ -1,0 +1,49 @@
+[package]
+name = "fruti-compiler"
+version = "0.1.0"
+edition = "2021"
+authors = ["Jameson"]
+description = "The Fruti programming language compiler"
+license = "MIT"
+repository = "https://github.com/Frutisoft/frutisoft"
+homepage = "https://frutisoft.github.io"
+documentation = "https://frutisoft.github.io/docs"
+
+[dependencies]
+# Command-line parsing
+clap = { version = "4.4", features = ["derive"] }
+
+# LLVM bindings (Phase 3 - Codegen)
+# inkwell = { version = "0.3", features = ["llvm17-0"] }
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Parsing
+nom = "7.1"
+
+# Data structures
+indexmap = "2.1"
+petgraph = "0.6"
+
+# Diagnostics
+codespan-reporting = "0.11"
+colored = "2.0"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[dev-dependencies]
+criterion = "0.5"
+pretty_assertions = "1.4"
+tempfile = "3.8"
+
+[[bin]]
+name = "fruti"
+path = "src/main.rs"

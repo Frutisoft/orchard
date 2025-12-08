@@ -1,0 +1,26 @@
+// Fruti Example - Basic Features
+
+fn main() {
+    // Variables
+    let x = 42;
+    let y = 3.14;
+    let name = "Fruti";
+    
+    // Control flow
+    if x > 40 and y < 5.0 {
+        println("Conditions work!");
+    }
+    
+    // Loops
+    for i in 0..10 {
+        println("Count: {i}");
+    }
+    
+    // Function calls
+    let result = add(10, 20);
+    println("Result: {result}");
+}
+
+fn add(a: i32, b: i32) -> i32 {
+    return a + b;
+}

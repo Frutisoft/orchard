@@ -1,0 +1,1750 @@
+﻿Fruti: The Universal Systems Language
+Frutisoft's vision for a programming language that eliminates the compromises between performance, safety, simplicity, and expressiveness. Fruti aims to be the last language you'll need to learn by solving real pain points across all programming domains.
+________________
+
+
+1. Core Philosophy: Simplicity Through Power
+
+1.1 The Frutisoft Principles
+* Zero-Compromise Performance: Compile-time optimization rivals hand-written C. Runtime adaptability matches JIT languages. Native code generation, incremental compilation, and intelligent caching make builds faster than Rust while matching C++ runtime speed.
+* Intuitive by Default: Syntax reads like natural language where it matters. No sigils, no cryptic operators, no arbitrary restrictions. If it looks like it should work, it does.
+* Fearless Correctness: Memory safety, thread safety, and type safety without fighting the compiler. Helpful errors that teach, not scold. Optional strictness levels for different project phases.
+* Universal Compatibility: First-class FFI for C, C++, Rust, Python, JavaScript, and .NET without wrapper overhead. Write once, compile to native, WASM, LLVM IR, or JVM bytecode.
+* Adaptive Complexity: Beginners write simple code that just works. Experts access low-level control without leaving the language. The same syntax scales from scripts to kernels.
+
+1.2 Pain Points We Eliminate
+
+**From C/C++:**
+- Manual memory management → Automatic ownership tracking with zero overhead
+- Header file hell → Unified module system with intelligent compilation units
+- Undefined behavior landmines → Explicit contracts with compile-time verification
+- Cryptic template errors → Clear generic constraints with helpful suggestions
+
+**From Rust:**
+- Lifetime annotation complexity → Automatic lifetime inference that always works
+- Borrow checker fights → Flow-sensitive analysis that understands your intent
+- Steep learning curve → Gradual type system: start simple, add precision as needed
+- Slow compilation → Parallel compilation with aggressive caching (10x faster)
+
+**From Python:**
+- Performance bottlenecks → AOT compilation with optional JIT for hot paths
+- Packaging chaos → Built-in package manager with reproducible builds
+- GIL limitations → True parallelism with automatic race detection
+- Type hint confusion → Real static types with seamless dynamic interop
+
+**From Go:**
+- Error handling verbosity → Elegant error propagation with context preservation
+- Missing generics power → Full generic programming with zero runtime cost
+- Limited type system → Algebraic types, pattern matching, trait composition
+- Forced simplicity → Expressive features that don't sacrifice readability
+
+**From JavaScript/TypeScript:**
+- Callback hell → First-class async/await with structured concurrency
+- Type system limitations → Sound type inference with gradual refinement
+- Runtime surprises → Compile-time verification of all edge cases
+- Tooling fragmentation → Unified toolchain from formatter to profiler
+
+**From Java/C#:**
+- Verbose ceremony → Concise syntax with powerful inference
+- GC pauses → Optional manual control over allocation strategies
+- Platform lock-in → True cross-platform with native compilation
+- Slow startup → Instant startup with ahead-of-time compilation
+________________
+
+
+2. Syntax Design: Natural Yet Precise
+
+2.1 Core Principles
+* **Read like English, write like thought**: `if user is authenticated` instead of `if (user.isAuthenticated())`
+* **Consistency without rigidity**: Braces for blocks, but smart formatter handles indentation
+* **No magic symbols**: Clear keywords over cryptic operators (`and` vs `&&`, `not` vs `!`)
+* **Progressive disclosure**: Simple things simple, complex things possible
+
+2.2 Declaration Keywords
+```
+// Immutability by default
+let name = "Alice"              // Immutable binding
+var counter = 0                 // Mutable when needed
+
+// Clear intent
+const PI = 3.14159              // Compile-time constant
+static cache = HashMap()        // Static lifetime
+
+// Smart ownership
+own data = allocate_large()     // Exclusive ownership
+shared ptr = data.share()       // Reference counting when needed
+weak ref = ptr.downgrade()      // Break cycles explicitly
+
+// Visibility that makes sense
+public fn api_function() {}     // External API
+internal fn helper() {}         // Module-private
+private fn secret() {}          // File-private
+```
+
+2.3 Function Syntax
+```
+// Simple functions
+fn greet(name: String) -> String {
+    "Hello, {name}!"  // String interpolation built-in
+}
+
+// Generic without boilerplate
+fn max<T: Comparable>(a: T, b: T) -> T {
+    if a > b then a else b
+}
+
+// Async by default for I/O
+async fn fetch(url: String) -> Result<Data> {
+    let response = http.get(url).await?  // Automatic error propagation
+    response.json()
+}
+
+// Multiple return values (proper tuples, not structs)
+fn divide(a: Int, b: Int) -> (quotient: Int, remainder: Int) {
+    (a / b, a % b)
+}
+
+// Named arguments and defaults
+fn connect(host: String, port: Int = 8080, timeout: Duration = 30s) {
+    // Implementation
+}
+connect(host: "example.com", timeout: 5s)  // Skip port, override timeout
+```
+
+2.4 Control Flow as Expressions
+```
+// Everything returns a value
+let status = if user.age >= 18 {
+    "adult"
+} else {
+    "minor"
+}
+
+// Pattern matching with guards
+let action = match request.method {
+    "GET" -> handle_get(request)
+    "POST" if request.has_body -> handle_post(request)
+    "POST" -> error("POST requires body")
+    _ -> error("Unsupported method")
+}
+
+// Loops with labeled breaks
+outer: for batch in batches {
+    for item in batch {
+        if item.is_critical() {
+            break outer with item  // Return value from nested loop
+        }
+    }
+}
+
+// Error handling without verbosity
+let data = try {
+    let file = fs.open("data.txt")?
+    let contents = file.read_all()?
+    parse_json(contents)?
+} catch error {
+    log.error("Failed: {error}")
+    return default_data()
+}
+```
+
+2.5 Modern Collection Syntax
+```
+// List comprehensions (Pythonic but typed)
+let squares = [x * x for x in 0..100 if x % 2 == 0]
+
+// Dictionary literals with inference
+let config = {
+    "host": "localhost",
+    "port": 8080,
+    "ssl": true
+}
+
+// Ranges and iterators
+for i in 0..10 {}           // Exclusive end
+for i in 0..=10 {}          // Inclusive end
+for i in (0..10).step(2) {} // Even numbers
+
+// Destructuring everywhere
+let (first, ...rest) = list
+let {name, age, ...other} = person
+let Point(x, y) = coordinates
+```
+________________
+
+
+3. Type System: Powerful Yet Invisible
+
+3.1 Inference That Actually Works
+```
+// Full inference in local scope
+let data = fetch_data()  // Type inferred from function return
+let count = data.len()   // Int inferred
+
+// Explicit when helpful
+let ids: List<Int> = []  // Empty collection needs hint
+
+// Flow-sensitive typing
+let value: String | Int = get_dynamic_value()
+if value is String {
+    print(value.upper())  // Compiler knows it's String here
+} else {
+    print(value + 1)      // And Int here
+}
+```
+
+3.2 Algebraic Types Without Ceremony
+```
+// Sum types (enums that make sense)
+type Result<T, E> {
+    Ok(T)
+    Error(E)
+}
+
+type Option<T> {
+    Some(T)
+    None
+}
+
+// Product types (structs with privacy)
+struct Person {
+    public name: String
+    public age: Int
+    private ssn: String  // Field-level visibility
+}
+
+// Type aliases for clarity
+type UserId = Int
+type Timestamp = Int
+type Handler = fn(Request) -> Response
+```
+
+3.3 Traits: Interfaces Done Right
+```
+// Simple interface definition
+trait Drawable {
+    fn draw(self)
+    fn bounds(self) -> Rect
+}
+
+// Default implementations
+trait Iterator<T> {
+    fn next(self) -> Option<T>
+    
+    fn count(self) -> Int {
+        var n = 0
+        while self.next() is Some {
+            n += 1
+        }
+        return n
+    }
+}
+
+// Trait composition
+trait Printable = Drawable + Debug  // Requires both
+
+// Conditional implementation
+impl<T> Display for List<T> where T: Display {
+    fn to_string(self) -> String {
+        "[" + self.map(|x| x.to_string()).join(", ") + "]"
+    }
+}
+```
+
+3.4 Generics Without Pain
+```
+// Simple generic types
+struct Container<T> {
+    value: T
+}
+
+// Multiple type parameters with defaults
+struct HashMap<K, V, H: Hasher = DefaultHasher> {
+    // Implementation
+}
+
+// Generic functions with smart constraints
+fn sort<T>(list: List<T>) where T: Comparable {
+    // Compile-time specialization, no overhead
+}
+
+// Associated types for complex relationships
+trait Graph {
+    type Node
+    type Edge
+    
+    fn nodes(self) -> Iterator<Node>
+    fn edges(self) -> Iterator<Edge>
+}
+```
+________________
+
+
+4. Memory Management: Safe and Fast
+
+4.1 Automatic Ownership (Rust's Safety, GC's Ease)
+```
+// Ownership transfers automatically
+let data = "large string"
+let moved = data  // Ownership moved
+// data is now invalid, compiler prevents use
+
+// Borrowing is implicit and safe
+fn print(text: String) {  // Borrows by default
+    println(text)
+}
+print(moved)  // Automatic borrow, moved still valid
+
+// Explicit mutable borrow when needed
+fn append(text: mut String, suffix: String) {
+    text.push(suffix)
+}
+```
+
+4.2 Multiple Memory Strategies
+```
+// Stack allocation (default)
+let small = [1, 2, 3, 4, 5]
+
+// Heap with ownership tracking
+let large = vec![0; 1_000_000]
+
+// Reference counting for shared ownership
+let shared = Rc::new(expensive_data)
+let clone1 = shared  // Cheap reference copy
+let clone2 = shared  // Still cheap
+
+// Arena allocation for batch processing
+arena temp {
+    for item in huge_list {
+        let processed = transform(item)  // Allocated in arena
+        emit(processed)
+    }
+}  // Entire arena freed at once, ultra-fast
+
+// Garbage collection for specific modules
+@gc module scripts {
+    // Full GC for dynamic scripting scenarios
+    // Isolated from performance-critical code
+}
+```
+
+4.3 Lifetime Inference (No Annotations Needed)
+```
+// Compiler figures out lifetimes automatically
+fn longest(a: String, b: String) -> String {
+    if a.len() > b.len() then a else b
+}  // No lifetime annotations needed!
+
+// Complex scenarios just work
+struct Parser {
+    input: String
+}
+
+impl Parser {
+    fn parse(self) -> Token {
+        // Returns token that borrows from self.input
+        // Compiler tracks relationship automatically
+    }
+}
+```
+________________
+
+
+5. Concurrency: Fearless Parallelism
+
+5.1 Structured Async/Await
+```
+// Async functions compose naturally
+async fn process_user(id: UserId) -> User {
+    let profile = fetch_profile(id).await
+    let settings = fetch_settings(id).await
+    User { profile, settings }
+}
+
+// Parallel execution with join
+async fn load_dashboard() -> Dashboard {
+    let (users, posts, stats) = join!(
+        fetch_users(),
+        fetch_posts(),
+        fetch_stats()
+    )  // All three run concurrently
+    
+    Dashboard { users, posts, stats }
+}
+
+// Timeouts and cancellation built-in
+async fn careful_fetch(url: String) -> Result<Data> {
+    timeout(5s) {
+        http.get(url).await
+    }  // Automatic cleanup on timeout
+}
+```
+
+5.2 Thread-Safe by Default
+```
+// Channels for message passing
+let (sender, receiver) = channel<Message>()
+
+spawn {
+    for msg in receiver {
+        process(msg)
+    }
+}
+
+sender.send(Message { data: "hello" })
+
+// Shared state with automatic synchronization
+let counter = Atomic::new(0)
+parallel for item in items {
+    counter.increment()  // Thread-safe
+}
+
+// Actor model for complex coordination
+actor DataProcessor {
+    state data: HashMap<String, Int>
+    
+    fn process(self, key: String, value: Int) {
+        self.data[key] = value  // Exclusive access guaranteed
+    }
+}
+```
+
+5.3 Race Detection at Compile Time
+```
+// Compiler prevents data races
+let mut value = 0
+spawn {
+    value += 1  // ERROR: Cannot access mutable value across threads
+}
+
+// Solution: use proper synchronization
+let value = Mutex::new(0)
+spawn {
+    value.lock().increment()  // Safe
+}
+
+// Or use channels
+let (send, recv) = channel()
+spawn {
+    send(value + 1)  // Ownership transferred
+}
+```
+________________
+
+
+6. Compilation: Instant Feedback, Maximum Speed
+
+6.1 Incremental Compilation
+- Change one function → recompile only affected code
+- Sub-second rebuilds for most changes
+- Intelligent caching across builds
+- Parallel compilation across all CPU cores
+
+6.2 Compilation Targets
+```
+// Native code (default)
+fruti build                    // Optimized native binary
+
+// Cross-compilation
+fruti build --target windows-x64
+fruti build --target linux-arm64
+fruti build --target macos-apple-silicon
+
+// WebAssembly
+fruti build --target wasm      // Full WASM support
+
+// JVM bytecode
+fruti build --target jvm       // Run on JVM
+
+// JavaScript
+fruti build --target js        // Compile to readable JS
+```
+
+6.3 Optimization Levels
+```
+// Development: fast compilation, debug info
+fruti build --debug
+
+// Production: maximum optimization
+fruti build --release
+
+// Size optimization
+fruti build --release --optimize=size
+
+// Profile-guided optimization
+fruti build --pgo=profile.data
+
+// Link-time optimization
+fruti build --release --lto
+```
+________________
+
+
+7. Interoperability: Call Anything, From Anywhere
+
+7.1 Zero-Cost FFI
+```
+// Import C libraries
+@cffi("libcurl")
+extern {
+    fn curl_easy_init() -> CurlHandle
+    fn curl_easy_setopt(handle: CurlHandle, option: Int, value: Ptr)
+}
+
+// Use directly
+let curl = curl_easy_init()
+
+// Import Rust
+@rust_ffi("my_rust_lib")
+extern {
+    fn fast_algorithm(data: &[u8]) -> Result<Vec<u8>, String>
+}
+
+// Import Python
+@python
+import numpy as np
+
+fn process_with_numpy(data: List<Float>) -> List<Float> {
+    let array = np.array(data.to_python())
+    let result = np.fft.fft(array)
+    return result.to_fruti()  // Automatic conversion
+}
+```
+
+7.2 Export to Other Languages
+```
+// Export to C
+@export_c
+public fn my_function(x: Int) -> Int {
+    x * 2
+}
+
+// Export to Python
+@export_python
+public fn fast_compute(data: List<Float>) -> Float {
+    // Fast Fruti code callable from Python
+}
+
+// Export to JavaScript
+@export_js
+public async fn api_handler(request: Request) -> Response {
+    // Runs in Node.js or browser
+}
+```
+________________
+
+
+8. Standard Library: Batteries Included
+
+8.1 Comprehensive Built-ins
+- **Collections**: List, Map, Set, Queue, Stack, Heap, Graph
+- **String**: Unicode-aware, zero-copy operations
+- **I/O**: Files, sockets, stdio with async support
+- **Networking**: HTTP client/server, WebSocket, TCP/UDP
+- **Crypto**: Hashing, encryption, signing (audited implementations)
+- **Compression**: gzip, zstd, brotli
+- **Serialization**: JSON, YAML, TOML, MessagePack, Protocol Buffers
+- **Time**: Duration, Instant, Date, TimeZone
+- **Math**: BigInt, Decimal, Complex, statistics, linear algebra
+- **Regex**: Fast, safe, with capture groups
+- **Testing**: Unit tests, property tests, benchmarks, coverage
+- **Logging**: Structured logging with levels and filtering
+
+8.2 Built-in Package Manager
+```
+// fruti.toml configuration
+[package]
+name = "my-app"
+version = "1.0.0"
+
+[dependencies]
+http = "2.0"
+json = "1.5"
+postgres = { version = "3.1", features = ["ssl"] }
+
+[dev-dependencies]
+test_utils = "0.5"
+
+// Commands
+fruti add http@2.0      // Add dependency
+fruti remove json       // Remove dependency
+fruti update            // Update all packages
+fruti publish           // Publish to registry
+```
+________________
+
+
+9. Tooling: Professional Grade Out of the Box
+
+9.1 Integrated Tools
+```
+fruti new my-project        // Project scaffolding
+fruti build                 // Compile
+fruti run                   // Build and execute
+fruti test                  // Run tests
+fruti bench                 // Benchmarks
+fruti doc                   // Generate documentation
+fruti fmt                   // Format code
+fruti lint                  // Static analysis
+fruti check                 // Type check without building
+fruti clean                 // Clean build artifacts
+```
+
+9.2 LSP Support
+- Real-time error checking
+- Intelligent code completion
+- Instant documentation on hover
+- Refactoring: rename, extract function, inline variable
+- Code actions: add imports, implement traits, fix errors
+- Semantic highlighting
+- Instant go-to-definition and find-all-references
+
+9.3 Debugger
+- Source-level debugging with full variable inspection
+- Time-travel debugging (record and replay)
+- Conditional breakpoints
+- Watch expressions
+- Stack traces with demangled names
+- Async task visualization
+
+9.4 Profiler
+- CPU profiling with flame graphs
+- Memory profiling with allocation tracking
+- Lock contention analysis
+- Cache miss analysis
+- Hot path identification
+________________
+
+
+10. Safety Features: Correctness Without Compromise
+
+10.1 Compile-Time Guarantees
+- **No null pointer dereferences**: Option<T> instead of null
+- **No buffer overflows**: Bounds checking (optimized away when provable)
+- **No data races**: Ownership system prevents concurrent mutation
+- **No use-after-free**: Lifetime tracking prevents dangling pointers
+- **No integer overflow**: Checked arithmetic by default, opt-in wrapping
+- **No type confusion**: Sound type system with no escape hatches
+
+10.2 Runtime Safety
+```
+// Panic with detailed information
+assert(value > 0, "Value must be positive, got {value}")
+
+// Graceful error handling
+fn divide(a: Int, b: Int) -> Result<Int, Error> {
+    if b == 0 {
+        Error("Division by zero")
+    } else {
+        Ok(a / b)
+    }
+}
+
+// Contract programming
+fn withdraw(amount: Int) 
+    requires amount > 0
+    requires self.balance >= amount
+    ensures self.balance == old(self.balance) - amount
+{
+    self.balance -= amount
+}
+```
+
+10.3 Gradual Strictness
+```
+// Development mode: warnings only
+@strict(warn)
+module prototype
+
+// Production mode: errors on potential issues
+@strict(error)
+module production
+
+// Unsafe code when needed (explicit)
+unsafe {
+    let ptr = allocate_raw(1024)
+    ptr.write(0, 42)
+}  // Clearly marked, auditable
+```
+________________
+
+
+11. Advanced Features
+
+11.1 Metaprogramming
+```
+// Compile-time code generation
+@derive(Debug, Serialize, Deserialize)
+struct User {
+    name: String
+    email: String
+}
+
+// Macros for DSLs
+html! {
+    <div class="container">
+        <h1>{title}</h1>
+        <p>{content}</p>
+    </div>
+}
+
+// Compile-time reflection
+@for field in reflection::fields_of<User>() {
+    println("Field: {field.name}, Type: {field.type}")
+}
+```
+
+11.2 Module System
+```
+// Hierarchical modules
+module http {
+    public module client {
+        public fn get(url: String) -> Response { }
+    }
+    
+    internal module server {
+        // Only visible within http module
+    }
+}
+
+// Re-exports
+module prelude {
+    public use collections::{List, Map, Set}
+    public use io::{print, println}
+}
+
+// Conditional compilation
+@if target_os == "windows"
+fn platform_specific() { }
+
+@if feature == "experimental"
+module new_features { }
+```
+
+11.3 Embedded Domain-Specific Languages
+```
+// SQL as first-class language construct
+let users = query! {
+    SELECT name, email 
+    FROM users 
+    WHERE age > $min_age
+    ORDER BY name
+}  // Type-checked at compile time!
+
+// Regex with syntax checking
+let pattern = regex!(r"\d{3}-\d{4}")  // Validated at compile time
+
+// JSON with structure validation
+let config = json!({
+    "host": host_var,
+    "port": port_var
+})  // Type-safe, compile-time checked
+```
+________________
+
+
+12. Performance Characteristics
+
+12.1 Benchmarks (Target Goals)
+- **Compilation speed**: 3x faster than Rust, on par with Go
+- **Runtime speed**: Match C++ optimized code within 5%
+- **Memory usage**: 10-20% less than equivalent Rust (better optimization)
+- **Binary size**: Comparable to Rust with LTO
+- **Startup time**: < 1ms for typical application
+
+12.2 Zero-Cost Abstractions
+All high-level features compile down to optimal machine code:
+- Iterators → inline loops
+- Closures → function pointers or inline
+- Traits → static dispatch (monomorphization)
+- Pattern matching → jump tables or decision trees
+- Error handling → return value optimization
+________________
+
+
+13. Roadmap to Reality
+
+13.1 Phase 1: Foundation (Months 1-6)
+- [ ] Lexer and parser for core syntax
+- [ ] Basic type checker with inference
+- [ ] LLVM backend for code generation
+- [ ] Core standard library (collections, I/O)
+- [ ] Basic REPL for experimentation
+- [ ] Hello World compiles and runs
+
+13.2 Phase 2: Essential Features (Months 7-12)
+- [ ] Ownership and lifetime tracking
+- [ ] Trait system implementation
+- [ ] Async/await runtime
+- [ ] Package manager prototype
+- [ ] LSP server (basic completions and errors)
+- [ ] Self-hosting: compile Fruti with Fruti
+
+13.3 Phase 3: Advanced Features (Months 13-24)
+- [ ] Generic specialization optimization
+- [ ] Full FFI for C/Rust
+- [ ] Incremental compilation
+- [ ] Comprehensive standard library
+- [ ] Debugger integration
+- [ ] Performance profiler
+
+13.4 Phase 4: Ecosystem (Months 25-36)
+- [ ] Package registry and ecosystem
+- [ ] IDE plugins (VS Code, IntelliJ)
+- [ ] Web framework
+- [ ] Database libraries
+- [ ] Machine learning bindings
+- [ ] Production-ready 1.0 release
+
+13.5 Phase 5: Aero OS Integration (Months 37+)
+- [ ] Kernel programming support
+- [ ] Hardware abstraction layer
+- [ ] Driver development framework
+- [ ] System call interface
+- [ ] Boot loader and init system
+- [ ] Aero OS dogfooding
+________________
+
+
+14. Why Fruti Will Succeed
+
+14.1 Clear Value Propositions
+**For C++ developers**: Same performance, dramatically better safety and tooling
+**For Rust developers**: Same safety, 10x better compile times and learning curve
+**For Python developers**: Keep the simplicity, gain 100x performance
+**For Go developers**: Keep the compile speed, gain expressiveness and performance
+**For everyone**: One language for everything—no more polyglot tax
+
+14.2 Realistic Differentiation
+- Not trying to replace all languages overnight
+- Starting with systems programming and web services
+- Building on proven concepts (LLVM, ownership, async)
+- Focusing on developer experience first
+- Clear migration paths from existing languages
+
+14.3 Community-First Development
+- Open source from day one
+- RFC process for language changes
+- Transparent roadmap and priorities
+- Excellent documentation and tutorials
+- Active engagement with early adopters
+module           ::= { directive } { declaration }
+directive        ::= [ attribute ] ("import" identifier_list [";"]
+                      | "export" identifier_list [";"])
+
+
+attribute        ::= "[" identifier "]"
+
+
+declaration      ::= struct_decl
+                   | fn_decl
+                   | variable_decl
+
+
+struct_decl      ::= [ attribute ] "struct" identifier "{" field_list "}"
+field_list       ::= [ field { "," field } ]
+field             ::= identifier ":" type_expr
+
+
+fn_decl          ::= [ attribute ] ["async"] "fn" identifier "(" param_list ")" ["->" type_expr] block
+param_list       ::= [ param { "," param } ]
+param             ::= identifier ":" type_expr
+
+
+variable_decl    ::= [ attribute ] ("let" | "var") identifier [":" type_expr] ["=" expression] ";"
+
+
+statement        ::= variable_decl
+                   | expression_statement
+                   | control_expr
+
+
+expression_statement ::= expression ";"
+
+
+block            ::= "{" { statement | declaration } "}"
+                   | "#pragma indent" indented_block
+indented_block   ::= INDENT { statement | declaration } DEDENT
+
+
+expression       ::= literal
+                   | identifier
+                   | call_expr
+                   | control_expr
+                   | comprehension_expr
+                   | tuple_literal
+                   | "(" expression ")"
+                   | "{" [expression] "}"
+
+
+call_expr        ::= expression "(" [ arg_list ] ")"
+arg_list         ::= expression { "," expression }
+
+
+control_expr     ::= if_expr
+                   | match_expr
+                   | while_expr
+                   | for_expr
+                   | break_expr
+                   | continue_expr
+
+
+if_expr          ::= "if" expression block ["else" (block | if_expr)]
+
+
+match_expr       ::= "match" expression "{" arm_list "}"
+arm_list         ::= match_arm { "," match_arm }
+match_arm        ::= pattern ["if" expression] "=>" expression
+
+
+while_expr       ::= "while" expression block
+
+
+for_expr         ::= "for" identifier "in" expression block
+
+
+break_expr       ::= "break" [ identifier ] ";"
+continue_expr    ::= "continue" [ identifier ] ";"
+
+
+comprehension_expr ::= "[" expression "for" identifier "in" expression "]"
+
+
+tuple_literal    ::= "(" expression { "," expression } ")"
+
+
+literal          ::= integer
+                   | string
+                   | boolean
+                   | list_literal
+list_literal     ::= "[" [ expression { "," expression } ] "]"
+
+
+pattern          ::= identifier
+                   | literal
+                   | "_"
+                   | identifier "(" pattern_list ")"
+pattern_list     ::= pattern { "," pattern }
+
+
+// Types including tuple types
+
+
+type_expr        ::= identifier
+                   | identifier "<" type_expr_list ">"
+                   | tuple_type
+tuple_type       ::= "(" type_expr { "," type_expr } ")"
+type_expr_list   ::= type_expr { "," type_expr }
+
+
+identifier_list  ::= identifier { "," identifier }
+identifier       ::= /[A-Za-z_][A-Za-z0-9_]*/
+integer          ::= /[0-9]+/
+string           ::= /"(\.|[^"])*"/
+boolean          ::= "true" | "false"
+________________
+
+
+15. Complete Grammar Specification
+
+15.1 Core EBNF Grammar (Extended)
+```ebnf
+// Module and top-level structure
+module           ::= { directive } { declaration }
+directive        ::= [ attribute ] ("import" identifier_list [";"]
+                      | "export" identifier_list [";"])
+
+
+attribute        ::= "[" identifier "]"
+
+
+declaration      ::= struct_decl
+                   | fn_decl
+                   | variable_decl
+
+
+struct_decl      ::= [ attribute ] "struct" identifier "{" field_list "}"
+field_list       ::= [ field { "," field } ]
+field             ::= identifier ":" type_expr
+
+
+fn_decl          ::= [ attribute ] ["async"] "fn" identifier "(" param_list ")" ["->" type_expr] block
+param_list       ::= [ param { "," param } ]
+param             ::= identifier ":" type_expr
+
+
+variable_decl    ::= [ attribute ] ("let" | "var") identifier [":" type_expr] ["=" expression] ";"
+
+
+statement        ::= variable_decl
+                   | expression_statement
+                   | control_expr
+
+
+expression_statement ::= expression ";"
+
+
+block            ::= "{" { statement | declaration } "}"
+                   | "#pragma indent" indented_block
+indented_block   ::= INDENT { statement | declaration } DEDENT
+
+
+expression       ::= literal
+                   | identifier
+                   | call_expr
+                   | control_expr
+                   | comprehension_expr
+                   | "(" expression ")"
+                   | "{" [expression] "}"
+
+
+call_expr        ::= expression "(" [ arg_list ] ")"
+arg_list         ::= expression { "," expression }
+
+
+control_expr     ::= if_expr
+                   | match_expr
+                   | while_expr
+                   | for_expr
+
+
+if_expr          ::= "if" expression block ["else" (block | if_expr)]
+
+
+match_expr       ::= "match" expression "{" arm_list "}"
+arm_list         ::= match_arm { "," match_arm }
+match_arm        ::= pattern "=>" expression
+
+
+while_expr       ::= "while" expression block
+
+
+for_expr         ::= "for" identifier "in" expression block
+
+
+comprehension_expr ::= "[" expression "for" identifier "in" expression "]"
+
+
+pattern          ::= identifier
+                   | literal
+                   | "_"
+                   | identifier "(" pattern_list ")"
+pattern_list     ::= pattern { "," pattern }
+
+
+literal          ::= integer
+                   | string
+                   | boolean
+                   | list_literal
+list_literal     ::= "[" [ expression { "," expression } ] "]"
+
+
+type_expr        ::= identifier
+                   | identifier "<" type_expr_list ">"
+type_expr_list   ::= type_expr { "," type_expr }
+
+
+identifier_list  ::= identifier { "," identifier }
+identifier       ::= /[A-Za-z_][A-Za-z0-9_]*/
+integer          ::= /[0-9]+/
+string           ::= /"(\.|[^"])*"/
+boolean          ::= "true" | "false"
+* Blocks: { ... } by default; indentation only via #pragma indent or formatter preset. { ... } by default; indentation only via #pragma indent or formatter preset.
+* Declarations: let (immutable), var (mutable); type annotations optional when inference suffices.
+* Control as Expressions: All control structures return () unless annotated with -> T for a value. Eliminates hidden temporaries.
+* Keywords: Expanded to ~40. Grouped by role (e.g., visibility: public, private; async: async, await; types: interface, trait).
+2.2. Type System
+* Static, Gradual Typing: Strong static types everywhere. Dynamic ? only at FFI borders or in @dynamic module sections.
+* Inference: Local and global inference; clear errors with inferred-lifetime annotations on failure.
+* Generics & Constraints: First-class generics with where T: Trait clauses.
+* Ownership & Borrowing: Simplified Rust model: automatic immutable borrows; explicit &mut for mutability; lifetimes elided by default but surfaced on errors.
+* Garbage Collection: Isolated GC modules (@gc module). GC types wrapped in Ref<T> when crossing into non-GC code.
+________________
+
+
+3. Memory & Concurrency
+* Memory Safety: No raw pointers in safe code. Non-GC and GC regions strictly separated.
+* Concurrency Models:
+   * Async Tasks: Lightweight, non‑blocking; async fn and .await cannot invoke blocking syscalls.
+   * Threads: OS threads via thread::spawn; clear separation in syntax and docs.
+* Channels & Actors: Provided via trait interface with multiple implementations (sync, async, lock‑free), optimized per platform.
+________________
+
+
+4. Modules & Packages
+* Uniform Import/Export: import Foo → module or package. export controls visibility.
+* Semantic Versioning: Enforced by default. Modules may declare @unsafe_export to bypass checks with explicit risk.
+* Distribution: Fruti ABI (FrABI) versioned per compiler release. Mixing source and binary across versions requires --compat flag.
+________________
+
+
+5. Tooling & Ecosystem
+* Modular CLI: fruti build, fruti fmt, fruti test are lean subcommands—each updateable separately.
+* Formatter & Linter: Configurable presets; opt‑in indentation mode.
+* LSP Support: Real‑time diagnostics, code actions, refactorings.
+* Debugging & Profiling: Basic profiler integrated; time‑travel debugging shipped as an optional extension crate, initially Linux/x86_64 only.
+________________
+
+
+6. Interoperability & Targets
+* FFI: Clang‑based subset for C/C++ header parsing. Complex cases flagged manual with user stubs.
+* Cross‑Compilation: Profiles (desktop, embedded) that disable unsupported features. Embedded profile strips GC, threading, and dynamic features.
+* WebAssembly & MCUs: First‑class support via fruti --target wasm or --target cortex-m; toolchain emits zero‑runtime binaries where possible.
+________________
+
+
+7. Example Snippet (Refined)
+import http, io.async
+
+
+struct Request { url: String }
+struct Response { body: String }
+
+
+async fn handle(req: Request) -> Result<Response, Error> {
+  match req.url {
+    "/" => Ok(Response { body: "Hello, Fruti!" }),
+    path => Err(Error::NotFound(path)),
+  }
+}
+
+
+fn main() {
+  let server = http::Server::new("127.0.0.1:8080");
+  server.spawn(async move |req| handle(req).await?);
+}
+________________
+
+
+Next Steps: Review these refinements, prioritize feature phasing, and draft the detailed implementation roadmap (parser, type-checker, CLI scaffold).
+________________
+
+
+8. Grammar Test Snippets
+Below are 20 concise Fruti code snippets designed to validate key grammar constructs and edge cases. For each, we’ll define the intended AST shape and note potential ambiguities.
+1. Simple Import Directive
+import foo, bar;
+2. Export Directive with Attribute
+[public] export MyStruct;
+3. Struct Declaration
+struct Point { x: Int, y: Int }
+Function Declaration (Sync)
+fn greet(name: String) -> String {
+  { "Hello, " + name }
+   4. }
+Function Declaration (Async + Attribute)
+[testing] async fn fetch() -> Result<Data, Error> {
+  {} // empty block
+   5. }
+Immutable & Mutable Variable
+let pi: Float = 3.14;
+   6. var counter;
+   7. If-Else Expression
+if x > 0 { y = 1; } else if x < 0 { y = -1; } else { y = 0; }
+Match with Guards
+match value {
+  Some(v) if v > 0 => true,
+  None => false,
+      8. }
+      9. While Loop
+while i < 10 { i = i + 1; }
+      10. For Loop
+for item in list { process(item); }
+      11. Break & Continue with Labels
+outer: while cond { if skip { continue outer; } if done { break outer; } }
+      12. List Comprehension
+let squares = [ x * x for x in nums ];
+      13. Tuple Literal & Type
+let pair: (Int, String) = (42, "Answer");
+      14. Nested Blocks & Implicit Unit
+{ { let x = 1; } { } }
+      15. Call Expression & Method Chaining
+result = obj.method(1, 2).another();
+      16. Comprehension vs. Literal Ambiguity
+let mixed = [ { a } for a in b ];
+Pragma-Indent Block
+#pragma indent
+    let a = 1;
+         17.     let b = 2;
+         18. Attribute on Variable Decl
+[deprecated] let old = 0;
+         19. Empty Block Expression
+let unit = { };
+Generic Function with Where Clause
+fn max<T>(a: T, b: T) where T: Ord {
+  if a > b { a } else { b }
+            20. }
+Feel free to suggest additions or refinements, or let me know if you’d like to start wiring up parser tests against these snippets!
+________________
+
+
+9. AST Test-Harness Schema
+To validate parsing, we’ll serialize expected ASTs against a minimal JSON/YAML schema. Each test fixture pairs a code snippet with its ExpectedAST object.
+# Represents any node in the syntax tree
+type: object
+required:
+  - "node"
+properties:
+  node:
+    type: object
+    required:
+      - type       # e.g. ImportDirective, FnDecl, IfExpr
+      - span       # source location
+      - fields     # node-specific content
+    properties:
+      type:
+        type: string
+      span:
+        type: object
+        required: [start, end]
+        properties:
+          start:
+            type: integer  # byte-offset of first character
+          end:
+            type: integer  # byte-offset after last character
+      fields:
+        type: object
+        description: "Holds node-specific data; see per-node definitions below"
+Common Node Types and Fields
+ImportDirective:
+  fields:
+    names:
+      type: array
+      items:
+        type: string
+ExportDirective:
+  fields:
+    names: [string]
+StructDecl:
+  fields:
+    identifier: string
+    fields: array      # list of FieldDecl nodes
+FnDecl:
+  fields:
+    async: boolean
+    identifier: string
+    params: array       # list of Param nodes
+    return_type: object # TypeExpr node or null
+    body: array         # list of statement/declaration nodes
+VariableDecl:
+  fields:
+    mutable: boolean
+    identifier: string
+    type_annotation: object|null  # TypeExpr node
+    initializer: object|null      # Expression node
+IfExpr:
+  fields:
+    condition: object   # Expression node
+    then_branch: array  # nodes
+    else_branch: array|null  # nodes or null
+# ... add entries for MatchExpr, WhileExpr, ForExpr, etc.
+Example Fixture: Simple Import Directive
+{
+  "snippet": "import foo, bar;",
+  "ExpectedAST": {
+    "node": {
+      "type": "ImportDirective",
+      "span": { "start": 0, "end": 17 },
+      "fields": {
+        "names": ["foo", "bar"]
+      }
+    }
+  }
+}
+{
+  "snippet": "let unit = { };",
+  "ExpectedAST": {
+    "node": {
+      "type": "VariableDecl",
+      "span": { "start": 0, "end": 17 },
+      "fields": {
+        "mutable": false,
+        "identifier": "unit",
+        "type_annotation": null,
+        "initializer": {
+          "type": "BlockExpr",
+          "fields": { "body": [] }
+        }
+      }
+    }
+  }
+}
+{
+  "snippet": "fn max<T>(a: T, b: T) where T: Ord { if a > b { a } else { b } }",
+  "ExpectedAST": {
+    "node": {
+      "type": "FnDecl",
+      "span": { "start": 0, "end": 61 },
+      "fields": {
+        "async": false,
+        "identifier": "max",
+        "type_params": ["T"],
+        "params": [
+          { "type": "Param", "fields": { "name": "a", "type": { "type": "SimpleType", "fields": { "name": "T" } } } },
+          { "type": "Param", "fields": { "name": "b", "type": { "type": "SimpleType", "fields": { "name": "T" } } } }
+        ],
+        "where_clauses": [
+          { "type": "WhereClause", "fields": { "param": "T", "trait": "Ord" } }
+        ],
+        "return_type": null,
+        "body": [
+          {
+            "type": "IfExpr",
+            "fields": {
+              "condition": {
+                "type": "BinaryExpr",
+                "fields": {
+                  "left": { "type": "Identifier", "fields": { "name": "a" } },
+                  "operator": ">",
+                  "right": { "type": "Identifier", "fields": { "name": "b" } }
+                }
+              },
+              "then_branch": [
+                { "type": "Expression", "fields": { "expression": { "type": "Identifier", "fields": { "name": "a" } } } }
+              ],
+              "else_branch": [
+                { "type": "Expression", "fields": { "expression": { "type": "Identifier", "fields": { "name": "b" } } } }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+10. Parser Harness Sketch
+Below is a high-level pseudocode sketch (in Python) illustrating how to wire up the parser harness:
+import json
+from parser import FrutiParser  # your parser prototype
+
+
+def load_fixture(path):
+    data = json.load(open(path))
+    return data['snippet'], data['ExpectedAST']['node']
+
+
+def normalize_ast(ast):
+    # Drop spans or set to snippet length
+    def walk(node):
+        node['span'] = {'start': 0, 'end': len(node.get('raw_text', ''))}
+        for f, v in node.get('fields', {}).items():
+            if isinstance(v, dict) and 'type' in v:
+                walk(v)
+            elif isinstance(v, list):
+                for item in v:
+                    if isinstance(item, dict) and 'type' in item:
+                        walk(item)
+    walk(ast)
+    return ast
+
+
+def compare_ast(actual, expected):
+    # deep-compare dictionaries, return diff if mismatch
+-    if actual != expected:
+-        import pprint; pprint.pprint({'actual': actual, 'expected': expected})
+-        raise AssertionError("AST mismatch")
++    if actual != expected:
++        # Generate unified diff for clarity
++        import difflib, json
++        actual_str = json.dumps(actual, indent=2, sort_keys=True).splitlines(keepends=True)
++        expected_str = json.dumps(expected, indent=2, sort_keys=True).splitlines(keepends=True)
++        diff = difflib.unified_diff(expected_str, actual_str, fromfile='expected', tofile='actual')
++        print(''.join(diff))
++        raise AssertionError("AST mismatch")
++
++def maybe_update_fixture(path, actual):
++    # If --update-fixture flag is set, overwrite expected node
++    import sys, json
++    if '--update-fixture' in sys.argv:
++        data = json.load(open(path))
++        data['ExpectedAST']['node'] = actual
++        json.dump(data, open(path, 'w'), indent=2, sort_keys=True)
+
+
+ if __name__ == '__main__':
+     import glob, sys
+     for fixture_file in glob.glob('fixtures/*.json'):
+         snippet, expected = load_fixture(fixture_file)
+         parser = FrutiParser(snippet)
+         actual = parser.parse_module().to_json()
+         actual = normalize_ast(actual)
+         expected = normalize_ast(expected)
+-        compare_ast(actual, expected)
++        compare_ast(actual, expected)
++        maybe_update_fixture(fixture_file, actual)
+     print("All tests passed!")
+Optional Language-Specific Variants
+Rust: Use serde_json to parse fixtures, insta or pretty_assertions for snapshot and diff testing:
+let fixture: Fixture = serde_json::from_str(&json_str)?;
+let ast = parse_module(&fixture.snippet)?;
+            * insta::assert_json_snapshot!(ast);
+Bash + jq: Quick CI check without a full runtime:
+for f in fixtures/*.json; do
+  snippet=$(jq -r .snippet "$f")
+  actual=$(echo "$snippet" | fruti-parser --to-json)
+  echo "$actual" | jq --sort-keys . > actual.json
+________________
+
+
+16. Implementation Strategy
+
+16.1 Bootstrap Compiler (Written in Rust)
+Phase 1 compiler written in Rust for:
+- Faster initial development
+- Leverage existing LLVM bindings
+- Mature tooling and ecosystem
+- Self-hosting compiler written in Fruti comes in Phase 2
+
+16.2 Architecture
+```
+Source Code (.fruti)
+    ↓
+Lexer → Tokens
+    ↓
+Parser → AST
+    ↓
+Semantic Analysis → Typed AST
+    ↓
+Ownership/Lifetime Checker
+    ↓
+MIR (Mid-level IR) ← Optimization
+    ↓
+LLVM IR Generation
+    ↓
+LLVM Backend → Native Code
+```
+
+16.3 Compiler Optimizations
+- Dead code elimination
+- Inline expansion
+- Constant folding and propagation
+- Loop optimization (unrolling, vectorization)
+- Escape analysis for stack allocation
+- Devirtualization for trait calls
+- Profile-guided optimization support
+
+________________
+
+
+17. Example Programs
+
+17.1 Web Server
+```
+import http
+import json
+import database
+
+struct User {
+    id: Int
+    name: String
+    email: String
+}
+
+async fn get_user(id: Int) -> Result<User> {
+    let user = database.query(
+        "SELECT * FROM users WHERE id = $1",
+        [id]
+    ).await?
+    
+    Ok(User {
+        id: user.get("id"),
+        name: user.get("name"),
+        email: user.get("email")
+    })
+}
+
+async fn main() {
+    let app = http.server("0.0.0.0:8080")
+    
+    app.get("/users/:id", async fn(req) {
+        let id = req.params.get("id").parse<Int>()?
+        let user = get_user(id).await?
+        req.json(user)
+    })
+    
+    app.listen().await
+}
+```
+
+17.2 Systems Programming
+```
+import os
+import memory
+
+struct FileSystem {
+    root: Directory
+    cache: HashMap<Path, CachedNode>
+}
+
+impl FileSystem {
+    fn new() -> Self {
+        FileSystem {
+            root: Directory::new("/"),
+            cache: HashMap::with_capacity(1024)
+        }
+    }
+    
+    fn read(self, path: Path) -> Result<Vec<u8>> {
+        if let Some(cached) = self.cache.get(path) {
+            return Ok(cached.data.clone())
+        }
+        
+        let data = os.read_file(path)?
+        self.cache.insert(path, CachedNode { data: data.clone() })
+        Ok(data)
+    }
+    
+    unsafe fn read_direct(self, path: Path, buffer: mut Ptr<u8>, size: usize) -> Result<usize> {
+        // Direct system call for performance-critical code
+        os.sys_read(path.as_cstr(), buffer, size)
+    }
+}
+```
+
+17.3 Data Processing
+```
+import csv
+import stats
+
+async fn process_dataset(filename: String) -> Result<Report> {
+    let data = csv.read(filename).await?
+    
+    let ages = [row["age"].parse<Int>()? for row in data]
+    let salaries = [row["salary"].parse<Float>()? for row in data]
+    
+    parallel {
+        let avg_age = stats.mean(ages)
+        let avg_salary = stats.mean(salaries)
+        let correlation = stats.correlate(ages, salaries)
+        
+        Report { avg_age, avg_salary, correlation }
+    }
+}
+```
+
+17.4 Machine Learning
+```
+import ml
+import tensor
+
+fn train_model(data: Dataset) -> Model {
+    let model = ml.Sequential([
+        ml.Dense(128, activation: "relu"),
+        ml.Dropout(0.2),
+        ml.Dense(64, activation: "relu"),
+        ml.Dense(10, activation: "softmax")
+    ])
+    
+    model.compile(
+        optimizer: ml.Adam(learning_rate: 0.001),
+        loss: "categorical_crossentropy",
+        metrics: ["accuracy"]
+    )
+    
+    model.fit(
+        data.train_x,
+        data.train_y,
+        epochs: 50,
+        batch_size: 32,
+        validation_data: (data.test_x, data.test_y)
+    )
+    
+    model
+}
+```
+________________
+
+
+18. Migration Guides
+
+18.1 From Python
+```python
+# Python
+def process_data(items):
+    return [x * 2 for x in items if x > 0]
+
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    
+    def greet(self):
+        return f"Hello, {self.name}"
+```
+
+```
+// Fruti equivalent
+fn process_data(items: List<Int>) -> List<Int> {
+    [x * 2 for x in items if x > 0]
+}
+
+struct Person {
+    name: String
+    age: Int
+}
+
+impl Person {
+    fn greet(self) -> String {
+        "Hello, {self.name}"
+    }
+}
+```
+
+18.2 From Rust
+```rust
+// Rust
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() { x } else { y }
+}
+
+impl<T: Display> ToString for Vec<T> {
+    fn to_string(&self) -> String {
+        // ...
+    }
+}
+```
+
+```
+// Fruti - lifetimes inferred automatically
+fn longest(x: String, y: String) -> String {
+    if x.len() > y.len() then x else y
+}
+
+impl<T: Display> ToString for List<T> {
+    fn to_string(self) -> String {
+        // ...
+    }
+}
+```
+
+18.3 From C++
+```cpp
+// C++
+template<typename T>
+class Container {
+private:
+    std::vector<T> data;
+public:
+    void add(T item) { data.push_back(item); }
+    size_t size() const { return data.size(); }
+};
+```
+
+```
+// Fruti
+struct Container<T> {
+    private data: List<T>
+}
+
+impl<T> Container<T> {
+    fn add(self, item: T) {
+        self.data.push(item)
+    }
+    
+    fn size(self) -> Int {
+        self.data.len()
+    }
+}
+```
+
+________________
+
+
+19. Testing and Quality Assurance
+
+19.1 Unit Testing
+```
+@test
+fn test_addition() {
+    assert_eq(2 + 2, 4)
+    assert_ne(2 + 2, 5)
+}
+
+@test
+fn test_division() {
+    let result = divide(10, 2)
+    assert(result.is_ok())
+    assert_eq(result.unwrap(), 5)
+}
+
+@test
+@should_panic
+fn test_division_by_zero() {
+    divide(10, 0).unwrap()
+}
+```
+
+19.2 Property Testing
+```
+@property_test
+fn test_reverse_reverse(list: List<Int>) {
+    assert_eq(list.reverse().reverse(), list)
+}
+
+@property_test
+fn test_sort_idempotent(list: List<Int>) {
+    let sorted = list.sort()
+    assert_eq(sorted.sort(), sorted)
+}
+```
+
+19.3 Benchmarking
+```
+@bench
+fn bench_hashmap_insert(b: Bencher) {
+    let map = HashMap::new()
+    b.iter(fn {
+        map.insert("key", "value")
+    })
+}
+
+@bench
+fn bench_sort_algorithm(b: Bencher) {
+    let data = generate_random_data(1000)
+    b.iter(fn {
+        data.clone().sort()
+    })
+}
+```
+
+________________
+
+
+20. Community and Governance
+
+20.1 Open Development
+- All design decisions discussed in public RFCs
+- Community voting on major features
+- Transparent roadmap and priorities
+- Regular community meetings
+- Open issue tracker and project management
+
+20.2 Code of Conduct
+- Welcoming and inclusive community
+- Respectful discourse
+- Focus on technical merit
+- Zero tolerance for harassment
+- Clear escalation procedures
+
+20.3 Contribution Guidelines
+- Clear coding standards
+- Comprehensive test requirements
+- Documentation for all public APIs
+- Performance regression testing
+- Security review for sensitive code
+
+________________
+
+
+21. Conclusion
+
+Fruti represents a bold vision for the future of programming: a language that doesn't ask you to choose between performance, safety, simplicity, and expressiveness. By learning from the successes and failures of existing languages, Fruti aims to provide a truly universal programming experience.
+
+The path from vision to reality is long, but with careful planning, community engagement, and iterative development, Fruti can become the language that developers reach for first—whether they're building web services, systems software, data pipelines, or operating systems.
+
+This is the foundation. Now we build.
+
+________________
+
+Frutisoft © 2025 - Building the future of programming

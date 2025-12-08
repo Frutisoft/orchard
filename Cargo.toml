@@ -1,0 +1,42 @@
+[workspace]
+resolver = "2"
+
+members = [
+    "packages/fruti-compiler",
+]
+
+# aero-kernel excluded from default build (requires no_std and special config)
+exclude = [
+    "packages/aero-kernel",
+]
+
+# Shared dependencies across workspace
+[workspace.dependencies]
+anyhow = "1.0"
+thiserror = "1.0"
+clap = { version = "4.4", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Build profiles
+[profile.dev]
+opt-level = 0
+debug = true
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+
+[profile.release-with-debug]
+inherits = "release"
+debug = true
+strip = false
+
+# Kernel-specific profile (use when building aero-kernel)
+[profile.kernel]
+inherits = "release"
+panic = "abort"

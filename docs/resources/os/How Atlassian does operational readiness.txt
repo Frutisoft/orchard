@@ -1,0 +1,386 @@
+How Atlassian does operational readiness
+Learn operational readiness best practices that drive reliability, security, and compliance
+Headshot of Krishna Sai
+Warren Marusiak
+Senior Technical Evangelist
+
+Even with modern project structures like DevOps, many projects lack an essential critical planning procedure – an automated readiness assessment process. Without operational readiness, software development teams don’t know if the environment is ready for the new system or product. But operational readiness isn’t something done right before deployment. It’s important to integrate it early when the project requirements and specifications are created. 
+
+What is operational readiness?
+software development
+Operational readiness is a set of requirements that development teams must meet before their service is ready for production deployment. The requirements are established by a team before development begins and must be addressed before the service is ready for production deployment. Operational readiness requirements force teams to think about reliability, security, and compliance from day one. By focusing on these requirements up front, teams prevent customer-facing problems from occurring after the service goes live.
+
+There are three components to operational readiness that teams must define. First, teams must define a set of service tiers. Second, teams must define a set of service-level agreements. Finally, teams must define a set of operational readiness requirements. Each service tier has a service level agreement and one or more operational readiness requirements. When a new service is created, it is assigned a service tier. The service tier’s service level agreement sets the requirement for availability, reliability, data loss, and service restoration. A service must satisfy all operational readiness requirements before it can go live in production. 
+
+organization logo
+related material
+What is DevOps
+Learn more
+Trophy Icon
+related material
+How to do DevOps
+See article
+The following details Atlassian’s own operational readiness process and can help teams bootstrap their own operational readiness process. However, each organization will need to tailor its own operational readiness procedures based on work and environment.
+
+Define service tiers
+Service tiers provide a way to group services into easily understood buckets. Each service tier determines an SLA and a set of operational readiness requirements. The SLA and operational readiness requirements are based on the kinds of usage scenarios that are encountered by services in the tier. Service tiers can be thought of as buckets of importance. All services in a particular bucket are equally important and should be treated in a similar way. A bucket of critical customer-facing services likely has more stringent requirements than a bucket of tertiary services that only impact employees. 
+
+The following example service tiers are based on the service tiers at Atlassian:
+
+Tier 0: Critical components that everything relies on
+Tier 1: Products and customer-facing services
+Tier 2: Business systems
+Tier 3: Internal tools
+Tier-0: Critical back-bone infrastructure
+A tier-0 service provides supporting infrastructure and shared service components that tier-1 services rely on to function. Components are considered critical if one of the following is true:
+
+They are required for a tier-1 service to run or be accessed by its users
+They are required for a customer to sign up for a tier-1 service
+They are required for staff to support or perform key operational functions on a tier-1 service, such as:
+     - Start / Stop / Restart the service 
+     - Perform a deployment, upgrade, roll-back, or hot-fix     
+     - Determine the current state (up / down / degraded)
+
+Tier-1: Essential services
+A tier-1 service provides a vital business, customer, or product function. These are customer-facing services or business-critical internal services. When the service is degraded or unavailable, the company loses money, or is unable to perform critical business functions, and/or core functionality from a customer perspective is lost. Tier-1 services require a 24/7 support roster, have high SLAs for key metrics, and a stringent set of go-live requirements.
+
+Tier-2: Non-core services
+A tier-2 service provides a customer-facing service that are not part of core functionality. Tier-2 services provide added value or additional user experience that might be considered optional or "nice to have."
+
+A tier-2 service includes public services that function mainly in a marketing capacity, such as public company websites. They don’t offer customers direct business-grade services and internal services used by teams to perform aspects of their roles, such as collaboration tools, work tracking, and more.
+
+Tier-2 services may or may not require a 24/7 support roster, have lower SLAs, and fewer go-live requirements.
+
+Tier-3: Internal only or non-critical features
+A tier-3 service provides internal functionality to the company or experimental beta services. This class may also include services that are currently an experimental feature for early adopters, where an expectation has been set that the quality of the service may degrade during beta. This level provides a low SLA bucket for services that are supported by best-efforts only.
+
+Define SLAs for the service tiers
+workflow window
+Service level agreements (SLAs) define availability and reliability targets as well as response times for service interrupting events. Each service tier has a service level agreement. The following table provides an example of service level agreements for each of the four service tiers defined in this article.
+
+SLA by service level
+Metric name
+
+Service level
+
+Tier-0
+
+Tier-1
+
+Tier-2
+
+Tier-3
+
+Availability
+
+99.99
+
+99.95
+
+99.90
+
+99.00
+
+Reliability
+
+99.99
+
+99.95
+
+99.90
+
+99.00
+
+Data loss (RPO)
+
+< 1 hour
+
+< 1 hour
+
+< 8 hours
+
+< 24 hours
+
+Service restoration (RTO)
+
+< 4 hours
+
+< 6 hours
+
+< 24 hours
+
+< 72 hours
+
+Availability
+ 
+ 
+ 
+Tier-0
+
+Tier-1
+
+Tier-2
+
+Tier-3
+
+Up to 1 minute per week downtime. Up to 4 minute per month downtime.
+
+Up to 5 minutes per week downtime. Up to 20 minutes per month downtime.
+
+Up to 10 minutes per week downtime. Up to 40 minutes per month downtime.
+
+Up to 1 hour 40 minutes per week downtime. Up to 6 hours 40 minutes per month downtime.
+
+Reliability
+ 
+ 
+ 
+Tier-0
+
+Tier-1
+
+Tier-2
+
+Tier-3
+
+Up to 1 in 10,000 requests fail
+
+Up to 1 in 2000 requests fail
+
+Up to 1 in 1000 requests fail
+
+Up to 1 in 100 requests fail
+
+Data loss (RPO)
+This number represents the maximum amount of data that will be lost by the service in the event of a service failure. A tier-0 service will lose less than one hour of data in the event of a service failure.
+
+Service restoration (RTO)
+This number represents the maximum amount of time before the service is back up and running. A tier-0 service will be fully recovered in less than four hours.
+
+Define operational readiness checks
+An operational readiness check is a pass / fail test for a specific quality of a service. It is related to the availability, reliability, and resilience of the service rather than the functionality of the service. Teams must define the set of operational readiness checks they will use to determine production readiness. These checks are not universal. Some checks will only be relevant to specific service tiers. A tier-0 service will have more stringent requirements than a tier-3 service. The following section provides examples of operational readiness checks that can be used as a starting point. 
+
+complex window
+Backups
+When a service breaks, teams may need to use backups to restore data to a certain point in time. It’s important to take regular backups of data, implement a restoration process, and routinely test the backup and restoration process. The backup and restoration process should be reliable and effective. Documentation and testing are key here.
+
+Definition of done
+
+Implement a backup and restoration process
+Document and test the backup and restoration process
+Regularly test the backup and restore process
+ 
+Capacity management
+Clearly outline what capacities the service provides to consumers. In particular, identify any limits the service imposes on consumers. Implement performance testing to ensure the service operates within expected limits.
+
+Here are some examples of information to test and make available to consumers.
+
+Service is limited to X requirements per second
+Service guarantees a response time of X
+X function of the service is or is not replicated cross region
+Consumer should not do X
+- overload the service
+- upload files larger than X
+Definition of done
+
+ Service limits are identified and documented
+ Performance testing is in place to verify the limits are enforced
+ 
+Customer awareness
+Supportability is an important aspect of service quality that sits alongside reliability and usability. Teams must build support processes for a service or new feature of a service before it goes live. Supportability can include a customer support process, a change control process, support runbooks, and other support-focused items.
+
+Customer support process
+
+Developers must understand what happens when customers contact the support team for support and they must understand their responsibilities with respect to the support process. This can include being part of an on-call rotation or being asked to address production problems as they occur.
+
+Change control process
+
+Not all changes impact customers in the same way. Some changes are imperceptible to customers. For example, a small bug fix. Some result in high customer effort to adopt, such as a complete rewrite of an API. Change control helps assess the magnitude of the customer impact changes might have.
+
+Support runbooks
+
+Runbooks provide a high-level overview of how a service works, as well as detailed explanations of problems that can occur and how to resolve them. It’s important to update runbooks regularly and verify that documented support procedures are accurate as the service changes over time.
+
+Definition of done
+
+Documentation answering most of the questions that the support team would require to investigate an issue
+A working change control process
+
+ 
+Disaster recovery
+Part of a disaster is losing an availability zone. Services need to be sufficiently resilient to operate normally in the event of an availability zone failure. Disaster recovery has two components: First, to develop and document a disaster recovery process and second, to perform ongoing testing of the documented process. Disaster recovery needs to be tested regularly. Test the ability to handle an availability zone failure using the documented disaster recovery plan.
+
+Definition of done
+
+DR plan is documented
+DR plan is tested
+Recurring tests of the DR plan are scheduled
+ 
+Logging
+Logs are useful for a multitude of reasons such as detection of anomalies, investigation during or after a service outage, and tracing malicious activity by connecting related events between services using unique identifiers. There are many kinds of logs. A couple of very useful logs that most services should include are:
+
+Access Logs
+Error logs
+Definition of done
+
+Appropriate logs are generated
+Logs are stored somewhere they are easily findable and searchable
+ 
+Logical access checks
+Logical access checks focus on how to manage internal users access, external users access, service to service access, and data encryption. How will the service prevent unauthorized access to functionality and data? How are user permissions defined, verified, updated, and deprecated? Do these controls provide sufficient protection to sensitive data?
+
+Internal Users
+
+Some important questions to answer are: How are internal users authenticated? How is access granted/provisioned? How is it taken away? How does an escalation of privileges work? What is the process for regular access reviews and audits?
+
+External users
+
+How is authentication handled for customers? How is access granted/provisioned? How is it taken away? How does an escalation of privileges work? What is the process for regular access reviews and audits?
+
+Service-to-service
+
+This is similar to internal and external users. Teams must determine how services are going to authenticate to each other. For example, by setting up OAuth 2.0.
+
+Encryption
+
+Teams likely want to encrypt their data at-rest and in-transit. Explain how the service manages encryption of data. How does the team manage keys? What is the key rotation policy?
+
+Definition of done
+
+Logical access checks are documented, implemented, and tested for internal users, external users, and service-to-service
+Data is encrypted at rest
+Data is encrypted in transit
+Encryption is implemented and tested
+ 
+Releases
+Deployment of a new version of the service must not disrupt customer traffic beyond what is defined in the services SLA. All changes must be peer-reviewed, tested, and deployed via CI/CD pipelines. After each deployment, verify the deployment was successful and didn't break any functionality. Automated post-deployment verification is preferred. Have multiple environments such as test, staging, pre-production, and production so deployments can be tested.
+
+Definition of Done
+
+The service has a zero-downtime deployment
+There are environments where the service must be deployed and tested before going to production
+ 
+Security checklist
+The security checklist is a set of practices and standards for developing and maintaining secure infrastructure and software. These standards reduce the likelihood of privacy violations and data breaches and, in turn, lead to enhanced customer trust. Teams must develop a security checklist that addresses the nature of the service they are building. A few example requirements are listed:
+
+Definition of done
+
+Evidence that no open critical or high vulnerabilities exist for the service
+Use of encryption at rest for all datastores
+Evidence that the service does not allow insecure HTTP connections
+ 
+Service metrics
+Service metrics provide essential health and diagnostic information about a service and empowers teams to monitor and respond to incidents. Start by defining a set of metrics that are monitored for each service. Then, create a dashboard with these metrics in a tool like Datadog or New Relic. Raise alarms when a metric moves out of bounds and raise trouble tickets in the event of an alarm.
+
+Definition of done
+Here are some examples of things to measure:
+
+Latency: the time taken to handle a request
+Traffic: load places on the service by external users
+Errors: number of user affecting errors or failures
+Saturation: how busy is the service and how much more can it handle
+Underlying resource usage: CPU, memory, disk
+Application internals such as queues, timings, and flow
+Usage and core functionality of your service: active users, actions per minute
+ 
+Service resilience
+Service resilience requirements determine whether or not a service can handle changes in load and/or failures of various components. A service that is resilient will likely auto-scale and be resistant to single node failure.
+
+Auto-scaling
+
+If the service has the ability to scale automatically, ensure the auto-scaling is configured properly and tested. Determine what metric will trigger auto-scaling and test to make sure it works. For example, if the service requires storing data on disk, it can monitor the percentage of free space of the disks and can auto-scale by adding storage when the percentage of free space falls below a threshold.
+
+Single node failure testing
+
+It is desirable to have services that can survive single node failures. If a single service node goes down, the service should continue to function, possibly with reduced capacity. Test this by terminating at least one node in the service and observe system behavior. It is expected that your service will handle a single node failure. The environment where you will simulate a single node failure must be monitored.
+
+Definition of done
+
+Evidence of auto-scaling implemented and tested
+Evidence that the production and/or staging environments run multiple nodes
+Evidence that the service is resilient to single node failure
+ 
+Support
+Support is the process of supporting a service after release. Teams need to have runbooks, ops tools, and on-call rotations in place and working before going live so that services experiencing issues have a process in place to fix them.
+
+Runbooks
+
+Runbooks provide on-call responders with the context and instructions they need to lead rapid incident response and remediation efforts.
+
+Ops tools
+
+Running a service to a sufficient standard means that there is an on-call roster in place and that an ops tool like Opsgenie is setup to alert on-call when the service has issues.
+
+On-call
+
+For a Tier 2 & Tier-3 service - an on-call roster is required
+
+For a Tier 1 & 0 service - a 24x7 on-call roster is required
+
+Definition of done
+
+Runbooks are written and findable by support
+Ops tool is configured and tested
+On-call rotations are in place and being paged in the event of issues
+ 
+Define operational readiness checks for the service tiers
+Once a team has defined a set of operational readiness requirements, they must determine which operational readiness requirements are appropriate for each service tier. Some operational readiness requirements are appropriate for all service tiers, while others may only be appropriate for tier-0 services. Start with the lowest service tier and progressively add requirements to the higher tiers. Tier-3 services might have a few basic operational readiness requirements while tier-0 services will requireall operational readiness requirements.
+
+Tier-3 suggested operational readiness checks
+Backups
+Logging
+Releases
+Security checklist
+Service metrics
+Support
+ 
+Tier-3 services start with the most basic operational readiness requirements.
+
+Tier-2 and Tier-1 suggested operational readiness checks
+Backups
+Disaster recovery
+Logging
+Releases
+Security checklist
+Service metrics
+Service resilience
+Support
+Tier-2 and tier-1 services add disaster recovery and service resilience operational readiness requirements. It is important to note that tier-2 and tier-1 services could have different operational readiness requirements. It is not required that the tiers have different requirements. If another operational readiness requirement is deemed necessary for a specific service tier, then add it. Tier-2, and tier-1 could diverge depending on the team’s needs.
+
+Tier-0 suggested operational readiness checks
+Backups
+Capacity management
+Customer awareness
+Disaster recovery
+Logging
+Logical access checks
+Releases
+Security checklist
+Service metrics
+Service resilience
+Support
+Tier-0 services add capacity management, customer awareness, and logical access checks.
+
+How do we use operational readiness?
+Once service tiers, service level agreements, and operational readiness requirements are defined, each new service is assigned to a service tier, and teams fulfill the operational readiness requirements as part of the development of the service. This process ensures that all services in a given service tier are up to the same standard before they go live.
+
+Operational readiness requirements are not static and can be updated regularly as team’s requirements change. Work items can bring existing services into compliance with the new requirements. It is also possible to not update existing services to comply with updated requirements depending on business needs.
+
+Production readiness indicator
+It is useful to build automation to verify production readiness requirements. Automated verification makes it straightforward to create a checklist for each service that lists the production readiness requirements applicable to a service. The production readiness requirements can be checked off automatically when they are fulfilled. When any of the production readiness requirements are not fulfilled, the production readiness indicator should be red. When all of the requirements are fulfilled, the production readiness indicator should be green.
+
+Surface the production readiness indicator on the main landing page for the particular service and in any other useful location. An example of a good location to surface a production readiness indicator would be in a Compass scorecard. Adding a production readiness indicator to a service's Compass scorecard makes this information easy to find and provides a framework for enforcing best practices and identifying areas that need improvement.
+
+In conclusion...
+It takes time for teams to develop their operational readiness process. Teams start by defining service tiers and service level agreements. Teams then define a set of operational readiness requirements and determine which requirements are applicable to each service tier. With the basic framework in place, each new service can address the operational readiness requirements as part of the standard development process and teams will have confidence that their service is ready to go to production once their production readiness indicator is green.
+
+Additional links
+For additional information on the topics covered in this article please follow these links.
+
+Operational Efficiency Best Practices
+Service Level Objectives
+What is Checkops?
+What are metrics?
+Warren Marusiak
+Warren Marusiak
+Warren is a former developer turned technical evangelist who joined Atlassian in 2021. He has worked on everything from COBOL telecoms software running on mainframes to modern cloud infrastructure at AWS. He has a passion for technology and a research background in machine learning. As a technical evangelist, Warren builds awareness of the capabilities of Atlassian products and partner integrations through demos, writings, and videos. In his spare time, you can find him practicing his passion for Brazilian Jiu-Jitsu.

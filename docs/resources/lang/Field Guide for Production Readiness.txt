@@ -1,0 +1,114 @@
+Field Guide for Production Readiness
+Production readiness is more important than ever for teams, especially considering recent resource constraints and increased demands on infrastructure.
+Jun 11th, 2020 1:00pm by Ian Smith and Paul Chu
+Featued image for: Field Guide for Production Readiness
+Feature image via Pixabay.
+Production readiness has become more important than ever for teams, especially considering recent resource constraints and increased demands on infrastructure. However, many teams aren’t able to achieve true production readiness and may struggle to define what it actually looks like in action.
+
+Lightstep and Blameless have partnered to demonstrate exactly what production readiness entails. This blog post highlights the key takeaways.
+
+What Is Production Readiness?
+O’Reilly defines production readiness as “…whether a software system is ready for live service. In its simplest form, this means ‘Is the system ready for implementation?’ It doesn’t matter whether you’re developing software for external clients, for internal purposes, for general sale, or even for yourself — the question remains the same.”
+
+With the rise in application complexity and increased demand for innovation velocity, investment in product readiness is key. However, it is often overlooked — leading to potential failures and unplanned work. These failures cost money, and as the demand for services to always be on increases, downtime is only getting more expensive. Additionally, unplanned work directly affects your teams’ innovation ability. The more time you spend on incident response, the less time you’ll have for shipping new features or shoring up reliability.
+
+To avoid these costs, you need to be sure that when you ship, your teams and product are ready.
+
+
+ServiceNow Cloud Observability powered by Lightstep helps organizations manage the growing scale and complexity of cloud and cloud-native infrastructure, for complete visibility across the enterprise.
+Learn More
+The latest from ServiceNow
+I am facing an issue using Google Cloud Vertex AI as the default provider in custom Now assist skill
+6 December 2025
+ServiceNow Yokohama CSA Delta Exam
+6 December 2025
+UI Builder: "Primary button clicked" handler doesn't update record
+6 December 2025
+Determining whether your product is ready for implementation can be difficult. To be sure that you’ve checked all the boxes, you’ll need deep observability into your systems.
+
+Additionally, you’ll need an excellent incident response because, as we all know, incidents will happen. It’s not a question of if, but when. By ensuring that you’re as thorough as possible and prepared for the worst-case scenario, you can achieve a state of production readiness.
+
+TRENDING STORIES
+When To Log, and When To Shut Up
+Has Grafana Taken Lead in AI for Observability?
+OpenAI Recovers 30,000 CPU Cores With Fluent Bit Tweak
+How Can We Solve Observability's Data Capture and Spending Problem?
+What To Know Before Building Fluent Bit Plugins With Go
+This comes with both benefits and challenges.
+
+Benefits of production readiness:
+
+Deploy faster with confidence.
+Do more with less through automation, minimizing toil.
+Improve customer experience.
+Mitigate risk to the business.
+Challenges to production readiness:
+
+Dependencies make it hard to observe distributed systems.
+Increased cognitive load.
+High costs of coordination across distributed, siloed teams.
+The challenges are all exacerbated by fluctuating business circumstances, such as an increased demand for digital services accelerating the needs for digitization plus shifts to distributed working models.
+
+To gain the benefits of production readiness and overcome the challenges, we can rely on key practices to boost our production readiness such as:
+
+Using CI/CD to automate the release pipeline and ensure that code can be deployed safely and automatically
+Regression testing to ensure that changes don’t break existing functionality
+Capacity management to scale infrastructure up and down to meet demands
+Observability to get complete visibility into service health and performance
+Adopting incident resolution best practices, runbooks, and playbooks to reduce ad hoc work and toil during incidents
+Creating incident retrospectives to ensure that you’re getting the most out of your incidents and reinvesting those learnings
+In an informal poll we conducted, we found that many teams are currently employing key practices such as CI/CD, incident resolution and retrospectives, observability, and capacity management. In 2020, teams also said they’re looking to invest more in their observability, incident resolution, and capacity management capabilities.
+
+These key practices are the foundation for production readiness. However, they also come with their own sets of challenges.
+
+Observability Pain Points
+Gaining insight into your systems is a major step towards production readiness. With the emergence of deep systems, microservice architecture, serverless functions, and service mesh, there are seemingly endless dependencies. When we look at typical architectures (represented through the triangle abstraction below), you can see that we have multiple layers.
+
+ Zoom
+
+Usually, those layers are independently managed. If you’re a service owner or if your team owns a handful of services, you might look at one or maybe two of those layers, but not all. This means your knowledge of the system as a whole is incomplete.
+
+Additionally, there’s a delta between what you have responsibility for and what you have control over. Your responsibility might be the performance of a service or a set of services, but what you have control over is only those services. You don’t have the ability to control the downstream dependencies or services delivering the information you’re using as part of your request lifecycle. This delta introduces a lot of stress, especially in an incident response workflow, and can affect your MTTR as well as developer happiness.
+
+The tools your team uses now might help with this delta, but won’t be able to overcome the observability challenge entirely. Many existing methods have some shortcomings:
+
+Metrics: these tools are great at understanding symptomatic behavior or identifying or quantifying the impact of particular symptoms, but they lack the context for you to be able to understand causation. You’ll have information, but no real way to connect it back to your layers of the system.
+Logs: logs have some of the context you might need to understand how different actors are contributing to one another’s performance, but they’re expensive. Additionally, they’re still not built from a workflow perspective to provide you with the analysis that you need to understand aggregate behavior. One instance doesn’t reflect upon another to allow you to draw conclusions about your system’s behavior.
+Traces: many folks have tried to solve that lack of context with traces. Traces show how requests move through applications. They can help highlight which metrics or logs are the most likely to help resolve an issue.
+In other words, getting deep visibility into distributed systems is expensive, manual, and time-consuming when using standard methods. And observability challenges aren’t the only blocker to production readiness. There are orchestration challenges to overcome, too.
+
+Orchestration and Learning Challenges
+The costs of coordination are exceptionally high, and only increasing with the rise of deep systems and the move to distributed teams. You’re expected to resolve incidents faster, have fewer critical service disruptions, and be able to answer “why” by the end of your retrospective. With all the tooling available to us, it seems like answering that question should be easy enough, but it isn’t. The data provided by observability tooling isn’t enough. It needs to be actionable, too.
+
+This is why — in order to maximize production readiness — observability should be used in conjunction with sophisticated incident response processes. This allows teams to funnel key insights towards valuable lessons learned.
+
+With today’s complex systems, it can take teams multiple days or even weeks to not just triage and resolve the issue, but also to decipher all the context for actionable learnings. Teams need shared context at their fingertips spanning testing, change events and deploys, error budget violations, monitoring, alerting data, and more, as well as structured automation such as role-based tasks to free up cognitive load so they can focus on decision-making. Aggregating all that information, driving a coordinated response, and building context into a post-incident review can be highly cumbersome and full of toil.
+
+To overcome these challenges, you’ll need to make sure that you can automate information capture and drive effective collaboration and follow-up not only in the incident process, but also in the downstream learning and product planning process. Ideally, post-incident reviews should be conducted within a few business days for as many incidents as possible. After all, incidents are unplanned investments to stress test the system, and without a structured process to reinvest earnings back into the system, the business is exposed to significant risk. You’ll also want to make sure that you’re keeping a record of insights that you can easily query and share across product, engineering, support, and business stakeholders. This will help create context for your observability metrics and provide you an answer to “why.”
+
+Using Lightstep and Blameless for Production Readiness
+Overcoming the challenges to observability, orchestration, and learning can be difficult, but using solutions like Lightstep and Blameless can help — as the following video demo shows.
+
+
+YOUTUBE.COM/THENEWSTACK
+Tech moves fast, don't miss an episode. Subscribe to our YouTube channel to stream all our podcasts, interviews, demos, and more.
+SUBSCRIBE
+By using both Blameless and Lightstep, you’ll gain end-to-end visibility into all layers of your service. With better context and incident response automation, you’ll be able to reduce metrics like MTTA, MTTR, and MTTI.
+
+MTTA (mean time to acknowledge): the average time it takes from when an alert is triggered to when work begins on the issue.
+MTTR (mean time to resolve): the average time from when an incident is opened until the incident is closed.
+MTTI (mean time to identify): how long a problem exists in an IT deployment before the appropriate parties become aware of it.
+This optimization will also eliminate tribal knowledge, making sure that you’re not siloed within your particular service boundaries and can better understand your system’s dependencies.
+
+Lightstep and Blameless also meet developers, operations, and SRE teams where they are with their existing tools. The platforms leverage the data that oftentimes exists in silos within other tools such as instrumentation, CI/CD, alerting, chat, service desk, and more, building a bridge to other tools for a cohesive workflow. You can start seeing the value of these products without lengthy retooling processes as well. Lightstep has a goal of less than 30 minutes for time to value, and Blameless takes just minutes to set up integrations and adapts based on your team’s usage.
+
+Production readiness is getting harder to achieve, but also more important than ever before as teams are hit with unprecedented change and growing application complexity. With combined solutions like Lightstep and Blameless, your teams can adopt the guardrails necessary to implement best practices and ensure production readiness to support your team at any scale.
+
+To learn more, you can check out these resources:
+
+Joint webinar
+Blameless Demo
+Blameless Sandbox
+Lightstep Demo
+Lightstep Sandbox
+At this time, The New Stack does not allow comments directly on this website. We invite all readers who wish to discuss a story to visit us on Twitter or Facebook. We also welcome your news tips and feedback via email: feedback@thenewstack.io.

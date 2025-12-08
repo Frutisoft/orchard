@@ -1,0 +1,81 @@
+name: Fruti Compiler CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'packages/fruti-compiler/**'
+      - '.github/workflows/fruti-compiler.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'packages/fruti-compiler/**'
+
+jobs:
+  test:
+    name: Test Fruti Compiler
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        rust: [stable]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: ${{ matrix.rust }}
+    
+    - name: Cache cargo registry
+      uses: actions/cache@v3
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+    
+    - name: Cache cargo index
+      uses: actions/cache@v3
+      with:
+        path: ~/.cargo/git
+        key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+    
+    - name: Cache target directory
+      uses: actions/cache@v3
+      with:
+        path: target
+        key: ${{ runner.os }}-target-${{ hashFiles('**/Cargo.lock') }}
+    
+    - name: Run tests
+      working-directory: packages/fruti-compiler
+      run: cargo test --verbose
+    
+    - name: Check compiler
+      working-directory: packages/fruti-compiler
+      run: cargo check --verbose
+    
+    - name: Test examples
+      working-directory: packages/fruti-compiler
+      run: |
+        cargo run -- check ../../examples/hello-world.fruti
+        cargo run -- check ../../examples/basic-features.fruti
+  
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: rustfmt, clippy
+    
+    - name: Check formatting
+      working-directory: packages/fruti-compiler
+      run: cargo fmt --check
+    
+    - name: Run clippy
+      working-directory: packages/fruti-compiler
+      run: cargo clippy -- -D warnings

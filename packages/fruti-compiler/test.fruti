@@ -1,0 +1,16 @@
+// Simple Fruti test program
+
+fn main() {
+    let x = 42;
+    let y = 3.14;
+    let name = "Fruti";
+    
+    if x > 40 and y < 5.0 {
+        print("Hello, {name}!");
+    }
+    
+    // Loop example
+    for i in 0..10 {
+        print("Count: {i}");
+    }
+}

@@ -1,0 +1,13 @@
+[package]
+name = "aero-kernel"
+version = "0.1.0"
+edition = "2021"
+authors = ["Jameson"]
+description = "Aero microkernel operating system"
+license = "MIT"
+repository = "https://github.com/Frutisoft/frutisoft"
+homepage = "https://frutisoft.github.io"
+
+[dependencies]
+# Kernel will be written in Fruti once compiler is ready
+# This is a placeholder for the Rust bootstrap version

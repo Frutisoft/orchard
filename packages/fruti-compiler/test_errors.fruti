@@ -1,0 +1,7 @@
+// Test lexer error handling
+
+fn test() {
+    let bad_string = "unterminated string
+    let bad_char = 'ab';
+    let unknown = `backtick`;
+}
