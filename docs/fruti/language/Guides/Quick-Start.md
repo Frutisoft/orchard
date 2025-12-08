@@ -263,3 +263,7 @@ async fn main() {
 ---
 
 **Happy coding with Fruti!**
+
+---
+
+**Frutisoft © 2025 - Fresh code, crisp ideas**
