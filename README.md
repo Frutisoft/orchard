@@ -1,12 +1,12 @@
 ﻿# Frutisoft: Fruti Language & Aero OS
 
-**A learning project exploring modern programming language and OS design**
+**A passion project exploring modern programming language and OS design**
 
 ---
 
 ## Vision
 
-Frutisoft is a solo student project exploring the design and implementation of:
+Frutisoft is a personal passion project by Jameson Jones, a student at the Illinois Mathematics and Science Academy, exploring the design and implementation of:
 
 - **Fruti** - A general-purpose programming language that learns from the pain points of existing languages to create a simple, comprehensive, and developer-friendly alternative
 
@@ -14,9 +14,9 @@ Frutisoft is a solo student project exploring the design and implementation of:
 
 **Current Status:** Early development / Design phase
 
-**Developer:** Solo student learning compiler and OS development
+**Developer:** Jameson Jones (Illinois Mathematics and Science Academy)
 
-**Timeline:** Multi-year learning and development project
+**Timeline:** Multi-year passion project
 
 ---
 

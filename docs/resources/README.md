@@ -6,7 +6,7 @@ This folder contains reference materials used to guide the development and valid
 
 ## Purpose
 
-These resources informed the production readiness approach, validation process, and realistic scope setting for the Frutisoft project as a solo student learning endeavor.
+These resources informed the production readiness approach, validation process, and realistic scope setting for the Frutisoft project as a personal passion project.
 
 ---
 
@@ -88,7 +88,7 @@ These resources informed the production readiness approach, validation process, 
 - Applied MVP-first methodology
 - Established realistic timelines for solo developer
 - Clarified distinction between design and implementation
-- Set appropriate scope for learning project
+- Set appropriate scope for passion project
 
 ### Validation
 - Confirmed all features have production precedents
@@ -116,7 +116,7 @@ These resources represent industry best practices from:
 - DevOps and reliability engineering
 - Security hardening practices
 
-They serve as reference material for ensuring Frutisoft follows production-ready development practices appropriate for a learning project with professional standards.
+They serve as reference material for ensuring Frutisoft follows production-ready development practices appropriate for a passion project with professional standards.
 
 ---
 

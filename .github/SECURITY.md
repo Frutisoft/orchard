@@ -10,7 +10,7 @@ Frutisoft is currently in early development (Phase 1 MVP). Security updates will
 
 ## Reporting a Vulnerability
 
-This is a learning project in early development and not yet production-ready. However, we take security seriously.
+This is a passion project in early development and not yet production-ready. However, we take security seriously.
 
 **If you discover a security vulnerability, please:**
 

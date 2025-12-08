@@ -6,7 +6,7 @@
 
 ## Overview
 
-The Fruti compiler is a **learning project** translating Fruti source code to LLVM IR. Phase 1 MVP is complete with a functional compilation pipeline. This is a **solo student project** demonstrating compiler construction principles.
+The Fruti compiler is a **passion project** by Jameson Jones (Illinois Mathematics and Science Academy) translating Fruti source code to LLVM IR. Phase 1 MVP is complete with a functional compilation pipeline. This is a **personal project** demonstrating compiler construction principles.
 
 ### Current Status: Phase 1 MVP Complete ✅
 
@@ -213,7 +213,7 @@ cargo bench
 
 ## Contributing
 
-**Note:** This is currently a solo learning project. Contributions may be accepted in the future once the core compiler reaches a stable state. For now, feel free to watch the repository and provide feedback through issues.
+**Note:** This is currently a personal passion project. Contributions may be accepted in the future once the core compiler reaches a stable state. For now, feel free to watch the repository and provide feedback through issues.
 
 ### Quick Start
 

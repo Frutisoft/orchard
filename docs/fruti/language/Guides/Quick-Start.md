@@ -6,7 +6,7 @@
 
 ## Current Status
 
-**This guide describes the intended design of Fruti.** The compiler is currently in early MVP development and does not yet support these features. Fruti is designed as a **general-purpose programming language** that learns from existing languages' pain points to create a simple, comprehensive solution. This is a learning project by a solo developer - check the [repository](https://github.com/Frutisoft/frutisoft) for current implementation status.
+**This guide describes the intended design of Fruti.** The compiler is currently in early MVP development and does not yet support these features. Fruti is designed as a **general-purpose programming language** that learns from existing languages' pain points to create a simple, comprehensive solution. This is a passion project by Jameson Jones (Illinois Mathematics and Science Academy) - check the [repository](https://github.com/Frutisoft/frutisoft) for current implementation status.
 
 **Use this guide to:**
 - Understand Fruti's design philosophy

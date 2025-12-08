@@ -4,15 +4,15 @@ Thank you for your interest in the Fruti programming language and Aero OS!
 
 ---
 
-## Current Status: Solo Learning Project
+## Current Status: Personal Passion Project
 
-**This project is not yet ready for external contributions.** Frutisoft is currently a solo student learning project focused on compiler and OS development.
+**This project is not yet ready for external contributions.** Frutisoft is currently a personal passion project by Jameson Jones (Illinois Mathematics and Science Academy) focused on compiler and OS development.
 
 ### Why Not Open for Contributions Yet?
 
 1. **Core architecture is being established** - The fundamental design and implementation patterns need to be proven first
 2. **No runnable code yet** - The compiler is in early MVP development; there's nothing to contribute to yet
-3. **Learning focus** - This is an educational journey for the developer to deeply understand compiler and OS design
+3. **Personal exploration** - This is a passion project to deeply explore compiler and OS design
 4. **Documentation priority** - Design documentation needs to stabilize before implementation contributions
 
 ### Future Plans

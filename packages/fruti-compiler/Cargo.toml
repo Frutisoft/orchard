@@ -2,7 +2,7 @@
 name = "fruti-compiler"
 version = "0.1.0"
 edition = "2021"
-authors = ["Jameson"]
+authors = ["Jameson Jones"]
 description = "The Fruti programming language compiler"
 license = "MIT"
 repository = "https://github.com/Frutisoft/frutisoft"

@@ -18,7 +18,7 @@ Fruti aspires to be a **comprehensive general-purpose programming language** tha
 - **Comprehensive standard library** - Batteries included, no framework fatigue
 - **Learn from the best** - Take inspiration from Rust's safety, Python's ergonomics, Go's simplicity
 
-While this is an ambitious goal, it's approached with humility as a learning project. The aim is not to replace existing languages, but to explore what's possible when combining the best ideas from modern language design.
+While this is an ambitious goal, it's approached with humility as a passion project. The aim is not to replace existing languages, but to explore what's possible when combining the best ideas from modern language design.
 
 This document provides definitive answers to all language design questions, based on what developers value most: predictability, simplicity, and consistency.
 
