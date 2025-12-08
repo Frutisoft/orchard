@@ -26,9 +26,9 @@ This document provides definitive answers to all language design questions, base
 
 ## Implementation Roadmap
 
-### Phase 1: MVP (Year 1-2)
+### Phase 1: MVP (Early Phase)
 
-**Status:** COMPLETE (December 7, 2025)
+**Status:** COMPLETE (Recently)
 
 **Features:**
 - Basic syntax and semantics
@@ -39,9 +39,9 @@ This document provides definitive answers to all language design questions, base
 
 **Deliverable:** Working compiler for basic programs
 
-### Phase 2: Core Features (Year 2-3)
+### Phase 2: Core Features (Mid Phase)
 
-**Target:** Q1-Q2 2026
+**Target:** Near Term
 
 **Features:**
 - Structs and enums
@@ -52,9 +52,9 @@ This document provides definitive answers to all language design questions, base
 
 **Deliverable:** Usable for real projects
 
-### Phase 3: Full Language (Year 3-4)
+### Phase 3: Full Language (Later Phase)
 
-**Target:** 2026-2027
+**Target:** Mid Term
 
 **Features:**
 - Async/await
@@ -924,8 +924,8 @@ Fruti is designed to be:
 
 **Current Status:**
 - Phase 1 Complete: Basic compiler working
-- Phase 2 Planned: Core features (2026)
-- Phase 3 Planned: Full language (2027)
+- Phase 2 Planned: Core features
+- Phase 3 Planned: Full language
 
 **Learn More:**
 - Language Reference: Complete syntax guide

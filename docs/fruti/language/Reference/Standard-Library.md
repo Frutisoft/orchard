@@ -12,8 +12,8 @@
 
 **Implementation Status:**
 - Phase 1 (Current): Basic primitives only
-- Phase 2 (Planned Q1 2026): Core collections and I/O
-- Phase 3 (Planned 2026): Full standard library
+- Phase 2 (Planned): Core collections and I/O
+- Phase 3 (Later): Full standard library
 
 This is a design specification that will guide future implementation.
 
@@ -657,9 +657,9 @@ The Fruti standard library aims to provide:
 
 **Implementation Roadmap:**
 - Phase 1 (Complete): Basic primitives
-- Phase 2 (Q1 2026): Core collections, basic I/O
-- Phase 3 (2026): Full networking and concurrency
-- Phase 4 (2027+): Advanced features and optimization
+- Phase 2 (Near Term): Core collections, basic I/O
+- Phase 3 (Mid Term): Full networking and concurrency
+- Phase 4 (Later): Advanced features and optimization
 
 ---
 

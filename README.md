@@ -243,11 +243,11 @@ Fruti aims to be a **general-purpose language** that addresses common frustratio
 
 **Current Phase:** MVP Development - Building basic compiler infrastructure
 
-**Realistic Timeline** (Solo Developer):
-- **Year 1:** MVP compiler (Hello World compiles)
-- **Year 2:** Core language features
-- **Year 3:** Standard library, tooling
-- **Year 4+:** Community building, ecosystem
+**Phased Development Approach:**
+- **Phase 1:** MVP compiler (Hello World compiles)
+- **Phase 2:** Core language features
+- **Phase 3:** Standard library, tooling
+- **Phase 4+:** Community building, ecosystem
 
 ### Aero OS
 
@@ -267,46 +267,46 @@ Fruti aims to be a **general-purpose language** that addresses common frustratio
 **Realistic Timeline** (Solo Developer):
 - **Years 1-3:** Focus on Fruti compiler
 - **Years 4-6:** Begin kernel implementation
-- **Years 7+:** System services and drivers
+- **Later:** System services and drivers
 
 ---
 
-## Roadmap (Solo Developer Reality)
+## Development Roadmap
 
-### 2025-2026: Foundation (Compiler MVP)
+### Early Phase: Foundation (Compiler MVP)
 - Lexer and parser implementation
 - Basic type checking
 - Simple code generation (LLVM IR)
 - Hello World program compiles and runs
 - Core language features working
 
-### 2027-2028: Language Maturity
+### Mid Phase: Language Maturity
 - Full language feature implementation
 - Ownership and borrow checking
 - Basic standard library
 - Error messages and tooling
 - Self-hosting experiments
 
-### 2029-2030: Ecosystem Building
+### Later Phase: Ecosystem Building
 - Package manager design
 - IDE integration (LSP)
 - Documentation generator
 - Growing standard library
 - Community formation (if interest exists)
 
-### 2031+: OS Development (If Compiler Succeeds)
+### Future Phase: OS Development (If Compiler Succeeds)
 - Begin microkernel implementation in Fruti
 - Core services
 - Basic driver support
 - Proof-of-concept OS
 
-**Note:** These are aspirational timelines. Progress will be made incrementally as a learning project.
+**Note:** These are aspirational goals. Progress will be made incrementally as a passion project.
 
 ---
 
 ## Contributing
 
-**Current Status:** This is a solo learning project. The project is not yet ready for external contributions.
+**Current Status:** This is a personal passion project. The project is not yet ready for external contributions.
 
 ### Future Plans
 
@@ -384,7 +384,7 @@ Frutisoft builds on decades of programming language and operating system researc
 
 **GitHub Issues:** Best way to provide feedback or report issues (when project has runnable code)
 
-**Note:** This is a learning project by a solo student developer. Response times may vary based on academic schedule.
+**Note:** This is a personal passion project by Jameson Jones. Response times may vary based on academic schedule.
 
 ---
 
@@ -395,7 +395,7 @@ Frutisoft builds on decades of programming language and operating system researc
 - Read the documentation and provide feedback
 - Share if you find the design interesting
 
-**Note:** This is a learning project focused on education, not commercial sponsorship.
+**Note:** This is a passion project focused on education, not commercial sponsorship.
 
 ---
 

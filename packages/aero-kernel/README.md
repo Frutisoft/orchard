@@ -6,7 +6,7 @@
 
 ## Current Status: Design Phase
 
-**This kernel is not yet implemented.** Aero OS is a comprehensive design specification for a capability-based microkernel operating system. Implementation will begin after the Fruti compiler reaches maturity (Year 4-6 of development).
+**This kernel is not yet implemented.** Aero OS is a comprehensive design specification for a capability-based microkernel operating system. Implementation will begin after the Fruti compiler reaches maturity.
 
 **Current State:**
 - [x] Complete architecture design
@@ -293,20 +293,19 @@ Performance: 95-100% of native Linux.
 
 ## Roadmap
 
-**Q1 2026:**
-- [ ] Stable 1.0 release
-- [ ] Full USB 3.0 support
-- [ ] GPU acceleration
+**Near Term:**
+- Compiler Phase 2 completion
+- Fruti self-hosting experiments
 
-**Q2 2026:**
-- [ ] ARM64 support
-- [ ] Mobile device support
-- [ ] App store launch
+**Mid Term:**
+- Begin Aero kernel design refinement
+- Prototype basic kernel structures
+- Memory management proof-of-concept
 
-**Q3 2026:**
-- [ ] RISC-V support
-- [ ] Real-time extensions
-- [ ] IoT support
+**Later:**
+- Kernel implementation in Fruti
+- Core system calls
+- Basic IPC mechanisms
 
 ---
 

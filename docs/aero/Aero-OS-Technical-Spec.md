@@ -4,7 +4,7 @@
 
 **Status:** Design Phase - No Implementation Yet
 
-**Reality Check:** This document describes the design for Aero OS. Currently, only minimal kernel scaffolding exists. Actual OS development begins after Fruti compiler Phase 3 (2026-2027).
+**Reality Check:** This document describes the design for Aero OS. Currently, only minimal kernel scaffolding exists. Actual OS development begins after Fruti compiler Phase 3.
 
 ---
 
@@ -26,7 +26,7 @@ All specifications finalized, ready for implementation when compiler matures.
 
 **Deliverable:** Bootable kernel with core services
 
-### Phase 2: Core Services (Year 5-6)
+### Phase 2: Core Services (Mid Phase)
 
 - Virtual file system
 - Device driver framework
@@ -36,7 +36,7 @@ All specifications finalized, ready for implementation when compiler matures.
 
 **Deliverable:** Functional microkernel
 
-### Phase 3: User Space (Year 6-7)
+### Phase 3: User Space (Later Phase)
 
 - User space runtime
 - Standard library integration
@@ -574,13 +574,13 @@ enum Capability {
 
 ### Timeline Summary
 
-| Phase | Duration | Focus | Status |
-|-------|----------|-------|--------|
-| Phase 0 | 2025 | Design | Complete |
-| Phase 1 | 2026-2027 | Kernel Foundation | Not Started |
-| Phase 2 | 2027-2028 | Core Services | Planned |
-| Phase 3 | 2028-2029 | User Space | Planned |
-| Phase 4 | 2029+ | Production | Planned |
+| Phase | Focus | Status |
+|-------|-------|--------|
+| Phase 0 | Design | Complete (2025) |
+| Phase 1 | Kernel Foundation | Not Started |
+| Phase 2 | Core Services | Planned |
+| Phase 3 | User Space | Planned |
+| Phase 4 | Production | Planned |
 
 ### Success Criteria
 
@@ -617,7 +617,7 @@ Aero OS represents an ambitious long-term goal to create a modern, safe, and eff
 **Current Reality:**
 - Comprehensive design complete
 - Minimal scaffolding exists
-- Implementation begins 2026-2027
+- Implementation begins after compiler maturity
 - Multi-year development effort
 
 **Key Strengths:**
