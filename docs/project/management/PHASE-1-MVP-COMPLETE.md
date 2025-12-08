@@ -29,7 +29,7 @@ Source Code (.fruti)
 
 ## Implemented Modules
 
-### 1. **Lexer** (`src/lexer.rs`) - ~600 lines [COMPLETE]
+### 1. **Lexer** (`src/lexer.rs`) - 553 lines [COMPLETE]
 
 **Functionality:**
 - Complete tokenization of Fruti source code
@@ -45,7 +45,7 @@ Source Code (.fruti)
 - Peek-ahead capability
 - Robust error messages with context
 
-### 2. **Token System** (`src/token.rs`) - ~300 lines [COMPLETE]
+### 2. **Token System** (`src/token.rs`) - 299 lines [COMPLETE]
 
 **Functionality:**
 - Complete token type enumeration
@@ -59,7 +59,7 @@ Source Code (.fruti)
 - Punctuation (parentheses, braces, brackets, semicolons)
 - Literals (integers, floats, strings, booleans)
 
-### 3. **AST** (`src/ast.rs`) - ~500 lines [COMPLETE]
+### 3. **AST** (`src/ast.rs`) - 482 lines [COMPLETE]
 
 **Node Types:**
 
@@ -87,7 +87,7 @@ Source Code (.fruti)
 - Struct declarations
 - Type aliases
 
-### 4. **Parser** (`src/parser.rs`) - ~1,200 lines [COMPLETE]
+### 4. **Parser** (`src/parser.rs`) - 1,096 lines [COMPLETE]
 
 **Capabilities:**
 
@@ -116,7 +116,7 @@ Source Code (.fruti)
 - Multiple error reporting
 - Contextual error messages
 
-### 5. **Semantic Analyzer** (`src/semantic.rs`) - ~620 lines [COMPLETE]
+### 5. **Semantic Analyzer** (`src/semantic.rs`) - 653 lines [COMPLETE]
 
 **Type System:**
 - Primitive types (integers, floats, bool, str)
@@ -140,7 +140,7 @@ Source Code (.fruti)
 - Function overload checking
 - Type resolution
 
-### 6. **Code Generator** (`src/codegen.rs`) - ~290 lines [COMPLETE]
+### 6. **Code Generator** (`src/codegen.rs`) - 308 lines [COMPLETE]
 
 **LLVM IR Generation:**
 
@@ -165,7 +165,7 @@ Source Code (.fruti)
 - Return value management
 - Basic block management
 
-### 7. **CLI & Main** (`src/main.rs`) - ~305 lines [COMPLETE]
+### 7. **CLI & Main** (`src/main.rs`) - 348 lines [COMPLETE]
 
 **Command-Line Interface:**
 ```
@@ -337,7 +337,7 @@ declare void @print(ptr)
 ### Code Quality
 
 **Metrics:**
-- ~3,800 lines of implementation code
+- 3,858 lines of implementation code (exact count)
 - 9 core modules
 - Clean separation of concerns
 - Comprehensive error handling

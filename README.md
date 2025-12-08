@@ -122,11 +122,11 @@ cargo run -- check ../../examples/basic-features.fruti
 
 **Current State:**
 - [x] Phase 1 MVP Complete (Fruti Compiler)
-- [x] Lexer (600 lines, 7 tests passing)
-- [x] Parser (1,200 lines, recursive descent)
-- [x] Semantic Analysis (620 lines, type checking)
-- [x] Code Generation (285 lines, LLVM IR)
-- [ ] Aero OS (design phase)
+- [x] Lexer (~553 lines, 7 tests passing)
+- [x] Parser (~1,096 lines, recursive descent)
+- [x] Semantic Analysis (~653 lines, type checking)
+- [x] Code Generation (~308 lines, LLVM IR)
+- [ ] Aero OS (design phase - scaffolding only)
 - [x] Website (GitHub Pages ready)
 
 ### For Developers (Future)
