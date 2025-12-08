@@ -436,7 +436,7 @@ impl Parser {
         while !matches!(self.peek().value, TokenKind::RightBrace) {
             // Save position in case we need to backtrack
             let saved_pos = self.pos;
-            
+
             // Try to parse statement
             match self.try_parse_stmt()? {
                 Some(stmt) => {
@@ -540,10 +540,10 @@ impl Parser {
                     self.peek().value,
                     TokenKind::If | TokenKind::Match | TokenKind::LeftBrace
                 );
-                
+
                 // Try parsing as expression statement
                 let expr = self.parse_expr()?;
-                
+
                 // Control flow expressions don't need semicolons when used as statements
                 if starts_with_control || self.eat(&TokenKind::Semicolon) {
                     Ok(Some(Stmt::Expr(expr)))
@@ -566,22 +566,31 @@ impl Parser {
 
         loop {
             // Check for range operators first (they're not binary ops in our AST)
-            if matches!(self.peek().value, TokenKind::DotDot | TokenKind::DotDotEqual) {
+            if matches!(
+                self.peek().value,
+                TokenKind::DotDot | TokenKind::DotDotEqual
+            ) {
                 let inclusive = matches!(self.peek().value, TokenKind::DotDotEqual);
                 self.advance();
-                
+
                 // Range can have optional end
-                let end = if matches!(self.peek().value, TokenKind::RightBrace | TokenKind::Semicolon | TokenKind::RightParen | TokenKind::Comma) {
+                let end = if matches!(
+                    self.peek().value,
+                    TokenKind::RightBrace
+                        | TokenKind::Semicolon
+                        | TokenKind::RightParen
+                        | TokenKind::Comma
+                ) {
                     None
                 } else {
                     Some(Box::new(self.parse_unary_expr()?))
                 };
-                
+
                 let span = Span {
                     start: left.span.start,
                     end: end.as_ref().map(|e| e.span.end).unwrap_or(left.span.end),
                 };
-                
+
                 left = Expr {
                     kind: ExprKind::Range {
                         start: Some(Box::new(left)),
@@ -592,7 +601,7 @@ impl Parser {
                 };
                 continue;
             }
-            
+
             let op = match self.peek_binop() {
                 Some(op) if op.precedence() >= min_prec => op,
                 _ => break,
@@ -854,7 +863,7 @@ impl Parser {
             }
             TokenKind::Ident(_) => {
                 let ident = self.expect_ident()?;
-                
+
                 // Check for struct literal
                 if matches!(self.peek().value, TokenKind::LeftBrace) {
                     self.advance();
@@ -896,7 +905,7 @@ impl Parser {
                 // Check for tuple
                 if self.eat(&TokenKind::Comma) {
                     let mut exprs = vec![first_expr];
-                    
+
                     if !matches!(self.peek().value, TokenKind::RightParen) {
                         loop {
                             exprs.push(self.parse_expr()?);
@@ -1045,13 +1054,11 @@ impl Parser {
                     kind: ExprKind::Lambda { params, body },
                 })
             }
-            _ => {
-                Err(Error::new(
-                    ErrorKind::UnexpectedToken,
-                    tok.span,
-                    format!("Expected expression, found {:?}", tok.value),
-                ))
-            }
+            _ => Err(Error::new(
+                ErrorKind::UnexpectedToken,
+                tok.span,
+                format!("Expected expression, found {:?}", tok.value),
+            )),
         }
     }
 
@@ -1064,12 +1071,12 @@ impl Parser {
             }
             TokenKind::Ident(_) => {
                 let ident = self.expect_ident()?;
-                
+
                 // Check for variant pattern
                 if matches!(self.peek().value, TokenKind::LeftParen) {
                     self.advance();
                     let mut patterns = Vec::new();
-                    
+
                     if !matches!(self.peek().value, TokenKind::RightParen) {
                         loop {
                             patterns.push(self.parse_pattern()?);
@@ -1078,9 +1085,9 @@ impl Parser {
                             }
                         }
                     }
-                    
+
                     self.expect(&TokenKind::RightParen)?;
-                    
+
                     Ok(Pattern::Variant {
                         name: ident.value,
                         patterns,

@@ -19,7 +19,7 @@ pub enum TokenKind {
 
     // Identifiers and Keywords
     Ident(String),
-    
+
     // Keywords - Control Flow
     If,
     Else,
@@ -31,46 +31,46 @@ pub enum TokenKind {
     Continue,
     Return,
     Match,
-    
+
     // Keywords - Definitions
     Fn,
     Let,
-    Var,      // Mutable variable (MVP: using var, later: mut keyword)
-    Const,    // Constants
+    Var,   // Mutable variable (MVP: using var, later: mut keyword)
+    Const, // Constants
     Struct,
     Enum,
     Trait,
     Impl,
     Type,
-    Mod,      // Modules
-    Use,      // Import from module
+    Mod,       // Modules
+    Use,       // Import from module
     SelfLower, // self (lowercase)
     SelfUpper, // Self (uppercase type)
-    
+
     // Keywords - Ownership (Phase 2)
-    Own,      // Explicit ownership transfer
-    Ref,      // Reference (will be inferred in most cases)
-    
+    Own, // Explicit ownership transfer
+    Ref, // Reference (will be inferred in most cases)
+
     // Keywords - Other
     As,
-    Is,       // Type checking and boolean properties
+    Is, // Type checking and boolean properties
     Import,
     Pub,
     Async,
     Await,
-    
+
     // Boolean operators - Natural language
-    And,      // Natural: and
-    Or,       // Natural: or
-    Not,      // Natural: not
-    
+    And, // Natural: and
+    Or,  // Natural: or
+    Not, // Natural: not
+
     // Operators - Arithmetic
-    Plus,     // +
-    Minus,    // -
-    Star,     // *
-    Slash,    // /
-    Percent,  // %
-    
+    Plus,    // +
+    Minus,   // -
+    Star,    // *
+    Slash,   // /
+    Percent, // %
+
     // Operators - Comparison
     EqualEqual,   // ==
     NotEqual,     // !=
@@ -78,37 +78,37 @@ pub enum TokenKind {
     LessEqual,    // <=
     Greater,      // >
     GreaterEqual, // >=
-    
+
     // Operators - Logical (symbolic)
-    AmpAmp,       // && (allowed alongside 'and')
-    PipePipe,     // || (allowed alongside 'or')
-    Bang,         // ! (allowed alongside 'not')
-    
+    AmpAmp,   // && (allowed alongside 'and')
+    PipePipe, // || (allowed alongside 'or')
+    Bang,     // ! (allowed alongside 'not')
+
     // Operators - Bitwise
-    Amp,          // &
-    Pipe,         // |
-    Caret,        // ^
-    Tilde,        // ~
-    LessLess,     // <<
+    Amp,            // &
+    Pipe,           // |
+    Caret,          // ^
+    Tilde,          // ~
+    LessLess,       // <<
     GreaterGreater, // >>
-    
+
     // Operators - Assignment
-    Equal,        // =
-    PlusEqual,    // +=
-    MinusEqual,   // -=
-    StarEqual,    // *=
-    SlashEqual,   // /=
-    
+    Equal,      // =
+    PlusEqual,  // +=
+    MinusEqual, // -=
+    StarEqual,  // *=
+    SlashEqual, // /=
+
     // Operators - Other
-    Dot,          // .
-    DotDot,       // .. (exclusive range)
-    DotDotEqual,  // ..= (inclusive range)
-    Colon,        // :
-    ColonColon,   // ::
-    Question,     // ? (error propagation)
-    Arrow,        // -> (return type)
-    FatArrow,     // => (match arms)
-    
+    Dot,         // .
+    DotDot,      // .. (exclusive range)
+    DotDotEqual, // ..= (inclusive range)
+    Colon,       // :
+    ColonColon,  // ::
+    Question,    // ? (error propagation)
+    Arrow,       // -> (return type)
+    FatArrow,    // => (match arms)
+
     // Delimiters
     LeftParen,    // (
     RightParen,   // )
@@ -116,13 +116,13 @@ pub enum TokenKind {
     RightBrace,   // }
     LeftBracket,  // [
     RightBracket, // ]
-    
+
     // Punctuation
-    Comma,        // ,
-    Semicolon,    // ;
-    
+    Comma,     // ,
+    Semicolon, // ;
+
     // Special
-    Eof,          // End of file
+    Eof,           // End of file
     Error(String), // Lexical error
 }
 

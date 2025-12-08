@@ -51,47 +51,47 @@ impl<'a> Lexer<'a> {
                 let kind = match ch {
                     // Identifiers and keywords
                     'a'..='z' | 'A'..='Z' | '_' => self.lex_identifier(),
-                    
+
                     // Numbers
                     '0'..='9' => self.lex_number()?,
-                    
+
                     // String literals
                     '"' => self.lex_string()?,
-                    
+
                     // Char literals
                     '\'' => self.lex_char()?,
-                    
+
                     // Operators and punctuation
                     '+' => self.lex_plus(),
                     '-' => self.lex_minus(),
                     '*' => self.lex_star(),
                     '/' => self.lex_slash(),
                     '%' => self.simple_token(TokenKind::Percent),
-                    
+
                     '=' => self.lex_equal(),
                     '!' => self.lex_bang(),
                     '<' => self.lex_less(),
                     '>' => self.lex_greater(),
-                    
+
                     '&' => self.lex_amp(),
                     '|' => self.lex_pipe(),
                     '^' => self.simple_token(TokenKind::Caret),
                     '~' => self.simple_token(TokenKind::Tilde),
-                    
+
                     '.' => self.lex_dot(),
                     ':' => self.lex_colon(),
                     '?' => self.simple_token(TokenKind::Question),
-                    
+
                     '(' => self.simple_token(TokenKind::LeftParen),
                     ')' => self.simple_token(TokenKind::RightParen),
                     '{' => self.simple_token(TokenKind::LeftBrace),
                     '}' => self.simple_token(TokenKind::RightBrace),
                     '[' => self.simple_token(TokenKind::LeftBracket),
                     ']' => self.simple_token(TokenKind::RightBracket),
-                    
+
                     ',' => self.simple_token(TokenKind::Comma),
                     ';' => self.simple_token(TokenKind::Semicolon),
-                    
+
                     _ => {
                         self.advance();
                         return Err(Error::new(
@@ -184,7 +184,7 @@ impl<'a> Lexer<'a> {
             }
         }
         let ident = &self.source[start..self.position];
-        
+
         // Check if it's a keyword
         TokenKind::from_keyword(ident).unwrap_or_else(|| TokenKind::Ident(ident.to_string()))
     }
@@ -192,7 +192,7 @@ impl<'a> Lexer<'a> {
     /// Lex number (integer or float)
     fn lex_number(&mut self) -> Result<TokenKind> {
         let start = self.position;
-        
+
         // Collect digits
         while let Some(ch) = self.current_char {
             if ch.is_ascii_digit() {
@@ -203,9 +203,9 @@ impl<'a> Lexer<'a> {
         }
 
         // Check for decimal point
-        if self.current_char == Some('.') && self.peek().map_or(false, |c| c.is_ascii_digit()) {
+        if self.current_char == Some('.') && self.peek().is_some_and(|c| c.is_ascii_digit()) {
             self.advance(); // '.'
-            
+
             // Collect fractional digits
             while let Some(ch) = self.current_char {
                 if ch.is_ascii_digit() {
@@ -245,7 +245,7 @@ impl<'a> Lexer<'a> {
         self.advance(); // Opening '"'
 
         let mut string = String::new();
-        
+
         while let Some(ch) = self.current_char {
             match ch {
                 '"' => {

@@ -20,11 +20,11 @@ pub enum ErrorKind {
     InvalidNumber,
     InvalidChar,
     UnexpectedCharacter,
-    
+
     // Parser errors (for future)
     UnexpectedToken,
     ExpectedToken,
-    
+
     // Semantic errors
     UndefinedVariable,
     TypeMismatch,

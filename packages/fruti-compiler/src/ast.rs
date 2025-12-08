@@ -76,9 +76,9 @@ pub struct Variant {
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum VariantData {
-    Unit,                     // None
-    Tuple(Vec<Type>),         // Some(i32, String)
-    Struct(Vec<Field>),       // Point { x: i32, y: i32 }
+    Unit,               // None
+    Tuple(Vec<Type>),   // Some(i32, String)
+    Struct(Vec<Field>), // Point { x: i32, y: i32 }
 }
 
 /// Trait definition
@@ -141,25 +141,25 @@ pub struct Use {
 pub enum Type {
     /// Simple type: i32, String, etc.
     Simple(Spanned<String>),
-    
+
     /// Reference type: &T
     Ref(Box<Type>),
-    
+
     /// Owned type: own T (explicit ownership)
     Own(Box<Type>),
-    
+
     /// Tuple type: (i32, String)
     Tuple(Vec<Type>),
-    
+
     /// Array type: [i32; 10]
     Array(Box<Type>, Option<usize>),
-    
+
     /// Function type: fn(i32) -> String
     Function {
         params: Vec<Type>,
         return_type: Box<Type>,
     },
-    
+
     /// Inferred type (placeholder for type inference)
     Infer,
 }
@@ -181,43 +181,38 @@ pub enum Stmt {
         ty: Option<Type>,
         value: Option<Expr>,
     },
-    
+
     /// Var binding: var x = 5;
     Var {
         name: Spanned<String>,
         ty: Option<Type>,
         value: Option<Expr>,
     },
-    
+
     /// Expression statement: foo();
     Expr(Expr),
-    
+
     /// Return statement: return 5;
     Return(Option<Expr>),
-    
+
     /// Break statement: break;
     Break,
-    
+
     /// Continue statement: continue;
     Continue,
-    
+
     /// While loop: while x < 10 { ... }
-    While {
-        condition: Expr,
-        body: Block,
-    },
-    
+    While { condition: Expr, body: Block },
+
     /// For loop: for i in 0..10 { ... }
     For {
         var: Spanned<String>,
         iter: Expr,
         body: Block,
     },
-    
+
     /// Infinite loop: loop { ... }
-    Loop {
-        body: Block,
-    },
+    Loop { body: Block },
 }
 
 /// Expression
@@ -235,101 +230,101 @@ pub enum ExprKind {
     String(String),
     Char(char),
     Bool(bool),
-    
+
     /// Identifier: x, foo
     Ident(String),
-    
+
     /// Binary operation: a + b, x == y
     Binary {
         op: BinOp,
         left: Box<Expr>,
         right: Box<Expr>,
     },
-    
+
     /// Unary operation: -x, not flag
     Unary {
         op: UnOp,
         expr: Box<Expr>,
     },
-    
+
     /// Function call: foo(x, y)
     Call {
         func: Box<Expr>,
         args: Vec<Expr>,
     },
-    
+
     /// Method call: obj.method(x)
     MethodCall {
         receiver: Box<Expr>,
         method: Spanned<String>,
         args: Vec<Expr>,
     },
-    
+
     /// Field access: obj.field
     Field {
         expr: Box<Expr>,
         field: Spanned<String>,
     },
-    
+
     /// Index access: arr[0]
     Index {
         expr: Box<Expr>,
         index: Box<Expr>,
     },
-    
+
     /// Range: 0..10, 0..=10
     Range {
         start: Option<Box<Expr>>,
         end: Option<Box<Expr>>,
         inclusive: bool,
     },
-    
+
     /// If expression: if x { a } else { b }
     If {
         condition: Box<Expr>,
         then_block: Block,
         else_block: Option<Block>,
     },
-    
+
     /// Match expression: match x { ... }
     Match {
         expr: Box<Expr>,
         arms: Vec<MatchArm>,
     },
-    
+
     /// Block expression: { ... }
     Block(Block),
-    
+
     /// Tuple: (1, "hello", 3.14)
     Tuple(Vec<Expr>),
-    
+
     /// Array literal: [1, 2, 3]
     Array(Vec<Expr>),
-    
+
     /// Struct literal: Point { x: 1, y: 2 }
     StructLit {
         name: Spanned<String>,
         fields: Vec<(Spanned<String>, Expr)>,
     },
-    
+
     /// Lambda: |x| x + 1
     Lambda {
         params: Vec<Param>,
         body: Box<Expr>,
     },
-    
+
     /// Await: await some_future()
     Await(Box<Expr>),
-    
+
     /// Try operator: might_fail()?
     Try(Box<Expr>),
-    
+
     /// Type cast: x as i32
     Cast {
         expr: Box<Expr>,
         ty: Type,
     },
-    
+
     /// Type check: x is SomeType
     Is {
         expr: Box<Expr>,
@@ -341,33 +336,33 @@ pub enum ExprKind {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BinOp {
     // Arithmetic
-    Add,      // +
-    Sub,      // -
-    Mul,      // *
-    Div,      // /
-    Rem,      // %
-    
+    Add, // +
+    Sub, // -
+    Mul, // *
+    Div, // /
+    Rem, // %
+
     // Comparison
-    Eq,       // ==
-    Ne,       // !=
-    Lt,       // <
-    Le,       // <=
-    Gt,       // >
-    Ge,       // >=
-    
+    Eq, // ==
+    Ne, // !=
+    Lt, // <
+    Le, // <=
+    Gt, // >
+    Ge, // >=
+
     // Logical
-    And,      // and or &&
-    Or,       // or or ||
-    
+    And, // and or &&
+    Or,  // or or ||
+
     // Bitwise
-    BitAnd,   // &
-    BitOr,    // |
-    BitXor,   // ^
-    Shl,      // <<
-    Shr,      // >>
-    
+    BitAnd, // &
+    BitOr,  // |
+    BitXor, // ^
+    Shl,    // <<
+    Shr,    // >>
+
     // Assignment
-    Assign,   // =
+    Assign,    // =
     AddAssign, // +=
     SubAssign, // -=
     MulAssign, // *=
@@ -378,9 +373,9 @@ pub enum BinOp {
 /// Unary operators
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum UnOp {
-    Neg,      // -x
-    Not,      // not x or !x
-    BitNot,   // ~x
+    Neg,    // -x
+    Not,    // not x or !x
+    BitNot, // ~x
 }
 
 /// Match arm
@@ -396,16 +391,16 @@ pub struct MatchArm {
 pub enum Pattern {
     /// Wildcard: _
     Wildcard,
-    
+
     /// Identifier: x
     Ident(String),
-    
+
     /// Literal: 42, "hello"
     Literal(Literal),
-    
+
     /// Tuple: (x, y)
     Tuple(Vec<Pattern>),
-    
+
     /// Enum variant: Some(x)
     Variant {
         name: String,
@@ -440,27 +435,27 @@ impl Expr {
     pub fn new(kind: ExprKind, span: Span) -> Self {
         Expr { kind, span }
     }
-    
+
     /// Create an integer literal
     pub fn integer(value: i64, span: Span) -> Self {
         Expr::new(ExprKind::Integer(value), span)
     }
-    
+
     /// Create a float literal
     pub fn float(value: f64, span: Span) -> Self {
         Expr::new(ExprKind::Float(value), span)
     }
-    
+
     /// Create a string literal
     pub fn string(value: impl Into<String>, span: Span) -> Self {
         Expr::new(ExprKind::String(value.into()), span)
     }
-    
+
     /// Create a boolean literal
     pub fn bool(value: bool, span: Span) -> Self {
         Expr::new(ExprKind::Bool(value), span)
     }
-    
+
     /// Create an identifier expression
     pub fn ident(name: impl Into<String>, span: Span) -> Self {
         Expr::new(ExprKind::Ident(name.into()), span)
@@ -472,42 +467,52 @@ impl BinOp {
     pub fn precedence(&self) -> u8 {
         match self {
             // Assignment (lowest precedence)
-            BinOp::Assign | BinOp::AddAssign | BinOp::SubAssign | 
-            BinOp::MulAssign | BinOp::DivAssign | BinOp::RemAssign => 1,
-            
+            BinOp::Assign
+            | BinOp::AddAssign
+            | BinOp::SubAssign
+            | BinOp::MulAssign
+            | BinOp::DivAssign
+            | BinOp::RemAssign => 1,
+
             // Logical OR
             BinOp::Or => 2,
-            
+
             // Logical AND
             BinOp::And => 3,
-            
+
             // Comparison
-            BinOp::Eq | BinOp::Ne | BinOp::Lt | BinOp::Le | 
-            BinOp::Gt | BinOp::Ge => 4,
-            
+            BinOp::Eq | BinOp::Ne | BinOp::Lt | BinOp::Le | BinOp::Gt | BinOp::Ge => 4,
+
             // Bitwise OR
             BinOp::BitOr => 5,
-            
+
             // Bitwise XOR
             BinOp::BitXor => 6,
-            
+
             // Bitwise AND
             BinOp::BitAnd => 7,
-            
+
             // Shifts
             BinOp::Shl | BinOp::Shr => 8,
-            
+
             // Addition/Subtraction
             BinOp::Add | BinOp::Sub => 9,
-            
+
             // Multiplication/Division/Remainder (highest precedence)
             BinOp::Mul | BinOp::Div | BinOp::Rem => 10,
         }
     }
-    
+
     /// Check if operator is left-associative
     pub fn is_left_associative(&self) -> bool {
-        !matches!(self, BinOp::Assign | BinOp::AddAssign | BinOp::SubAssign | 
-                       BinOp::MulAssign | BinOp::DivAssign | BinOp::RemAssign)
+        !matches!(
+            self,
+            BinOp::Assign
+                | BinOp::AddAssign
+                | BinOp::SubAssign
+                | BinOp::MulAssign
+                | BinOp::DivAssign
+                | BinOp::RemAssign
+        )
     }
 }

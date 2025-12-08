@@ -18,7 +18,10 @@ impl Span {
     }
 
     pub fn empty(pos: usize) -> Self {
-        Self { start: pos, end: pos }
+        Self {
+            start: pos,
+            end: pos,
+        }
     }
 
     /// Combine two spans into one that covers both
