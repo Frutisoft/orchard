@@ -329,7 +329,7 @@ impl TypeChecker {
     /// Type check a statement
     fn check_stmt(&mut self, stmt: &Stmt) -> Result<()> {
         match stmt {
-            Stmt::Let { name, ty, value } => {
+            Stmt::Let { name, ty, value, mutable } => {
                 let value_type = if let Some(v) = value {
                     self.check_expr(v)?
                 } else {
@@ -360,43 +360,7 @@ impl TypeChecker {
                         name.value.clone(),
                         Symbol::Variable {
                             ty: value_type,
-                            mutable: false,
-                            span: name.span,
-                        },
-                    )
-                    .map_err(|e| Error::new(ErrorKind::SemanticError, name.span, e))?;
-            }
-            Stmt::Var { name, ty, value } => {
-                let value_type = if let Some(v) = value {
-                    self.check_expr(v)?
-                } else {
-                    return Err(Error::new(
-                        ErrorKind::SemanticError,
-                        name.span,
-                        "Var binding must have an initializer or explicit type".to_string(),
-                    ));
-                };
-
-                if let Some(annotated_ty) = ty {
-                    let expected_ty = self.resolve_type(annotated_ty)?;
-                    if !self.types_compatible(&value_type, &expected_ty) {
-                        return Err(Error::new(
-                            ErrorKind::TypeMismatch,
-                            name.span,
-                            format!(
-                                "Type mismatch: expected {:?}, found {:?}",
-                                expected_ty, value_type
-                            ),
-                        ));
-                    }
-                }
-
-                self.symbols
-                    .define(
-                        name.value.clone(),
-                        Symbol::Variable {
-                            ty: value_type,
-                            mutable: true,
+                            mutable: *mutable,
                             span: name.span,
                         },
                     )

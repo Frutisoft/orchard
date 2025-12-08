@@ -1,0 +1,13 @@
+// Test mutable variables with 'let mut' syntax
+
+fn main() {
+    let x = 42;           // Immutable
+    let mut y = 10;       // Mutable
+    
+    // y = 20;            // This should work (mutable)
+    // x = 50;            // This should error (immutable)
+    
+    if x > 40 and y < 20 {
+        println("Mutable variables work!");
+    }
+}

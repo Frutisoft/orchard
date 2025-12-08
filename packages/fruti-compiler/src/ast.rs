@@ -175,18 +175,12 @@ pub struct Block {
 /// Statement
 #[derive(Debug, Clone, PartialEq)]
 pub enum Stmt {
-    /// Let binding: let x = 5;
+    /// Let binding: let x = 5; or let mut x = 5;
     Let {
         name: Spanned<String>,
         ty: Option<Type>,
         value: Option<Expr>,
-    },
-
-    /// Var binding: var x = 5;
-    Var {
-        name: Spanned<String>,
-        ty: Option<Type>,
-        value: Option<Expr>,
+        mutable: bool,
     },
 
     /// Expression statement: foo();

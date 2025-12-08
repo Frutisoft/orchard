@@ -491,12 +491,13 @@ mod tests {
 
     #[test]
     fn test_keywords() {
-        let tokens = lex("fn let if else while for").unwrap();
+        let tokens = lex("fn let mut if else while for").unwrap();
         assert_eq!(
             tokens,
             vec![
                 TokenKind::Fn,
                 TokenKind::Let,
+                TokenKind::Mut,
                 TokenKind::If,
                 TokenKind::Else,
                 TokenKind::While,

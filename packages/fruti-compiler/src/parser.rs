@@ -465,6 +465,7 @@ impl Parser {
         match self.peek().value {
             TokenKind::Let => {
                 self.advance();
+                let mutable = self.eat(&TokenKind::Mut);
                 let name = self.expect_ident()?;
                 let ty = if self.eat(&TokenKind::Colon) {
                     Some(self.parse_type()?)
@@ -477,23 +478,7 @@ impl Parser {
                     None
                 };
                 self.expect(&TokenKind::Semicolon)?;
-                Ok(Some(Stmt::Let { name, ty, value }))
-            }
-            TokenKind::Var => {
-                self.advance();
-                let name = self.expect_ident()?;
-                let ty = if self.eat(&TokenKind::Colon) {
-                    Some(self.parse_type()?)
-                } else {
-                    None
-                };
-                let value = if self.eat(&TokenKind::Equal) {
-                    Some(self.parse_expr()?)
-                } else {
-                    None
-                };
-                self.expect(&TokenKind::Semicolon)?;
-                Ok(Some(Stmt::Var { name, ty, value }))
+                Ok(Some(Stmt::Let { name, ty, value, mutable }))
             }
             TokenKind::Return => {
                 self.advance();

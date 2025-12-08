@@ -35,7 +35,7 @@ pub enum TokenKind {
     // Keywords - Definitions
     Fn,
     Let,
-    Var,   // Mutable variable (MVP: using var, later: mut keyword)
+    Mut,   // Mutable modifier: let mut x = 5
     Const, // Constants
     Struct,
     Enum,
@@ -143,7 +143,7 @@ impl TokenKind {
                 | TokenKind::Match
                 | TokenKind::Fn
                 | TokenKind::Let
-                | TokenKind::Var
+                | TokenKind::Mut
                 | TokenKind::Const
                 | TokenKind::Struct
                 | TokenKind::Enum
@@ -185,7 +185,7 @@ impl TokenKind {
             "match" => Some(TokenKind::Match),
             "fn" => Some(TokenKind::Fn),
             "let" => Some(TokenKind::Let),
-            "var" => Some(TokenKind::Var),
+            "mut" => Some(TokenKind::Mut),
             "const" => Some(TokenKind::Const),
             "struct" => Some(TokenKind::Struct),
             "enum" => Some(TokenKind::Enum),
@@ -236,7 +236,7 @@ impl fmt::Display for TokenKind {
             TokenKind::Match => write!(f, "match"),
             TokenKind::Fn => write!(f, "fn"),
             TokenKind::Let => write!(f, "let"),
-            TokenKind::Var => write!(f, "var"),
+            TokenKind::Mut => write!(f, "mut"),
             TokenKind::Const => write!(f, "const"),
             TokenKind::Struct => write!(f, "struct"),
             TokenKind::Enum => write!(f, "enum"),
