@@ -38,6 +38,6 @@ jobs:
             - [ ] Documentation is updated if needed
             - [ ] PR description clearly explains the changes
             
-            Please refer to our [Contributing Guidelines](https://github.com/Frutisoft/frutisoft/blob/main/CONTRIBUTING.md) for more details.
+            Please refer to our [Contributing Guidelines](https://github.com/Frutisoft/orchard/blob/main/CONTRIBUTING.md) for more details.
             
             A maintainer will review your PR soon. Thank you for contributing!
