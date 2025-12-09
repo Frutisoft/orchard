@@ -1,26 +1,19 @@
-# Frutisoft Examples
+# Fruti Examples - Phase 1 MVP
 
-This directory contains example programs demonstrating Fruti language features and Aero OS concepts.
+**Runnable example programs for the current Fruti compiler implementation**
 
-## Fruti Language Examples
+---
 
-### Basic
-- `hello-world.fruti` - Simple hello world program
-- `basic-features.fruti` - Variables, control flow, functions
+## Current Status: Phase 1 MVP
 
-### Advanced (Coming Soon)
-- Structs and enums
-- Pattern matching
-- Trait implementations
-- Ownership examples
-- Concurrent programming
+These examples **actually work** with the current compiler (Phase 1 MVP completed December 7, 2025). They demonstrate the implemented features:
 
-## Aero OS Examples (Planned)
+- Variables and basic types (i32, f64, str, bool)
+- Functions and control flow
+- Basic operators
+- Comments
 
-- Kernel module template
-- System call examples
-- IPC communication
-- Device driver skeleton
+**Looking for more advanced examples?** See `/docs/fruti/examples/` for design reference examples showing planned features (web servers, CLI tools, concurrency, etc.).
 
 ## Running Examples
 

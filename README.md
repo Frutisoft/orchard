@@ -50,18 +50,17 @@ frutisoft/                    # Root monorepo
 ├── docs/                     # Complete documentation
 │   ├── fruti/                # Fruti language docs
 │   │   ├── language/         # Guides and reference
-│   │   ├── examples/         # Code examples
-│   │   └── Language-Design-Decisions.md
-│   ├── aero/                 # Aero OS docs
-│   │   ├── os/               # Architecture and guides
+│   │   ├── examples/         # Design reference examples (aspirational)
+│   │   └── Language-Design-Decisions.md (7,177 lines)
+│   ├── aero/                 # Aero OS docs (early design phase)
 │   │   └── Aero-OS-Technical-Spec.md
 │   ├── archive/              # Historical documents & milestones
 │   ├── assets/               # Images and media
 │   └── README.md
 │
-├── examples/                 # Working code samples
-│   ├── hello-world.fruti     # Basic Fruti program
-│   ├── basic-features.fruti  # Language features demo
+├── examples/                 # Runnable code samples (Phase 1 MVP)
+│   ├── hello-world.fruti     # Basic hello world
+│   ├── basic-features.fruti  # Variables, functions, control flow
 │   └── README.md
 │
 ├── website/                  # GitHub Pages site
