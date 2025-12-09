@@ -1,5 +1,10 @@
 ﻿# Frutisoft: Fruti Language & Aero OS
 
+[![CI](https://github.com/Frutisoft/frutisoft/actions/workflows/ci.yml/badge.svg)](https://github.com/Frutisoft/frutisoft/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![GitHub issues](https://img.shields.io/github/issues/Frutisoft/frutisoft)](https://github.com/Frutisoft/frutisoft/issues)
+[![GitHub stars](https://img.shields.io/github/stars/Frutisoft/frutisoft)](https://github.com/Frutisoft/frutisoft/stargazers)
+
 **A passion project exploring modern programming language and OS design**
 
 ---
