@@ -8,10 +8,10 @@ Last Updated: December 8, 2025
 
 ## Quick Links
 
-- **[Fruti Language Design](./fruti/Language-Design-Decisions.md)** - All syntax and semantic choices
+- **[Fruti Language Design](./fruti/Language-Design-Decisions.md)** - Complete specification
 - **[Quick Start Guide](./fruti/language/Guides/Quick-Start.md)** - Get started in 10 minutes
 - **[Aero OS Specification](./aero/Aero-OS-Technical-Spec.md)** - Kernel architecture
-- **[Phase 1 Complete](./PHASE-1-COMPLETE.md)** - Fruti compiler Phase 1 status
+- **[Code Examples](./fruti/examples/)** - Real-world Fruti programs
 
 ---
 
@@ -20,30 +20,23 @@ Last Updated: December 8, 2025
 ### [Fruti Language](./fruti/)
 General-purpose programming language
 
-- **Language Reference** - Complete specification
-- **Standard Library** - Built-in modules and APIs
-- **Examples** - Code patterns and use cases
-- **Guides** - Tutorials and deep dives
+- **[Language Design Decisions](./fruti/Language-Design-Decisions.md)** - Complete specification (7,177 lines)
+- **[Examples](./fruti/examples/)** - Real-world code patterns (CLI tools, web servers, data processing)
+- **[Guides](./fruti/language/Guides/)** - Quick start and deep dives
+- **[Reference](./fruti/language/Reference/)** - Standard library and formatting
 
 ### [Aero Operating System](./aero/)
-Microkernel OS design
+Microkernel OS design (early design phase)
 
-- **Technical Specification** - Architecture and implementation
-- **Developer Guide** - Building for Aero OS
-- **User Guide** - Using Aero OS
-
-### [Resources](./resources/)
-Development references
-
-- Language evaluation criteria and production readiness guides
-- OS development checklists and best practices
+- **[Technical Specification](./aero/Aero-OS-Technical-Spec.md)** - Architecture and implementation plans
 
 ### [Archive](./archive/)
-Original design documents from early 2025
+Historical materials and milestones
 
-- Original Fruti language design documents
-- Original Aero OS architecture notes
-- Project evolution and restructure documentation
+- Original design documents (early 2025)
+- Phase 1 completion milestone (December 7, 2025)
+- Reference materials and production readiness guides
+- Repository setup documentation
 
 ---
 
