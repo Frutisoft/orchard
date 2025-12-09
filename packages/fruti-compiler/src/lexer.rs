@@ -11,6 +11,8 @@ pub struct Lexer<'a> {
     chars: std::iter::Peekable<Chars<'a>>,
     position: usize,
     current_char: Option<char>,
+    last_token: Option<TokenKind>,
+    pending_semicolon: Option<()>,
 }
 
 impl<'a> Lexer<'a> {
@@ -22,6 +24,8 @@ impl<'a> Lexer<'a> {
             chars,
             position: 0,
             current_char,
+            last_token: None,
+            pending_semicolon: None,
         }
     }
 
@@ -41,13 +45,41 @@ impl<'a> Lexer<'a> {
 
     /// Get the next token
     pub fn next_token(&mut self) -> Result<Token> {
+        // Remember position before skipping whitespace for newline detection
+        let before_skip = self.position;
         self.skip_whitespace_and_comments();
+        let had_newline = self.source[before_skip..self.position].contains('\n');
 
         let start = self.position;
 
         match self.current_char {
-            None => Ok(Token::new(TokenKind::Eof, Span::new(start, start))),
+            None => {
+                // Insert semicolon before EOF if last token could end a statement
+                if self.should_insert_semicolon_before_eof() {
+                    // Clear last_token so we don't insert another semicolon
+                    self.last_token = Some(TokenKind::Semicolon);
+                    // Set pending to ensure EOF comes next
+                    self.pending_semicolon = Some(());
+                    return Ok(Token::new(TokenKind::Semicolon, Span::new(start, start)));
+                }
+                Ok(Token::new(TokenKind::Eof, Span::new(start, start)))
+            }
             Some(ch) => {
+                // Check if we should insert semicolon before this token
+                if had_newline
+                    && self.pending_semicolon.is_none()
+                    && self.should_insert_semicolon_before(ch)
+                {
+                    // Mark that we inserted a semicolon so we don't insert another
+                    self.last_token = Some(TokenKind::Semicolon);
+                    // Mark pending so we process the actual token next
+                    self.pending_semicolon = Some(());
+                    return Ok(Token::new(TokenKind::Semicolon, Span::new(start, start)));
+                }
+
+                // Clear pending flag now that we're processing the real token
+                self.pending_semicolon = None;
+
                 let kind = match ch {
                     // Identifiers and keywords
                     'a'..='z' | 'A'..='Z' | '_' => self.lex_identifier(),
@@ -103,6 +135,7 @@ impl<'a> Lexer<'a> {
                 };
 
                 let end = self.position;
+                self.last_token = Some(kind.clone());
                 Ok(Token::new(kind, Span::new(start, end)))
             }
         }
@@ -131,6 +164,47 @@ impl<'a> Lexer<'a> {
             true
         } else {
             false
+        }
+    }
+
+    /// Check if we should insert a semicolon before this character
+    /// Based on Go's automatic semicolon insertion rules
+    fn should_insert_semicolon_before(&self, _next_char: char) -> bool {
+        // Insert if last token could end a statement
+        // The rule is simple: did the previous token end a statement?
+        // We don't care what comes next (except we check for newlines elsewhere)
+        self.last_token_can_end_statement()
+    }
+
+    /// Check if we should insert a semicolon before EOF
+    fn should_insert_semicolon_before_eof(&self) -> bool {
+        self.last_token_can_end_statement()
+    }
+
+    /// Check if the last token could end a statement
+    /// Per spec: identifiers, literals, return/break/continue, closing delimiters
+    fn last_token_can_end_statement(&self) -> bool {
+        match &self.last_token {
+            None => false,
+            Some(kind) => match kind {
+                // Identifiers and literals
+                TokenKind::Ident(_)
+                | TokenKind::Integer(_)
+                | TokenKind::Float(_)
+                | TokenKind::String(_)
+                | TokenKind::Char(_)
+                | TokenKind::True
+                | TokenKind::False => true,
+
+                // Keywords that end statements
+                TokenKind::Return | TokenKind::Break | TokenKind::Continue => true,
+
+                // Closing delimiters
+                TokenKind::RightParen | TokenKind::RightBracket | TokenKind::RightBrace => true,
+
+                // Everything else doesn't trigger ASI
+                _ => false,
+            },
         }
     }
 
@@ -517,6 +591,7 @@ mod tests {
                 TokenKind::Ident("world".to_string()),
                 TokenKind::Ident("_test".to_string()),
                 TokenKind::Ident("test123".to_string()),
+                TokenKind::Semicolon, // Auto-inserted at EOF
                 TokenKind::Eof,
             ]
         );
@@ -532,6 +607,7 @@ mod tests {
                 TokenKind::Float(3.14),
                 TokenKind::Integer(0),
                 TokenKind::Integer(100),
+                TokenKind::Semicolon, // Auto-inserted at EOF
                 TokenKind::Eof,
             ]
         );
@@ -546,6 +622,7 @@ mod tests {
                 TokenKind::String("hello".to_string()),
                 TokenKind::String("world\n".to_string()),
                 TokenKind::String("test".to_string()),
+                TokenKind::Semicolon, // Auto-inserted at EOF
                 TokenKind::Eof,
             ]
         );
@@ -597,5 +674,96 @@ mod tests {
         let tokens = lex(source).unwrap();
         assert_eq!(tokens[0], TokenKind::Let);
         assert_eq!(tokens[1], TokenKind::Ident("x".to_string()));
+    }
+
+    #[test]
+    fn test_automatic_semicolon_insertion() {
+        // Test ASI after identifiers and literals
+        let source = r#"
+let x = 42
+let y = 100
+        "#;
+        let tokens = lex(source).unwrap();
+        assert_eq!(
+            tokens,
+            vec![
+                TokenKind::Let,
+                TokenKind::Ident("x".to_string()),
+                TokenKind::Equal,
+                TokenKind::Integer(42),
+                TokenKind::Semicolon, // Auto-inserted!
+                TokenKind::Let,
+                TokenKind::Ident("y".to_string()),
+                TokenKind::Equal,
+                TokenKind::Integer(100),
+                TokenKind::Semicolon, // Auto-inserted!
+                TokenKind::Eof,
+            ]
+        );
+    }
+
+    #[test]
+    fn test_asi_with_return() {
+        // Test ASI after return keyword
+        let source = r#"
+fn test() -> i32 {
+    return 42
+}
+        "#;
+        let tokens = lex(source).unwrap();
+        // Debug: print all tokens
+        println!("Tokens: {:?}", tokens);
+        // Find the return keyword
+        let return_idx = tokens.iter().position(|t| *t == TokenKind::Return).unwrap();
+        // Check that semicolon was inserted after the integer
+        assert_eq!(tokens[return_idx + 1], TokenKind::Integer(42));
+        assert_eq!(tokens[return_idx + 2], TokenKind::Semicolon); // Auto-inserted!
+    }
+
+    #[test]
+    fn test_no_double_asi_on_braces() {
+        // Test that RightBrace itself gets ASI after it, but content before it also gets ASI
+        let source = r#"
+fn test() {
+    let x = 42
+}
+        "#;
+        let tokens = lex(source).unwrap();
+        println!("Tokens: {:?}", tokens);
+        // Should have semicolon after 42
+        let int_idx = tokens
+            .iter()
+            .position(|t| matches!(t, TokenKind::Integer(42)))
+            .unwrap();
+        assert_eq!(tokens[int_idx + 1], TokenKind::Semicolon); // After 42
+        assert_eq!(tokens[int_idx + 2], TokenKind::RightBrace); // Then }
+                                                                // RightBrace also ends a statement, so it gets a semicolon too
+        assert_eq!(tokens[int_idx + 3], TokenKind::Semicolon); // After }
+    }
+
+    #[test]
+    fn test_explicit_semicolons_still_work() {
+        // Test that explicit semicolons still work
+        let source = r#"
+let x = 42;
+let y = 100;
+        "#;
+        let tokens = lex(source).unwrap();
+        assert_eq!(
+            tokens,
+            vec![
+                TokenKind::Let,
+                TokenKind::Ident("x".to_string()),
+                TokenKind::Equal,
+                TokenKind::Integer(42),
+                TokenKind::Semicolon, // Explicit
+                TokenKind::Let,
+                TokenKind::Ident("y".to_string()),
+                TokenKind::Equal,
+                TokenKind::Integer(100),
+                TokenKind::Semicolon, // Explicit
+                TokenKind::Eof,
+            ]
+        );
     }
 }

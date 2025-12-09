@@ -54,6 +54,7 @@ pub enum TokenKind {
     As,
     Is, // Type checking and boolean properties
     Pub,
+    Priv, // Private visibility modifier
     Async,
     Await,
 
@@ -156,6 +157,7 @@ impl TokenKind {
                 | TokenKind::As
                 | TokenKind::Is
                 | TokenKind::Pub
+                | TokenKind::Priv
                 | TokenKind::Async
                 | TokenKind::Await
                 | TokenKind::And
@@ -196,6 +198,7 @@ impl TokenKind {
             "as" => Some(TokenKind::As),
             "is" => Some(TokenKind::Is),
             "pub" => Some(TokenKind::Pub),
+            "priv" => Some(TokenKind::Priv),
             "async" => Some(TokenKind::Async),
             "await" => Some(TokenKind::Await),
             "and" => Some(TokenKind::And),
@@ -245,6 +248,7 @@ impl fmt::Display for TokenKind {
             TokenKind::As => write!(f, "as"),
             TokenKind::Is => write!(f, "is"),
             TokenKind::Pub => write!(f, "pub"),
+            TokenKind::Priv => write!(f, "priv"),
             TokenKind::Async => write!(f, "async"),
             TokenKind::Await => write!(f, "await"),
             TokenKind::And => write!(f, "and"),

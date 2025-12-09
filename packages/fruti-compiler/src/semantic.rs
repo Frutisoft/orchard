@@ -1,6 +1,14 @@
 // Semantic Analysis - Fruti Compiler
 //
 // Type checking, name resolution, and semantic validation
+//
+// TODO (Phase 2): When implementing Result<T,E> and Option<T> types,
+// enforce simplified syntax per Language-Design-Decisions.md lines 3690-3697:
+// - Use Ok(val) NOT Result::Ok(val)
+// - Use Error(e) NOT Result::Err(e)  
+// - Use Some(val) NOT Option::Some(val)
+// - Use None NOT Option::None
+// This is a deliberate design decision to improve on Rust's verbose syntax.
 
 use crate::ast::*;
 use crate::error::{Error, ErrorKind, Result};

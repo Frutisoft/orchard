@@ -23,7 +23,14 @@ impl Parser {
         let mut items = Vec::new();
 
         while !self.is_at_end() {
-            items.push(self.parse_item()?);
+            // Skip any extraneous semicolons at module level (from ASI)
+            while self.eat(&TokenKind::Semicolon) {
+                // Just skip them
+            }
+
+            if !self.is_at_end() {
+                items.push(self.parse_item()?);
+            }
         }
 
         Ok(Module { items })
@@ -410,6 +417,16 @@ impl Parser {
         let mut expr = None;
 
         while !matches!(self.peek().value, TokenKind::RightBrace) {
+            // Skip any extraneous semicolons (from ASI)
+            while self.eat(&TokenKind::Semicolon) {
+                // Just skip them
+            }
+
+            // Check again after skipping semicolons
+            if matches!(self.peek().value, TokenKind::RightBrace) {
+                break;
+            }
+
             // Save position in case we need to backtrack
             let saved_pos = self.pos;
 
