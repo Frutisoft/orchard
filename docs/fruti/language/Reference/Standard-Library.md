@@ -114,15 +114,15 @@ impl<T> Option<T> {
 ```fruti
 fn divide(a: i32, b: i32) -> Option<i32> {
     if b == 0 {
-        return Option::None;
+        return None
     }
-    return Option::Some(a / b);
+    return Some(a / b)
 }
 
-let result: Option<i32> = divide(10, 2);
+let result: Option<i32> = divide(10, 2)
 match result {
-    Option::Some(value) => println("Result: {value}"),
-    Option::None => println("Cannot divide by zero"),
+    Some(value) => println("Result: {value}"),
+    None => println("Cannot divide by zero"),
 }
 ```
 
@@ -149,9 +149,9 @@ impl<T, E> Result<T, E> {
 fn parse_number(s: &str) -> Result<i32, String> {
     // Parsing logic
     if valid {
-        return Result::Ok(number);
+        return Ok(number)
     } else {
-        return Result::Error("Invalid number format");
+        return Error("Invalid number format")
     }
 }
 ```

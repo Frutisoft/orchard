@@ -599,12 +599,12 @@ mod tests {
 
     #[test]
     fn test_numbers() {
-        let tokens = lex("42 3.14 0 100").unwrap();
+        let tokens = lex("42 3.15 0 100").unwrap();
         assert_eq!(
             tokens,
             vec![
                 TokenKind::Integer(42),
-                TokenKind::Float(3.14),
+                TokenKind::Float(3.15),
                 TokenKind::Integer(0),
                 TokenKind::Integer(100),
                 TokenKind::Semicolon, // Auto-inserted at EOF
