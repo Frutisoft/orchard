@@ -15,7 +15,6 @@ These files represent the original project vision and served as the foundation f
 ### Project Milestones
 
 - `PHASE-1-COMPLETE.md` - Phase 1 MVP completion record (December 7, 2025)
-- `REPOSITORY_SETUP.md` - Initial GitHub repository configuration guide
 
 ### Reference Materials (`reference-materials/`)
 
