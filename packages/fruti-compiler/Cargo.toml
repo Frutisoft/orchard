@@ -21,7 +21,7 @@ anyhow = "1.0"
 thiserror = "1.0"
 
 # Parsing
-nom = "7.1"
+nom = "8.0"
 
 # Data structures
 indexmap = "2.1"
