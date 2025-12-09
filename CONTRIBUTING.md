@@ -95,8 +95,8 @@ When the project opens for contributions, we'll maintain a welcoming community f
 
 ```bash
 # Clone the repository
-git clone https://github.com/Frutisoft/frutisoft.git
-cd frutisoft
+git clone https://github.com/Frutisoft/orchard.git
+cd orchard
 
 # Build the compiler (when ready)
 cd packages/fruti-compiler

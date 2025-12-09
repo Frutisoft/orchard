@@ -5,9 +5,9 @@ edition = "2021"
 authors = ["Jameson Jones"]
 description = "The Fruti programming language compiler"
 license = "MIT"
-repository = "https://github.com/Frutisoft/frutisoft"
-homepage = "https://github.com/Frutisoft/frutisoft"
-documentation = "https://github.com/Frutisoft/frutisoft/tree/main/docs"
+repository = "https://github.com/Frutisoft/orchard"
+homepage = "https://github.com/Frutisoft/orchard"
+documentation = "https://github.com/Frutisoft/orchard/tree/main/docs"
 
 [dependencies]
 # Command-line parsing

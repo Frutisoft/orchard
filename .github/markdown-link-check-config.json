@@ -1,7 +1,7 @@
 {
   "ignorePatterns": [
     {
-      "pattern": "^https://github.com/Frutisoft/frutisoft/blob/main"
+      "pattern": "^https://github.com/Frutisoft/orchard/blob/main"
     },
     {
       "pattern": "^#"

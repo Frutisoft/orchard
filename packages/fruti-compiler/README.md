@@ -50,8 +50,8 @@ The Fruti compiler is a **passion project** by Jameson Jones (Illinois Mathemati
 
 ```bash
 # Clone repository
-git clone https://github.com/Frutisoft/frutisoft.git
-cd frutisoft/packages/fruti-compiler
+git clone https://github.com/Frutisoft/orchard.git
+cd orchard/packages/fruti-compiler
 
 # Build release version
 cargo build --release

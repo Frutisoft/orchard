@@ -6,7 +6,7 @@
 
 ## Current Status
 
-**This guide describes the intended design of Fruti.** The compiler is currently in early MVP development and does not yet support these features. Fruti is designed as a **general-purpose programming language** that learns from existing languages' pain points to create a simple, comprehensive solution. This is a passion project by Jameson Jones (Illinois Mathematics and Science Academy) - check the [repository](https://github.com/Frutisoft/frutisoft) for current implementation status.
+**This guide describes the intended design of Fruti.** The compiler is currently in early MVP development and does not yet support these features. Fruti is designed as a **general-purpose programming language** that learns from existing languages' pain points to create a simple, comprehensive solution. This is a passion project by Jameson Jones (Illinois Mathematics and Science Academy) - check the [repository](https://github.com/Frutisoft/orchard) for current implementation status.
 
 **Use this guide to:**
 - Understand Fruti's design philosophy
@@ -21,7 +21,7 @@
 **Current Status:** The Fruti compiler is in active development. There is no automated installer yet.
 
 **To experiment with Fruti:**
-1. Clone the repository: `git clone https://github.com/Frutisoft/frutisoft.git`
+1. Clone the repository: `git clone https://github.com/Frutisoft/orchard.git`
 2. Follow build instructions in [packages/fruti-compiler/README.md](../../../../packages/fruti-compiler/README.md)
 3. Build from source using Cargo
 
@@ -258,7 +258,7 @@ async fn main() {
 - **[Standard Library](../Reference/Standard-Library.md)** - Built-in modules and functions
 - **[Examples](../../examples/)** - More code examples
 - **[Language Design Decisions](../../Language-Design-Decisions.md)** - Complete design rationale
-- **[GitHub Repository](https://github.com/Frutisoft/frutisoft)** - Source code and development progress
+- **[GitHub Repository](https://github.com/Frutisoft/orchard)** - Source code and development progress
 
 ---
 
