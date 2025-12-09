@@ -42,8 +42,8 @@ fn main() {
 ```fruti
 fn main() {
     let name = "Alice"           // String (inferred)
-    let age = 30                 // Int (inferred)
-    let height = 5.7             // Float (inferred)
+    let age = 30                 // i32 (inferred)
+    let height = 5.7             // f64 (inferred)
     let is_active = true         // Bool (inferred)
     
     // Mutable variables
@@ -56,7 +56,7 @@ fn main() {
 
 ### Functions
 ```fruti
-fn add(a: Int, b: Int) -> Int {
+fn add(a: i32, b: i32) -> i32 {
     a + b
 }
 
@@ -104,7 +104,7 @@ async fn handle_request(req: http.Request, db: &Database) -> http.Response {
 
 ### Simple HTTP Client
 ```fruti
-import std.http
+import std::http
 
 async fn main() {
     // GET request
@@ -150,15 +150,15 @@ wc -l file.txt -o counts.txt
 
 ### Simple CLI Tool
 ```fruti
-import std.env
-import std.fs
+import std::env
+import std::fs
 
 fn main() -> Result<()> {
     let args = env.args().collect()
     
     if args.len() < 2 {
         eprintln("Usage: mytool <file>")
-        return Err("Missing argument")
+        return Error("Missing argument")
     }
     
     let filename = &args[1]
@@ -185,7 +185,7 @@ Download multiple files concurrently with progress tracking and retry logic.
 
 **Key concepts:**
 ```fruti
-async fn download_with_retry(url: String, max_retries: Int) -> Result<Vec<u8>> {
+async fn download_with_retry(url: String, max_retries: i32) -> Result<Vec<u8>> {
     let mut attempts = 0
     
     loop {
@@ -193,11 +193,11 @@ async fn download_with_retry(url: String, max_retries: Int) -> Result<Vec<u8>> {
         
         match http.get(&url).await {
             Ok(response) => return Ok(response.bytes().await?),
-            Err(e) if attempts < max_retries => {
+            Error(e) if attempts < max_retries => {
                 eprintln("Retry {attempts}/{max_retries}: {e}")
                 async.sleep(1s * attempts).await  // Exponential backoff
             }
-            Err(e) => return Err(e)
+            Error(e) => return Error(e)
         }
     }
 }
@@ -213,8 +213,8 @@ async fn main() {
 
 ### Producer-Consumer with Channels
 ```fruti
-import std.sync.channel
-import std.thread
+import std::sync::channel
+import std::thread
 
 fn main() {
     let (tx, rx) = channel::unbounded()
@@ -279,7 +279,7 @@ impl Arena {
 
 ### Device Driver Template
 ```fruti
-import std.aero.driver
+import std::aero::driver
 
 struct MyDriver {
     device: Device
@@ -347,12 +347,12 @@ fn group_by_category(records: Vec<Record>) -> HashMap<String, Vec<Record>> {
 
 ### JSON Processing
 ```fruti
-import std.json
-import std.fs
+import std::json
+import std::fs
 
 struct Config {
     host: String
-    port: Int
+    port: i32
     features: Vec<String>
 }
 
@@ -367,7 +367,7 @@ fn main() -> Result<()> {
     let new_config = Config {
         host: "localhost",
         port: 3000,
-        features: vec!["auth", "cache"]
+        features: ["auth", "cache"]
     }
     
     let json_str = json.stringify_pretty(&new_config)?
@@ -383,9 +383,9 @@ fn main() -> Result<()> {
 
 ### Error Handling
 ```fruti
-fn divide(a: Int, b: Int) -> Result<Int> {
+fn divide(a: i32, b: i32) -> Result<i32> {
     if b == 0 {
-        Err("Division by zero")
+        Error("Division by zero")
     } else {
         Ok(a / b)
     }
@@ -398,7 +398,7 @@ fn main() -> Result<()> {
     // Match on Result
     match divide(10, 0) {
         Ok(value) => println("Result: {value}"),
-        Err(e) => eprintln("Error: {e}")
+        Error(e) => eprintln("Error: {e}")
     }
     
     // Unwrap with default
@@ -412,7 +412,7 @@ fn main() -> Result<()> {
 ```fruti
 enum Message {
     Text(String)
-    Number(Int)
+    Number(i32)
     Quit
 }
 
@@ -443,7 +443,7 @@ trait Printable {
     fn print(self)
 }
 
-impl Printable for Int {
+impl Printable for i32 {
     fn print(self) {
         println("Number: {self}")
     }
@@ -469,7 +469,7 @@ fn main() {
 ### Closures and Higher-Order Functions
 ```fruti
 fn main() {
-    let numbers = vec![1, 2, 3, 4, 5]
+    let numbers = [1, 2, 3, 4, 5]
     
     // Map
     let doubled = numbers.map(|x| x * 2)
@@ -495,7 +495,7 @@ fn main() {
 
 ### Testing
 ```fruti
-fn add(a: Int, b: Int) -> Int {
+fn add(a: i32, b: i32) -> i32 {
     a + b
 }
 

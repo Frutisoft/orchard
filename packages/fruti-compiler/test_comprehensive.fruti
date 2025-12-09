@@ -1,40 +1,40 @@
 // Comprehensive Lexer Test - All Token Types
 
-/* Multi-line comment
-   testing block comments
-   with multiple lines */
+// Multi-line comments using // style
+// testing block comments
+// with multiple lines
 
 // Keywords test
 fn test_function(x: i32, y: f64) -> bool {
-    let immutable = 42;
-    let mut mutable = 3.14;
-    const CONSTANT = 100;
+    let immutable = 42
+    let mut mutable = 3.14
+    const CONSTANT = 100
     
     // Control flow keywords
     if x > 0 {
-        return true;
+        return true
     } else if x == 0 {
-        return false;
+        return false
     } else {
-        return false;
+        return false
     }
     
     // Loop keywords
     while mutable < 10.0 {
-        mutable = mutable + 1.0;
+        mutable = mutable + 1.0
     }
     
     for i in 0..10 {
-        continue;
+        continue
     }
     
     loop {
-        break;
+        break
     }
     
     // Match keyword
     match x {
-        _ => {}
+        _ => {},
     }
 }
 
@@ -59,18 +59,13 @@ impl Display for Point {
     }
 }
 
-// Module keywords
-mod utils {
-    pub fn helper() {}
-    use super::Point;
-}
-
-import std::io;
+// Import statement
+import std::io
 
 // Async/await
 async fn fetch_data() -> i32 {
-    await some_future();
-    return 0;
+    some_future().await
+    return 0
 }
 
 // Boolean literals and operators

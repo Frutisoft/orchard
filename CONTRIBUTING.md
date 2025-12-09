@@ -190,7 +190,7 @@ let doubled: Vec<i32> = numbers.iter().map(|x| x * 2).collect();
 
 ```fruti
 // Follow Fruti style guide
-fn calculate_total(items: Vec<Item>) -> Float {
+fn calculate_total(items: Vec<Item>) -> f64 {
     items.iter()
         .map(|item| item.price)
         .sum()

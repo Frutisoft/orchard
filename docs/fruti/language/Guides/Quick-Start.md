@@ -32,7 +32,7 @@
 Create `hello.fruti`:
 
 ```fruti
-import std.io
+import std::io
 
 fn main() {
     io.println("Hello, Fruti!")
@@ -75,11 +75,11 @@ let name = "Alice"
 let age = 30
 
 // Mutable
-var counter = 0
+let mut counter = 0
 counter += 1
 
 // Type annotations (optional)
-let explicit: Int = 42
+let explicit: i32 = 42
 ```
 
 ### Functions
@@ -135,7 +135,7 @@ let squares = [x * x for x in numbers]
 
 ```fruti
 // Result type for errors
-fn divide(a: Int, b: Int) -> Result<Int, String> {
+fn divide(a: i32, b: i32) -> Result<i32, String> {
     if b == 0 {
         Error("Division by zero")
     } else {
@@ -144,7 +144,7 @@ fn divide(a: Int, b: Int) -> Result<Int, String> {
 }
 
 // Using ? operator
-fn complex() -> Result<Int, String> {
+fn complex() -> Result<i32, String> {
     let x = divide(10, 2)?
     let y = divide(20, 4)?
     Ok(x + y)
@@ -152,8 +152,8 @@ fn complex() -> Result<Int, String> {
 
 // Match on Result
 match divide(10, 0) {
-    Ok(result) -> io.println("Result: {result}")
-    Error(msg) -> io.println("Error: {msg}")
+    Ok(result) => io.println("Result: {result}")
+    Error(msg) => io.println("Error: {msg}")
 }
 ```
 
@@ -164,8 +164,8 @@ match divide(10, 0) {
 ```fruti
 // Define a struct
 struct Person {
-    name: String
-    age: Int
+    name: String,
+    age: i32
 }
 
 // Create instance

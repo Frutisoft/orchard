@@ -1,34 +1,34 @@
 // Complete Web Server Example
 // Demonstrates: HTTP server, routing, JSON, async, error handling
 
-import std.http
-import std.json
-import std.collections.HashMap
-import std.sync.RwLock
+import std::http
+import std::json
+import std::collections::HashMap
+import std::sync::RwLock
 
 // Data models
 struct User {
-    id: Int
-    name: String
-    email: String
+    id: i32,
+    name: String,
+    email: String,
 }
 
 struct CreateUserRequest {
-    name: String
-    email: String
+    name: String,
+    email: String,
 }
 
 // In-memory database (thread-safe)
 struct Database {
-    users: RwLock<HashMap<Int, User>>
-    next_id: RwLock<Int>
+    users: RwLock<HashMap<i32, User>>,
+    next_id: RwLock<i32>,
 }
 
 impl Database {
     fn new() -> Self {
         Database {
             users: RwLock::new(HashMap::new()),
-            next_id: RwLock::new(1)
+            next_id: RwLock::new(1),
         }
     }
     
@@ -45,7 +45,7 @@ impl Database {
         user
     }
     
-    fn get_user(self, id: Int) -> Option<User> {
+    fn get_user(self, id: i32) -> Option<User> {
         self.users.read().get(&id).cloned()
     }
     
@@ -53,7 +53,7 @@ impl Database {
         self.users.read().values().cloned().collect()
     }
     
-    fn delete_user(self, id: Int) -> bool {
+    fn delete_user(self, id: i32) -> bool {
         self.users.write().remove(&id).is_some()
     }
 }
@@ -63,53 +63,53 @@ async fn handle_request(req: http.Request, db: &Database) -> http.Response {
     match (req.method(), req.path()) {
         ("GET", "/") => {
             http.Response::ok("Welcome to Fruti API")
-        }
+        },
         
         ("GET", "/users") => {
             let users = db.list_users()
             http.Response::json(&users)
-        }
+        },
         
         ("GET", path) if path.starts_with("/users/") => {
             let id_str = path.trim_start_prefix("/users/")
-            match id_str.parse::<Int>() {
+            match id_str.parse::<i32>() {
                 Ok(id) => {
                     match db.get_user(id) {
                         Some(user) => http.Response::json(&user),
-                        None => http.Response::not_found()
+                        None => http.Response::not_found(),
                     }
-                }
-                Err(_) => http.Response::bad_request("Invalid user ID")
+                },
+                Error(_) => http.Response::bad_request("Invalid user ID"),
             }
-        }
+        },
         
         ("POST", "/users") => {
             match req.json::<CreateUserRequest>().await {
                 Ok(create_req) => {
                     let user = db.create_user(create_req.name, create_req.email)
                     http.Response::json(&user).with_status(201)
-                }
-                Err(e) => {
+                },
+                Error(e) => {
                     http.Response::bad_request("Invalid JSON: {e}")
-                }
+                },
             }
-        }
+        },
         
         ("DELETE", path) if path.starts_with("/users/") => {
             let id_str = path.trim_start_prefix("/users/")
-            match id_str.parse::<Int>() {
+            match id_str.parse::<i32>() {
                 Ok(id) => {
                     if db.delete_user(id) {
                         http.Response::no_content()
                     } else {
                         http.Response::not_found()
                     }
-                }
-                Err(_) => http.Response::bad_request("Invalid user ID")
+                },
+                Error(_) => http.Response::bad_request("Invalid user ID"),
             }
-        }
+        },
         
-        _ => http.Response::not_found()
+        _ => http.Response::not_found(),
     }
 }
 

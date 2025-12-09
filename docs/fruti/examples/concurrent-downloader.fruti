@@ -1,22 +1,22 @@
 // Concurrent File Downloader
 // Demonstrates: Async, concurrency, channels, progress tracking
 
-import std.http
-import std.fs
-import std.async
-import std.sync.{Mutex, Arc}
-import std.collections.Vec
-import std.time
+import std::http
+import std::fs
+import std::async
+import std::sync::{Mutex, Arc}
+import std::collections::Vec
+import std::time
 
 struct Download {
-    url: String
-    filename: String
+    url: String,
+    filename: String,
 }
 
 struct Progress {
-    total: Int
-    completed: Int
-    errors: Int
+    total: i32,
+    completed: i32,
+    errors: i32,
 }
 
 async fn download_file(url: String, filename: String) -> Result<()> {
@@ -26,7 +26,7 @@ async fn download_file(url: String, filename: String) -> Result<()> {
         .map_err(|e| "Failed to fetch {url}: {e}")?
     
     if response.status() != 200 {
-        return Err("HTTP {response.status()} for {url}")
+        return Error("HTTP {response.status()} for {url}")
     }
     
     let bytes = response.bytes().await
@@ -41,7 +41,7 @@ async fn download_file(url: String, filename: String) -> Result<()> {
 
 async fn download_with_retry(
     download: Download,
-    max_retries: Int,
+    max_retries: i32,
     progress: Arc<Mutex<Progress>>
 ) {
     let mut attempts = 0
@@ -54,8 +54,8 @@ async fn download_with_retry(
                 let mut p = progress.lock()
                 p.completed += 1
                 break
-            }
-            Err(e) => {
+            },
+            Error(e) => {
                 if attempts >= max_retries {
                     eprintln("[FAILED] {download.filename} after {attempts} attempts: {e}")
                     let mut p = progress.lock()
@@ -65,7 +65,7 @@ async fn download_with_retry(
                 
                 eprintln("Retry {attempts}/{max_retries} for {download.filename}: {e}")
                 async.sleep(1s).await
-            }
+            },
         }
     }
 }
@@ -97,27 +97,27 @@ async fn print_progress(progress: Arc<Mutex<Progress>>) {
 }
 
 async fn main() -> Result<()> {
-    let downloads = vec![
+    let downloads = [
         Download {
             url: "https://example.com/file1.pdf",
-            filename: "downloads/file1.pdf"
+            filename: "downloads/file1.pdf",
         },
         Download {
             url: "https://example.com/file2.jpg",
-            filename: "downloads/file2.jpg"
+            filename: "downloads/file2.jpg",
         },
         Download {
             url: "https://example.com/file3.zip",
-            filename: "downloads/file3.zip"
+            filename: "downloads/file3.zip",
         },
         Download {
             url: "https://example.com/file4.mp4",
-            filename: "downloads/file4.mp4"
+            filename: "downloads/file4.mp4",
         },
         Download {
             url: "https://example.com/file5.txt",
-            filename: "downloads/file5.txt"
-        }
+            filename: "downloads/file5.txt",
+        },
     ]
     
     // Create output directory
@@ -127,7 +127,7 @@ async fn main() -> Result<()> {
     let progress = Arc::new(Mutex::new(Progress {
         total: downloads.len(),
         completed: 0,
-        errors: 0
+        errors: 0,
     }))
     
     // Spawn progress printer
@@ -162,7 +162,7 @@ async fn main() -> Result<()> {
     println("  Errors: {p.errors}")
     
     if p.errors > 0 {
-        Err("Some downloads failed")
+        Error("Some downloads failed")
     } else {
         Ok(())
     }

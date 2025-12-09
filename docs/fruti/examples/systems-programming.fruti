@@ -1,9 +1,9 @@
 // Systems Programming Example
 // Demonstrates: Low-level APIs, unsafe code, FFI, memory management
 
-import std.mem
-import std.ptr
-import std.ffi
+import std::mem
+import std::ptr
+import std::ffi
 
 // C interop
 extern "C" {
@@ -14,9 +14,9 @@ extern "C" {
 
 // Custom allocator example
 struct Arena {
-    buffer: *mut u8
-    capacity: usize
-    offset: usize
+    buffer: *mut u8,
+    capacity: usize,
+    offset: usize,
 }
 
 impl Arena {
@@ -29,7 +29,7 @@ impl Arena {
         Arena {
             buffer,
             capacity,
-            offset: 0
+            offset: 0,
         }
     }
     
@@ -67,9 +67,9 @@ impl Drop for Arena {
 
 // Zero-copy buffer handling
 struct Buffer {
-    data: *mut u8
-    len: usize
-    capacity: usize
+    data: *mut u8,
+    len: usize,
+    capacity: usize,
 }
 
 impl Buffer {
@@ -80,7 +80,7 @@ impl Buffer {
     
     fn push(mut self, byte: u8) -> Result<()> {
         if self.len >= self.capacity {
-            return Err("Buffer full")
+            return Error("Buffer full")
         }
         
         unsafe {
@@ -113,8 +113,8 @@ impl Drop for Buffer {
 
 // Memory-mapped file
 struct MemoryMap {
-    ptr: *mut u8
-    len: usize
+    ptr: *mut u8,
+    len: usize,
 }
 
 impl MemoryMap {
@@ -122,7 +122,7 @@ impl MemoryMap {
         // Platform-specific implementation
         #[cfg(target_os = "aero")]
         {
-            use std.aero.mmap
+            import std::aero::mmap
             let fd = fs.open(path, fs.READ)?
             let len = fs.file_size(fd)?
             let ptr = mmap.map(fd, 0, len, mmap.READ)?
@@ -131,7 +131,7 @@ impl MemoryMap {
         
         #[cfg(not(target_os = "aero"))]
         {
-            Err("Memory mapping not supported on this platform")
+            Error("Memory mapping not supported on this platform")
         }
     }
     
@@ -144,23 +144,23 @@ impl MemoryMap {
 
 // Atomic reference counting (like Arc)
 struct ArcInner<T> {
-    data: T
-    ref_count: Atomic<usize>
+    data: T,
+    ref_count: Atomic<usize>,
 }
 
 struct Arc<T> {
-    ptr: *mut ArcInner<T>
+    ptr: *mut ArcInner<T>,
 }
 
 impl<T> Arc<T> {
     fn new(data: T) -> Self {
         let inner = Box::new(ArcInner {
             data,
-            ref_count: Atomic::new(1)
+            ref_count: Atomic::new(1),
         })
         
         Arc {
-            ptr: Box::into_raw(inner)
+            ptr: Box::into_raw(inner),
         }
     }
     
@@ -230,11 +230,11 @@ fn main() {
             let sum: u64 = data.iter().map(|&b| b as u64).sum()
             println("Sum of bytes: {sum}")
         }
-        Err(e) => eprintln("Failed to map file: {e}")
+        Error(e) => eprintln("Failed to map file: {e}")
     }
     
     // Atomic reference counting
-    let data = Arc::new(vec![1, 2, 3, 4, 5])
+    let data = Arc::new([1, 2, 3, 4, 5])
     let data2 = data.clone()
     let data3 = data.clone()
     

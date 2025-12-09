@@ -42,8 +42,7 @@ pub enum TokenKind {
     Trait,
     Impl,
     Type,
-    Mod,       // Modules
-    Use,       // Import from module
+    Import,    // Import from module
     SelfLower, // self (lowercase)
     SelfUpper, // Self (uppercase type)
 
@@ -54,7 +53,6 @@ pub enum TokenKind {
     // Keywords - Other
     As,
     Is, // Type checking and boolean properties
-    Import,
     Pub,
     Async,
     Await,
@@ -150,15 +148,13 @@ impl TokenKind {
                 | TokenKind::Trait
                 | TokenKind::Impl
                 | TokenKind::Type
-                | TokenKind::Mod
-                | TokenKind::Use
+                | TokenKind::Import
                 | TokenKind::SelfLower
                 | TokenKind::SelfUpper
                 | TokenKind::Own
                 | TokenKind::Ref
                 | TokenKind::As
                 | TokenKind::Is
-                | TokenKind::Import
                 | TokenKind::Pub
                 | TokenKind::Async
                 | TokenKind::Await
@@ -192,15 +188,13 @@ impl TokenKind {
             "trait" => Some(TokenKind::Trait),
             "impl" => Some(TokenKind::Impl),
             "type" => Some(TokenKind::Type),
-            "mod" => Some(TokenKind::Mod),
-            "use" => Some(TokenKind::Use),
+            "import" => Some(TokenKind::Import),
             "self" => Some(TokenKind::SelfLower),
             "Self" => Some(TokenKind::SelfUpper),
             "own" => Some(TokenKind::Own),
             "ref" => Some(TokenKind::Ref),
             "as" => Some(TokenKind::As),
             "is" => Some(TokenKind::Is),
-            "import" => Some(TokenKind::Import),
             "pub" => Some(TokenKind::Pub),
             "async" => Some(TokenKind::Async),
             "await" => Some(TokenKind::Await),
@@ -243,15 +237,13 @@ impl fmt::Display for TokenKind {
             TokenKind::Trait => write!(f, "trait"),
             TokenKind::Impl => write!(f, "impl"),
             TokenKind::Type => write!(f, "type"),
-            TokenKind::Mod => write!(f, "mod"),
-            TokenKind::Use => write!(f, "use"),
+            TokenKind::Import => write!(f, "import"),
             TokenKind::SelfLower => write!(f, "self"),
             TokenKind::SelfUpper => write!(f, "Self"),
             TokenKind::Own => write!(f, "own"),
             TokenKind::Ref => write!(f, "ref"),
             TokenKind::As => write!(f, "as"),
             TokenKind::Is => write!(f, "is"),
-            TokenKind::Import => write!(f, "import"),
             TokenKind::Pub => write!(f, "pub"),
             TokenKind::Async => write!(f, "async"),
             TokenKind::Await => write!(f, "await"),

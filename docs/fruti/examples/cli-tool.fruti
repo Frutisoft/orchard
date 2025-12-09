@@ -1,16 +1,16 @@
 // Command-Line Tool Example
 // Demonstrates: Argument parsing, file I/O, error handling, piping
 
-import std.io
-import std.fs
-import std.env
+import std::io
+import std::fs
+import std::env
 
 struct Config {
-    input: Option<String>
-    output: Option<String>
-    count: bool
-    lines: bool
-    words: bool
+    input: Option<String>,
+    output: Option<String>,
+    count: bool,
+    lines: bool,
+    words: bool,
 }
 
 fn parse_args(args: Vec<String>) -> Result<Config> {
@@ -19,7 +19,7 @@ fn parse_args(args: Vec<String>) -> Result<Config> {
         output: None,
         count: false,
         lines: false,
-        words: false
+        words: false,
     }
     
     let mut i = 1  // Skip program name
@@ -30,21 +30,21 @@ fn parse_args(args: Vec<String>) -> Result<Config> {
             "-w" | "--words" => config.words = true,
             "-o" | "--output" => {
                 i += 1
-                if i >= args.len() {
-                    return Err("Missing value for --output")
+                if i + 1 >= args.len() {
+                    return Error("Missing value for --output")
                 }
                 config.output = Some(args[i])
             }
             "-h" | "--help" => {
                 print_help()
-                return Err("Help requested")
+                return Error("Help requested")
             }
             arg if arg.starts_with("-") => {
-                return Err("Unknown option: {arg}")
+                return Error("Unknown option: {arg}")
             }
             file => {
                 if config.input.is_some() {
-                    return Err("Multiple input files not supported")
+                    return Error("Multiple input files not supported")
                 }
                 config.input = Some(file)
             }
@@ -74,10 +74,10 @@ fn print_help() {
     println("  wc -l file.txt -o counts.txt")
 }
 
-struct Stats {
-    lines: Int
-    words: Int
-    chars: Int
+struct FileStats {
+    lines: i32
+    words: i32
+    chars: i32
 }
 
 fn count_text(text: String) -> Stats {

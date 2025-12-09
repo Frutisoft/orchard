@@ -58,8 +58,8 @@ Fruti's ownership system is based on three fundamental rules:
 
 ```fruti
 fn main() {
-    let s1: str = "hello";  // s1 owns the string
-    let s2: str = s1;       // ownership moves to s2
+    let s1: String = "hello";  // s1 owns the string
+    let s2: String = s1;       // ownership moves to s2
     // print(s1);           // ERROR: s1 no longer valid
     print(s2);              // OK: s2 is the owner
 }  // s2 goes out of scope, string is dropped
@@ -74,8 +74,8 @@ fn main() {
 When you assign a value to another variable, **ownership transfers**:
 
 ```fruti
-let v1: Vec<i32> = vec![1, 2, 3];
-let v2: Vec<i32> = v1;  // v1 moved to v2
+let v1 = [1, 2, 3];
+let v2 = v1;  // v1 moved to v2
 // v1 is now invalid
 ```
 
@@ -87,8 +87,8 @@ let v2: Vec<i32> = v1;  // v1 moved to v2
 ### Types That Move
 
 **Most types move by default:**
-- Strings (`str`)
-- Vectors (`Vec<T>`)
+- Strings (`String`)
+- Arrays and collections
 - Custom structs
 - Heap-allocated data
 
@@ -103,12 +103,12 @@ let v2: Vec<i32> = v1;  // v1 moved to v2
 Use the `move` keyword to be explicit:
 
 ```fruti
-fn take_ownership(v: Vec<i32>) {
+fn take_ownership(v: [i32]) {
     // v is owned here
 }
 
 fn main() {
-    let data: Vec<i32> = vec![1, 2, 3];
+    let data = [1, 2, 3];
     take_ownership(move data);  // explicitly move
     // data is no longer accessible
 }
@@ -119,15 +119,15 @@ fn main() {
 **Passing by value moves ownership:**
 
 ```fruti
-fn process(s: str) -> str {
+fn process(s: String) -> String {
     // s is owned by this function
-    let result: str = s + " processed";
+    let result: String = s + " processed";
     return result;  // ownership moves to caller
 }
 
 fn main() {
-    let text: str = "hello";
-    let processed: str = process(text);  // text moved
+    let text: String = "hello";
+    let processed: String = process(text);  // text moved
     // text is invalid here
     print(processed);  // OK
 }
@@ -142,13 +142,13 @@ fn main() {
 **Borrow without taking ownership:**
 
 ```fruti
-fn print_length(s: &str) {
+fn print_length(s: &String) {
     // s is borrowed, not owned
     print(s.len());
 }
 
 fn main() {
-    let text: str = "hello";
+    let text: String = "hello";
     print_length(&text);  // borrow text
     print(text);          // text still valid!
 }
@@ -164,12 +164,12 @@ fn main() {
 **Exclusive mutable access:**
 
 ```fruti
-fn append(s: &mut str, suffix: str) {
+fn append(s: &mut String, suffix: String) {
     s.push_str(suffix);
 }
 
 fn main() {
-    let mut text: str = "hello";
+    let mut text: String = "hello";
     append(&mut text, " world");
     print(text);  // "hello world"
 }
@@ -209,15 +209,15 @@ Borrows are valid for their scope:
 
 ```fruti
 fn main() {
-    let mut data: str = "hello";
+    let mut data: String = "hello";
     
     {
-        let r: &str = &data;
+        let r: &String = &data;
         print(r);
     }  // r goes out of scope
     
     // Now we can borrow mutably
-    let r2: &mut str = &mut data;
+    let r2: &mut String = &mut data;
     r2.push_str(" world");
 }
 ```
@@ -231,7 +231,7 @@ fn main() {
 **Lifetimes ensure references don't outlive their data:**
 
 ```fruti
-fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+fn longest<'a>(x: &'a String, y: &'a String) -> &'a String {
     if x.len() > y.len() {
         return x;
     } else {
@@ -250,12 +250,12 @@ fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
 
 ```fruti
 // Explicit lifetime
-fn first_word<'a>(s: &'a str) -> &'a str {
+fn first_word<'a>(s: &'a String) -> &'a String {
     // ...
 }
 
 // Elided (compiler infers)
-fn first_word(s: &str) -> &str {
+fn first_word(s: &String) -> &String {
     // ...
 }
 ```
@@ -271,12 +271,12 @@ fn first_word(s: &str) -> &str {
 
 ```fruti
 struct TextAnalyzer<'a> {
-    text: &'a str,
+    text: &'a String,
     position: usize,
 }
 
 impl<'a> TextAnalyzer<'a> {
-    fn new(text: &'a str) -> TextAnalyzer<'a> {
+    fn new(text: &'a String) -> TextAnalyzer<'a> {
         return TextAnalyzer {
             text: text,
             position: 0,
@@ -294,7 +294,7 @@ impl<'a> TextAnalyzer<'a> {
 **`'static` means the reference lives for the entire program:**
 
 ```fruti
-let s: &'static str = "I live forever";
+let s: &'static String = "I live forever";
 
 static GLOBAL: i32 = 42;  // Has 'static lifetime
 ```
@@ -306,21 +306,21 @@ static GLOBAL: i32 = 42;  // Has 'static lifetime
 ### Pattern 1: Returning Ownership
 
 ```fruti
-fn create_vec() -> Vec<i32> {
-    let v: Vec<i32> = vec![1, 2, 3];
+fn create_array() -> [i32] {
+    let v = [1, 2, 3];
     return v;  // ownership transferred to caller
 }
 
 fn main() {
-    let numbers: Vec<i32> = create_vec();
-    // numbers owns the vector
+    let numbers = create_array();
+    // numbers owns the array
 }
 ```
 
 ### Pattern 2: Borrow and Return
 
 ```fruti
-fn find_max(numbers: &Vec<i32>) -> i32 {
+fn find_max(numbers: &[i32]) -> i32 {
     let mut max: i32 = numbers[0];
     for n in numbers {
         if *n > max {
@@ -331,7 +331,7 @@ fn find_max(numbers: &Vec<i32>) -> i32 {
 }
 
 fn main() {
-    let nums: Vec<i32> = vec![1, 5, 3, 9, 2];
+    let nums = [1, 5, 3, 9, 2];
     let maximum: i32 = find_max(&nums);
     // nums still valid!
     print(maximum);
@@ -342,13 +342,13 @@ fn main() {
 
 ```fruti
 struct Config {
-    name: str,
+    name: String,
     port: i32,
     debug: bool,
 }
 
 impl Config {
-    fn new(name: str) -> Config {
+    fn new(name: String) -> Config {
         return Config {
             name: name,
             port: 8080,
@@ -379,9 +379,9 @@ fn main() {
 ```fruti
 // Reference counted pointer for shared ownership
 fn share_data() {
-    let data: Rc<str> = Rc::new("shared");
-    let ref1: Rc<str> = data.clone();  // increment count
-    let ref2: Rc<str> = data.clone();  // increment count
+    let data: Rc<String> = Rc::new("shared");
+    let ref1: Rc<String> = data.clone();  // increment count
+    let ref2: Rc<String> = data.clone();  // increment count
     // All three refs point to same data
 }  // count drops to zero, data freed
 
@@ -451,7 +451,7 @@ fn calculate(data: Vec<i32>) -> i32 {
 
 **Borrow when possible:**
 ```fruti
-fn calculate(data: &Vec<i32>) -> i32 {
+fn calculate(data: &[i32]) -> i32 {
     // Borrows, caller retains access
 }
 ```
@@ -459,7 +459,7 @@ fn calculate(data: &Vec<i32>) -> i32 {
 ### 2. Return Ownership for New Data
 
 ```fruti
-fn create_user(name: str, age: i32) -> User {
+fn create_user(name: String, age: i32) -> User {
     return User { name: name, age: age };
     // Caller gets ownership of new User
 }
@@ -478,7 +478,7 @@ fn update_score(player: &mut Player, points: i32) {
 
 **Sometimes copying is the right choice:**
 ```fruti
-fn backup(data: &Vec<i32>) -> Vec<i32> {
+fn backup(data: &[i32]) -> [i32] {
     return data.clone();  // Explicit copy
 }
 ```
@@ -496,18 +496,18 @@ print(x);        // x still valid
 
 **Be explicit about ownership:**
 ```fruti
-let owned: str = "hello";
-let borrowed: &str = &owned;
-let mut_borrowed: &mut str = &mut owned;
+let owned: String = "hello";
+let borrowed: &String = &owned;
+let mut_borrowed: &mut String = &mut owned;
 ```
 
 ### 7. Scope Borrowsnarrowly
 
 **End borrows as soon as possible:**
 ```fruti
-fn process(data: &mut Vec<i32>) {
+fn process(data: &mut [i32]) {
     {
-        let r: &Vec<i32> = data;
+        let r: &[i32] = data;
         print(r);
     }  // r dropped
     
@@ -523,56 +523,56 @@ fn process(data: &mut Vec<i32>) {
 ### Error: Use After Move
 
 ```fruti
-let s1: str = "hello";
-let s2: str = s1;
+let s1: String = "hello";
+let s2: String = s1;
 print(s1);  // ERROR: s1 was moved
 ```
 
 **Solution:** Clone or borrow:
 ```fruti
 // Option 1: Clone
-let s1: str = "hello";
-let s2: str = s1.clone();
+let s1: String = "hello";
+let s2: String = s1.clone();
 print(s1);  // OK
 
 // Option 2: Borrow
-let s1: str = "hello";
-let s2: &str = &s1;
+let s1: String = "hello";
+let s2: &String = &s1;
 print(s1);  // OK
 ```
 
 ### Error: Multiple Mutable Borrows
 
 ```fruti
-let mut v: Vec<i32> = vec![1, 2, 3];
-let r1: &mut Vec<i32> = &mut v;
-let r2: &mut Vec<i32> = &mut v;  // ERROR
+let mut v = [1, 2, 3];
+let r1: &mut [i32] = &mut v;
+let r2: &mut [i32] = &mut v;  // ERROR
 ```
 
 **Solution:** Use borrows sequentially:
 ```fruti
-let mut v: Vec<i32> = vec![1, 2, 3];
+let mut v = [1, 2, 3];
 {
-    let r1: &mut Vec<i32> = &mut v;
+    let r1: &mut [i32] = &mut v;
     r1.push(4);
 }
-let r2: &mut Vec<i32> = &mut v;
+let r2: &mut [i32] = &mut v;
 r2.push(5);
 ```
 
 ### Error: Borrow Outlives Owner
 
 ```fruti
-fn get_ref() -> &str {
-    let s: str = "hello";
+fn get_ref() -> &String {
+    let s: String = "hello";
     return &s;  // ERROR: s dropped when function returns
 }
 ```
 
 **Solution:** Return owned data:
 ```fruti
-fn get_string() -> str {
-    let s: str = "hello";
+fn get_string() -> String {
+    let s: String = "hello";
     return s;  // OK: ownership transferred
 }
 ```

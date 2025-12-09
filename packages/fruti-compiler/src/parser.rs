@@ -62,13 +62,9 @@ impl Parser {
                 let cnst = self.parse_const(is_pub)?;
                 Ok(Item::Const(cnst))
             }
-            TokenKind::Mod => {
-                let md = self.parse_mod(is_pub)?;
-                Ok(Item::Mod(md))
-            }
-            TokenKind::Use => {
-                let us = self.parse_use()?;
-                Ok(Item::Use(us))
+            TokenKind::Import => {
+                let imp = self.parse_import()?;
+                Ok(Item::Import(imp))
             }
             _ => {
                 let tok = self.peek();
@@ -390,29 +386,9 @@ impl Parser {
         })
     }
 
-    /// Parse module
-    fn parse_mod(&mut self, is_pub: bool) -> Result<Mod> {
-        self.expect(&TokenKind::Mod)?;
-        let name = self.expect_ident()?;
-        self.expect(&TokenKind::LeftBrace)?;
-
-        let mut items = Vec::new();
-        while !matches!(self.peek().value, TokenKind::RightBrace) {
-            items.push(self.parse_item()?);
-        }
-
-        self.expect(&TokenKind::RightBrace)?;
-
-        Ok(Mod {
-            name,
-            items,
-            is_pub,
-        })
-    }
-
-    /// Parse use statement
-    fn parse_use(&mut self) -> Result<Use> {
-        self.expect(&TokenKind::Use)?;
+    /// Parse import statement
+    fn parse_import(&mut self) -> Result<Import> {
+        self.expect(&TokenKind::Import)?;
 
         let mut path = Vec::new();
         loop {
@@ -424,7 +400,7 @@ impl Parser {
 
         self.expect(&TokenKind::Semicolon)?;
 
-        Ok(Use { path })
+        Ok(Import { path })
     }
 
     /// Parse a block

@@ -3,27 +3,27 @@
 
 fn main() {
     // Test 1: Immutable variables (let)
-    let x = 42;
-    let y = 3.14;
-    let name = "Fruti";
-    let flag = true;
+    let x = 42
+    let y = 3.14
+    let name = "Fruti"
+    let flag = true
     
     // Test 2: Mutable variables (let mut) - SPECIFICATION COMPLIANT
-    let mut counter = 0;
-    let mut score = 100;
+    let mut counter = 0
+    let mut score = 100
     
     // Test 3: Type annotations (explicit)
-    let a: i32 = 10;
-    let b: f64 = 2.5;
-    let c: bool = false;
+    let a: i32 = 10
+    let b: f64 = 2.5
+    let c: bool = false
     
     // Test 4: Logical operators - BOTH FORMS (and/or AND &&/||)
     if x > 40 and y < 5.0 {
-        println("Keyword operators work!");
+        println("Keyword operators work!")
     }
     
     if x > 40 && y < 5.0 {
-        println("Symbol operators work!");
+        println("Symbol operators work!")
     }
     
     // Test 5: Control flow - if expressions
@@ -31,29 +31,29 @@ fn main() {
         "high"
     } else {
         "low"
-    };
+    }
     
     // Test 6: Loops - for with ranges
     for i in 0..5 {
-        println("Count: {i}");
+        println("Count: {i}")
     }
     
     // Test 7: While loops
     while counter < 3 {
-        println("Counter: {counter}");
+        println("Counter: {counter}")
     }
     
     // Test 8: Function calls
-    let sum = add(10, 20);
-    println("Sum: {sum}");
+    let sum = add(10, 20)
+    println("Sum: {sum}")
 }
 
 // Test 9: Function definitions with return type inference
 fn add(a: i32, b: i32) -> i32 {
-    return a + b;
+    a + b
 }
 
 // Test 10: Function with explicit return type
 fn multiply(a: i32, b: i32) -> i32 {
-    return a * b;
+    a * b
 }

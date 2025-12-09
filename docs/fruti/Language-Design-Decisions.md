@@ -2352,7 +2352,7 @@ match find_user(id) {
 // Result values - clean syntax (no Result:: prefix needed)
 match load_file(path) {
     Ok(contents) => process(contents),
-    Err(error) => println("Error: {error}"),
+    Error(error) => println("Error: {error}"),
 }
 ```
 
@@ -2398,7 +2398,7 @@ match coordinates {
 // Return value from match
 let message = match status {
     Ok(data) => data.message,
-    Err(e) => format("Error: {e}"),
+    Error(e) => format("Error: {e}"),
 }
 
 // Use in calculations
@@ -3139,19 +3139,19 @@ match maybe_number {
 // Result<T, E> - type-safe error handling
 enum Result<T, E> {
     Ok(T),
-    Err(E),
+    Error(E),
 }
 
 fn divide(a: i32, b: i32) -> Result<i32, String> {
     if b == 0 {
-        return Err("Division by zero")
+        return Error("Division by zero")
     }
     return Ok(a / b)
 }
 
 match divide(10, 2) {
     Ok(result) => println("Result: {result}"),
-    Err(error) => println("Error: {error}"),
+    Error(error) => println("Error: {error}"),
 }
 ```
 
@@ -3665,13 +3665,13 @@ let user = find_user(42).unwrap_or(default_user)
 ```fruti
 enum Result<T, E> {
     Ok(T),
-    Err(E),
+    Error(E),
 }
 
 // Usage - cleaner than Rust
 fn divide(a: i32, b: i32) -> Result<i32, str> {
     if b == 0 {
-        return Err("Division by zero")  // Note: Result:: prefix optional
+        return Error("Division by zero")  // Note: Result:: prefix optional
     }
     return Ok(a / b)
 }
@@ -3679,7 +3679,7 @@ fn divide(a: i32, b: i32) -> Result<i32, str> {
 // Handling
 match divide(10, 2) {
     Ok(value) => println("Result: {value}"),
-    Err(error) => println("Error: {error}"),
+    Error(error) => println("Error: {error}"),
 }
 ```
 
@@ -3688,8 +3688,8 @@ match divide(10, 2) {
 | Scenario | Go (Verbose) | Rust (Wordy) | Fruti (Best) |
 |----------|--------------|--------------|--------------|
 | Return success | `return val, nil` | `return Result::Ok(val)` | `return Ok(val)` |
-| Return error | `return nil, err` | `return Result::Err(e)` | `return Err(e)` |
-| Check result | `if err != nil { ... }` | `match x { Result::Ok(...) => ..., Result::Err(...) => ... }` | `match x { Ok(...) => ..., Err(...) => ... }` |
+| Return error | `return nil, err` | `return Result::Err(e)` | `return Error(e)` |
+| Check result | `if err != nil { ... }` | `match x { Result::Ok(...) => ..., Result::Err(...) => ... }` | `match x { Ok(...) => ..., Error(...) => ... }` |
 
 **Why This is Better:**
 - **vs Java/C#:** No hidden control flow, no performance penalty
@@ -3715,13 +3715,13 @@ fn read_username_from_file() -> Result<String, Error> {
 fn read_username_from_file_verbose() -> Result<String, Error> {
     let mut file = match File::open("username.txt") {
         Ok(f) => f,
-        Err(e) => return Err(e),
+        Error(e) => return Error(e),
     }
     
     let mut username = String::new()
     match file.read_to_string(&mut username) {
         Ok(_) => {},
-        Err(e) => return Err(e),
+        Error(e) => return Error(e),
     }
     
     return Ok(username)
@@ -3755,7 +3755,7 @@ fn process_data(path: String) -> Result<Summary, Error> {
 fn handle_config(path: String) -> Config {
     match load_config(path) {
         Ok(cfg) => cfg,
-        Err(e) => {
+        Error(e) => {
             eprintln("Failed to load config: {e}")
             return default_config()
         }
@@ -3821,9 +3821,9 @@ let result = operation().expect("operation should never fail")  // Better messag
 
 | Use Case | Use | Reasoning |
 |----------|-----|-----------|
-| File not found | `Result::Err` | User error - recoverable |
-| Network timeout | `Result::Err` | Environment error - recoverable |
-| Invalid config syntax | `Result::Err` | User error - recoverable |
+| File not found | `Result::Error` | User error - recoverable |
+| Network timeout | `Result::Error` | Environment error - recoverable |
+| Invalid config syntax | `Result::Error` | User error - recoverable |
 | Array index out of bounds | `panic!` | Programmer error - bug in code |
 | Integer overflow (debug) | `panic!` | Programmer error - logic mistake |
 | Null pointer dereference | `panic!` | Programmer error - should never happen |
@@ -4564,20 +4564,20 @@ match some_number {
 // Standard library Result (simplified)
 enum Result<T, E> {
     Ok(T),
-    Err(E),
+    Error(E),
 }
 
 // Usage
 fn divide(a: i32, b: i32) -> Result<i32, String> {
     if b == 0 {
-        return Err("Division by zero")
+        return Error("Division by zero")
     }
     return Ok(a / b)
 }
 
 match divide(10, 2) {
     Ok(result) => println("Result: {result}"),
-    Err(error) => println("Error: {error}"),
+    Error(error) => println("Error: {error}"),
 }
 ```
 
@@ -6690,7 +6690,7 @@ help: or use pattern matching to handle both cases
 2 ª     let file = match fs::read_to_string("data.txt") {
   ª                ++++++
 3 ª         Ok(content) => content,
-4 ª         Err(e) => {
+4 ª         Error(e) => {
 5 ª             eprintln("Failed to read file: {e}")
 6 ª             return
 7 ª         }
@@ -7173,4 +7173,4 @@ Fruti is designed to be:
 
 ---
 
-**Frutisoft ⌐ 2025 - Fresh code, crisp ideas**
+**Frutisoft © 2025 - Fresh code, crisp ideas**

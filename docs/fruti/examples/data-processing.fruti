@@ -1,24 +1,24 @@
 // Data Processing Pipeline Example
 // Demonstrates: Functional programming, iterators, parallelism, CSV parsing
 
-import std.fs
-import std.collections.{Vec, HashMap}
-import std.thread
+import std::fs
+import std::collections::{Vec, HashMap}
+import std::thread
 
 // Data structures
 struct Record {
-    date: String
-    category: String
-    amount: Float
-    description: String
+    date: String,
+    category: String,
+    amount: f64,
+    description: String,
 }
 
 struct Summary {
-    total: Float
-    count: Int
-    average: Float
-    min: Float
-    max: Float
+    total: f64,
+    count: i32,
+    average: f64,
+    min: f64,
+    max: f64,
 }
 
 // CSV parsing
@@ -28,14 +28,14 @@ fn parse_csv(content: String) -> Result<Vec<Record>> {
     lines.map(|line| {
         let parts = line.split(',').collect::<Vec<_>>()
         if parts.len() != 4 {
-            return Err("Invalid CSV line: {line}")
+            return Error("Invalid CSV line: {line}")
         }
         
         Ok(Record {
             date: parts[0].trim().to_string(),
             category: parts[1].trim().to_string(),
             amount: parts[2].trim().parse()?,
-            description: parts[3].trim().to_string()
+            description: parts[3].trim().to_string(),
         })
     }).collect()
 }
@@ -48,7 +48,7 @@ fn analyze_category(records: &[Record]) -> Summary {
     
     let total = amounts.iter().sum()
     let count = amounts.len()
-    let average = if count > 0 { total / count as Float } else { 0.0 }
+    let average = if count > 0 { total / count as f64 } else { 0.0 }
     let min = amounts.iter().min().unwrap_or(0.0)
     let max = amounts.iter().max().unwrap_or(0.0)
     
@@ -112,14 +112,14 @@ fn filter_and_transform(records: Vec<Record>) -> Vec<Record> {
         .collect()
 }
 
-fn is_recent(date: &str, days: Int) -> bool {
+fn is_recent(date: &str, days: i32) -> bool {
     // Simplified date comparison
     // In real code, use proper date parsing
     true
 }
 
 // Advanced queries using method chaining
-fn top_expenses(records: &[Record], n: usize) -> Vec<(String, Float)> {
+fn top_expenses(records: &[Record], n: usize) -> Vec<(String, f64)> {
     records.iter()
         .filter(|r| r.amount < 0.0)  // Negative = expense
         .map(|r| (r.description.clone(), r.amount.abs()))
@@ -128,7 +128,7 @@ fn top_expenses(records: &[Record], n: usize) -> Vec<(String, Float)> {
         .collect()
 }
 
-fn monthly_totals(records: &[Record]) -> HashMap<String, Float> {
+fn monthly_totals(records: &[Record]) -> HashMap<String, f64> {
     records.iter()
         .map(|r| {
             let month = r.date[..7].to_string()  // "YYYY-MM"
@@ -141,15 +141,15 @@ fn monthly_totals(records: &[Record]) -> HashMap<String, Float> {
 }
 
 // Statistical operations
-fn calculate_percentile(values: &mut [Float], percentile: Float) -> Float {
+fn calculate_percentile(values: &mut [f64], percentile: f64) -> f64 {
     values.sort()
-    let index = ((values.len() as Float) * percentile / 100.0) as usize
+    let index = ((values.len() as f64) * percentile / 100.0) as usize
     values[index.min(values.len() - 1)]
 }
 
-fn moving_average(values: &[Float], window_size: usize) -> Vec<Float> {
+fn moving_average(values: &[f64], window_size: usize) -> Vec<f64> {
     values.windows(window_size)
-        .map(|window| window.iter().sum::<Float>() / window_size as Float)
+        .map(|window| window.iter().sum::<f64>() / window_size as f64)
         .collect()
 }
 
@@ -158,7 +158,7 @@ fn main() -> Result<()> {
     println("Loading data...")
     
     // Load CSV files
-    let files = vec![
+    let files = [
         "data/transactions_2024_01.csv",
         "data/transactions_2024_02.csv",
         "data/transactions_2024_03.csv"
@@ -201,7 +201,7 @@ fn main() -> Result<()> {
     }
     
     // Statistical analysis
-    let mut amounts: Vec<Float> = records.iter()
+    let mut amounts: Vec<f64> = records.iter()
         .map(|r| r.amount)
         .collect()
     
@@ -215,7 +215,7 @@ fn main() -> Result<()> {
     println("  99th: ${:.2}", p99)
     
     // Moving average
-    let daily_totals = vec![100.0, 150.0, 120.0, 180.0, 140.0, 160.0, 130.0]
+    let daily_totals = [100.0, 150.0, 120.0, 180.0, 140.0, 160.0, 130.0]
     let ma = moving_average(&daily_totals, 3)
     
     println("\n7-Day Moving Average (window=3):")

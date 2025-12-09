@@ -43,7 +43,7 @@ The prelude is automatically imported into every Fruti program.
 ```fruti
 // Primitive types (always available)
 bool, i8, i16, i32, i64, u8, u16, u32, u64, f32, f64
-str, char
+char
 
 // Common types
 Option<T>, Result<T, E>
@@ -54,18 +54,18 @@ Vec<T>, String
 
 ```fruti
 // Console I/O
-fn print(s: str)
-fn println(s: str)
-fn eprint(s: str)  // print to stderr
-fn eprintln(s: str)
+fn print(s: &str)
+fn println(s: &str)
+fn eprint(s: &str)  // print to stderr
+fn eprintln(s: &str)
 
 // Input
-fn read_line() -> str
-fn read_input(prompt: str) -> str
+fn read_line() -> String
+fn read_input(prompt: &str) -> String
 
 // Panic
-fn panic(message: str) -> never
-fn assert(condition: bool, message: str)
+fn panic(message: &str) -> never
+fn assert(condition: bool, message: &str)
 ```
 
 ### Traits (Planned)
@@ -131,13 +131,13 @@ match result {
 ```fruti
 enum Result<T, E> {
     Ok(T),
-    Err(E),
+    Error(E),
 }
 
 impl<T, E> Result<T, E> {
     fn is_ok(&self) -> bool
     fn is_err(&self) -> bool
-    fn unwrap(self) -> T  // Panics if Err
+    fn unwrap(self) -> T  // Panics if Error
     fn unwrap_or(self, default: T) -> T
     fn map<U>(self, f: fn(T) -> U) -> Result<U, E>
     fn map_err<F>(self, f: fn(E) -> F) -> Result<T, F>
@@ -146,12 +146,12 @@ impl<T, E> Result<T, E> {
 
 **Example:**
 ```fruti
-fn parse_number(s: str) -> Result<i32, str> {
+fn parse_number(s: &str) -> Result<i32, String> {
     // Parsing logic
     if valid {
         return Result::Ok(number);
     } else {
-        return Result::Err("Invalid number format");
+        return Result::Error("Invalid number format");
     }
 }
 ```
@@ -278,7 +278,7 @@ impl<K, V> HashMap<K, V> {
 
 **Example:**
 ```fruti
-let mut scores: HashMap<str, i32> = HashMap::new();
+let mut scores: HashMap<String, i32> = HashMap::new();
 scores.insert("Alice", 100);
 scores.insert("Bob", 85);
 
@@ -313,10 +313,10 @@ impl<T> HashSet<T> {
 
 ```fruti
 mod io {
-    fn print(s: str)
-    fn println(s: str)
-    fn eprint(s: str)
-    fn eprintln(s: str)
+    fn print(s: &str)
+    fn println(s: &str)
+    fn eprint(s: &str)
+    fn eprintln(s: &str)
     
     fn read_line() -> Result<String, Error>
     fn read_to_string() -> Result<String, Error>
@@ -331,8 +331,8 @@ struct File {
 }
 
 impl File {
-    fn open(path: str) -> Result<File, Error>
-    fn create(path: str) -> Result<File, Error>
+    fn open(path: &str) -> Result<File, Error>
+    fn create(path: &str) -> Result<File, Error>
     fn read_to_string(&mut self) -> Result<String, Error>
     fn read_to_end(&mut self, buf: &mut Vec<u8>) -> Result<usize, Error>
     fn write(&mut self, buf: &[u8]) -> Result<usize, Error>
@@ -385,11 +385,11 @@ struct String {
 
 impl String {
     fn new() -> String
-    fn from(s: str) -> String
+    fn from(s: &str) -> String
     fn with_capacity(capacity: usize) -> String
     
     fn push(&mut self, ch: char)
-    fn push_str(&mut self, string: str)
+    fn push_str(&mut self, string: &str)
     fn pop(&mut self) -> Option<char>
     fn clear(&mut self)
     
@@ -420,9 +420,9 @@ impl str {
     fn chars(&self) -> Chars
     fn bytes(&self) -> Bytes
     
-    fn contains(&self, pattern: str) -> bool
-    fn starts_with(&self, prefix: str) -> bool
-    fn ends_with(&self, suffix: str) -> bool
+    fn contains(&self, pattern: &str) -> bool
+    fn starts_with(&self, prefix: &str) -> bool
+    fn ends_with(&self, suffix: &str) -> bool
     
     fn split(&self, delimiter: char) -> Split
     fn lines(&self) -> Lines
@@ -437,21 +437,21 @@ impl str {
 
 ```fruti
 mod fs {
-    fn read(path: str) -> Result<Vec<u8>, Error>
-    fn read_to_string(path: str) -> Result<String, Error>
-    fn write(path: str, contents: &[u8]) -> Result<(), Error>
-    fn remove_file(path: str) -> Result<(), Error>
+    fn read(path: &str) -> Result<Vec<u8>, Error>
+    fn read_to_string(path: &str) -> Result<String, Error>
+    fn write(path: &str, contents: &[u8]) -> Result<(), Error>
+    fn remove_file(path: &str) -> Result<(), Error>
     
-    fn create_dir(path: str) -> Result<(), Error>
-    fn create_dir_all(path: str) -> Result<(), Error>
-    fn remove_dir(path: str) -> Result<(), Error>
-    fn remove_dir_all(path: str) -> Result<(), Error>
+    fn create_dir(path: &str) -> Result<(), Error>
+    fn create_dir_all(path: &str) -> Result<(), Error>
+    fn remove_dir(path: &str) -> Result<(), Error>
+    fn remove_dir_all(path: &str) -> Result<(), Error>
     
-    fn copy(from: str, to: str) -> Result<u64, Error>
-    fn rename(from: str, to: str) -> Result<(), Error>
+    fn copy(from: &str, to: &str) -> Result<u64, Error>
+    fn rename(from: &str, to: &str) -> Result<(), Error>
     
-    fn metadata(path: str) -> Result<Metadata, Error>
-    fn exists(path: str) -> bool
+    fn metadata(path: &str) -> Result<Metadata, Error>
+    fn exists(path: &str) -> bool
 }
 
 struct Metadata {
@@ -475,7 +475,7 @@ mod net {
     }
     
     impl TcpListener {
-        fn bind(addr: str) -> Result<TcpListener, Error>
+        fn bind(addr: &str) -> Result<TcpListener, Error>
         fn accept(&self) -> Result<(TcpStream, SocketAddr), Error>
         fn local_addr(&self) -> Result<SocketAddr, Error>
     }
@@ -485,7 +485,7 @@ mod net {
     }
     
     impl TcpStream {
-        fn connect(addr: str) -> Result<TcpStream, Error>
+        fn connect(addr: &str) -> Result<TcpStream, Error>
         fn read(&mut self, buf: &mut [u8]) -> Result<usize, Error>
         fn write(&mut self, buf: &[u8]) -> Result<usize, Error>
         fn shutdown(&self) -> Result<(), Error>
@@ -502,8 +502,8 @@ mod net {
     }
     
     impl UdpSocket {
-        fn bind(addr: str) -> Result<UdpSocket, Error>
-        fn send_to(&self, buf: &[u8], addr: str) -> Result<usize, Error>
+        fn bind(addr: &str) -> Result<UdpSocket, Error>
+        fn send_to(&self, buf: &[u8], addr: &str) -> Result<usize, Error>
         fn recv_from(&self, buf: &mut [u8]) -> Result<(usize, SocketAddr), Error>
     }
 }

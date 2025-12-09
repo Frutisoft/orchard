@@ -21,8 +21,7 @@ pub enum Item {
     Impl(Impl),
     TypeAlias(TypeAlias),
     Const(Const),
-    Mod(Mod),
-    Use(Use),
+    Import(Import),
 }
 
 /// Function definition
@@ -122,17 +121,9 @@ pub struct Const {
     pub is_pub: bool,
 }
 
-/// Module definition
+/// Import statement
 #[derive(Debug, Clone, PartialEq)]
-pub struct Mod {
-    pub name: Spanned<String>,
-    pub items: Vec<Item>,
-    pub is_pub: bool,
-}
-
-/// Use statement
-#[derive(Debug, Clone, PartialEq)]
-pub struct Use {
+pub struct Import {
     pub path: Vec<Spanned<String>>,
 }
 
