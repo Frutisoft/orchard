@@ -1,0 +1,42 @@
+# Pull Request Labeler Configuration
+# Automatically labels PRs based on changed files
+
+'component: compiler':
+  - 'packages/fruti-compiler/**/*'
+
+'component: kernel':
+  - 'packages/aero-kernel/**/*'
+
+'component: language':
+  - 'docs/fruti/language/**/*'
+  - 'docs/fruti/Language-Design-Decisions.md'
+
+'component: stdlib':
+  - 'docs/fruti/language/Reference/Standard-Library.md'
+  - 'packages/fruti-compiler/src/stdlib/**/*'
+
+'component: tooling':
+  - 'tools/**/*'
+
+'component: ci-cd':
+  - '.github/workflows/**/*'
+  - '.github/dependabot.yml'
+
+'type: documentation':
+  - '**/*.md'
+  - 'docs/**/*'
+  - 'website/**/*'
+
+'type: test':
+  - '**/tests/**/*'
+  - '**/*_test.rs'
+  - '**/*_tests.rs'
+
+'type: refactor':
+  - any: ['packages/fruti-compiler/src/**/*.rs']
+    all: ['!**/tests/**/*']
+
+'dependencies':
+  - '**/Cargo.toml'
+  - '**/Cargo.lock'
+  - '.github/dependabot.yml'

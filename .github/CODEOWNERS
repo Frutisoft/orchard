@@ -1,0 +1,29 @@
+# Code Owners
+# These owners will be the default owners for everything in the repo
+# They will be requested for review when someone opens a pull request
+
+# Global owners
+* @Frutisoft
+
+# Fruti compiler
+/packages/fruti-compiler/ @Frutisoft
+/docs/fruti/ @Frutisoft
+/examples/*.fruti @Frutisoft
+
+# Aero kernel
+/packages/aero-kernel/ @Frutisoft
+/docs/aero/ @Frutisoft
+
+# Documentation
+/docs/ @Frutisoft
+*.md @Frutisoft
+
+# CI/CD and GitHub configuration
+/.github/ @Frutisoft
+/tools/ @Frutisoft
+
+# Build and configuration files
+Cargo.toml @Frutisoft
+Cargo.lock @Frutisoft
+.gitignore @Frutisoft
+.gitattributes @Frutisoft

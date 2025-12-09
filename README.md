@@ -1,9 +1,12 @@
 ﻿# Frutisoft: Fruti Language & Aero OS
 
 [![CI](https://github.com/Frutisoft/frutisoft/actions/workflows/ci.yml/badge.svg)](https://github.com/Frutisoft/frutisoft/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/Frutisoft/frutisoft/actions/workflows/codeql.yml/badge.svg)](https://github.com/Frutisoft/frutisoft/actions/workflows/codeql.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Rust Version](https://img.shields.io/badge/rust-1.70%2B-orange.svg)](https://www.rust-lang.org/)
 [![GitHub issues](https://img.shields.io/github/issues/Frutisoft/frutisoft)](https://github.com/Frutisoft/frutisoft/issues)
 [![GitHub stars](https://img.shields.io/github/stars/Frutisoft/frutisoft)](https://github.com/Frutisoft/frutisoft/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/Frutisoft/frutisoft)](https://github.com/Frutisoft/frutisoft/network)
 
 **A passion project exploring modern programming language and OS design**
 

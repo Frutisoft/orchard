@@ -1,0 +1,136 @@
+# GitHub Labels Configuration
+# This file can be used with https://github.com/marketplace/actions/github-labeler
+# or applied manually through GitHub UI
+
+# Type labels
+- name: "type: bug"
+  color: "d73a4a"
+  description: "Something isn't working"
+
+- name: "type: feature"
+  color: "0075ca"
+  description: "New feature or request"
+
+- name: "type: enhancement"
+  color: "a2eeef"
+  description: "Improvement to existing functionality"
+
+- name: "type: documentation"
+  color: "0075ca"
+  description: "Improvements or additions to documentation"
+
+- name: "type: refactor"
+  color: "fbca04"
+  description: "Code refactoring"
+
+- name: "type: performance"
+  color: "ff6b6b"
+  description: "Performance improvements"
+
+- name: "type: security"
+  color: "d73a4a"
+  description: "Security vulnerability or fix"
+
+- name: "type: test"
+  color: "1d76db"
+  description: "Related to testing"
+
+# Priority labels
+- name: "priority: critical"
+  color: "b60205"
+  description: "Critical priority, needs immediate attention"
+
+- name: "priority: high"
+  color: "d93f0b"
+  description: "High priority"
+
+- name: "priority: medium"
+  color: "fbca04"
+  description: "Medium priority"
+
+- name: "priority: low"
+  color: "0e8a16"
+  description: "Low priority"
+
+# Status labels
+- name: "status: blocked"
+  color: "d73a4a"
+  description: "Blocked by other issues or external factors"
+
+- name: "status: in-progress"
+  color: "0052cc"
+  description: "Currently being worked on"
+
+- name: "status: needs-discussion"
+  color: "d876e3"
+  description: "Needs further discussion"
+
+- name: "status: needs-review"
+  color: "fbca04"
+  description: "Needs code review"
+
+- name: "status: stale"
+  color: "fef2c0"
+  description: "No activity for extended period"
+
+# Component labels
+- name: "component: compiler"
+  color: "c2e0c6"
+  description: "Related to Fruti compiler"
+
+- name: "component: language"
+  color: "c2e0c6"
+  description: "Related to Fruti language design"
+
+- name: "component: kernel"
+  color: "bfd4f2"
+  description: "Related to Aero OS kernel"
+
+- name: "component: stdlib"
+  color: "c2e0c6"
+  description: "Related to standard library"
+
+- name: "component: tooling"
+  color: "5319e7"
+  description: "Related to development tools"
+
+- name: "component: ci-cd"
+  color: "000000"
+  description: "Related to CI/CD pipelines"
+
+# Special labels
+- name: "good first issue"
+  color: "7057ff"
+  description: "Good for newcomers"
+
+- name: "help wanted"
+  color: "008672"
+  description: "Extra attention is needed"
+
+- name: "question"
+  color: "d876e3"
+  description: "Further information is requested"
+
+- name: "wontfix"
+  color: "ffffff"
+  description: "This will not be worked on"
+
+- name: "duplicate"
+  color: "cfd3d7"
+  description: "This issue or pull request already exists"
+
+- name: "invalid"
+  color: "e4e669"
+  description: "This doesn't seem right"
+
+- name: "breaking-change"
+  color: "d73a4a"
+  description: "Introduces a breaking change"
+
+- name: "dependencies"
+  color: "0366d6"
+  description: "Pull requests that update a dependency file"
+
+- name: "pinned"
+  color: "fbca04"
+  description: "Will not be closed by stale bot"

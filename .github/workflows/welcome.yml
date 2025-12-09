@@ -1,0 +1,43 @@
+name: Welcome
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: |
+            👋 Thanks for opening your first issue in Frutisoft! 
+            
+            We appreciate your interest in the project. Please note that Frutisoft is currently a passion project in early development.
+            
+            - Check out the [Language Design Decisions](https://github.com/Frutisoft/frutisoft/blob/main/docs/fruti/Language-Design-Decisions.md) for context
+            - Read our [Contributing Guidelines](https://github.com/Frutisoft/frutisoft/blob/main/CONTRIBUTING.md)
+            - Join the [Discussions](https://github.com/Frutisoft/frutisoft/discussions) for questions and ideas
+            
+            A maintainer will review your issue soon. Thank you for helping make Frutisoft better!
+            
+          pr-message: |
+            🎉 Thanks for your first pull request to Frutisoft!
+            
+            Before your PR can be reviewed, please ensure:
+            - [ ] All tests pass locally (`cargo test`)
+            - [ ] Code is formatted (`cargo fmt`)
+            - [ ] No clippy warnings (`cargo clippy`)
+            - [ ] Documentation is updated if needed
+            - [ ] PR description clearly explains the changes
+            
+            Please refer to our [Contributing Guidelines](https://github.com/Frutisoft/frutisoft/blob/main/CONTRIBUTING.md) for more details.
+            
+            A maintainer will review your PR soon. Thank you for contributing!
