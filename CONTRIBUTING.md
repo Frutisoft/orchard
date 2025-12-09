@@ -318,7 +318,7 @@ Contributors are recognized in:
 ## Project Structure
 
 ```
-frutisoft/
+orchard/
 ├── fruti-compiler/          # Fruti compiler implementation
 │   ├── src/
 │   │   ├── lexer/          # Tokenization

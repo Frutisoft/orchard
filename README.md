@@ -31,7 +31,7 @@ Frutisoft is a personal passion project by Jameson Jones, a student at the Illin
 ## Monorepo Structure
 
 ```
-frutisoft/                    # Root monorepo
+orchard/                      # Root monorepo
 ├── packages/                 # Main projects
 │   ├── fruti-compiler/       # Fruti compiler (Rust bootstrap)
 │   │   ├── src/              # Compiler source code
