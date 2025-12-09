@@ -55,9 +55,8 @@ frutisoft/                    # Root monorepo
 │   ├── aero/                 # Aero OS docs
 │   │   ├── os/               # Architecture and guides
 │   │   └── Aero-OS-Technical-Spec.md
-│   ├── resources/            # Production readiness guides
-│   ├── archive/              # Historical documents
-│   ├── PHASE-1-COMPLETE.md   # Phase 1 completion record
+│   ├── archive/              # Historical documents & milestones
+│   ├── assets/               # Images and media
 │   └── README.md
 │
 ├── examples/                 # Working code samples
