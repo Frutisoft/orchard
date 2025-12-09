@@ -166,11 +166,11 @@ Each process only has capabilities granted at launch
 
 Example:
 Text editor launched by user:
-✓ Read/write specific file being edited
-✓ Access clipboard
-✗ Network access
-✗ Access to other files
-✗ Camera/microphone
++ Read/write specific file being edited
++ Access clipboard
+- Network access
+- Access to other files
+- Camera/microphone
 ```
 
 3.2 Sandboxing by Default
@@ -193,12 +193,12 @@ let app = Process::spawn("text-editor")
 
 3.3 No More Malware
 Traditional malware vectors blocked:
-- ❌ DLL injection - not possible (no shared libraries in process space)
-- ❌ Registry manipulation - no registry
-- ❌ Startup items - capability required
-- ❌ Keylogging - no global keyboard access
-- ❌ Screen capture - explicit permission required
-- ❌ Network backdoors - network capability required
+- DLL injection - not possible (no shared libraries in process space)
+- Registry manipulation - no registry
+- Startup items - capability required
+- Keylogging - no global keyboard access
+- Screen capture - explicit permission required
+- Network backdoors - network capability required
 
 3.4 Verified Boot
 ```
@@ -280,10 +280,10 @@ Aero Application:
 └── Resources (icons, assets)
 
 Runs:
-✓ Native desktop (optimal performance)
-✓ Web browser (via WASM compilation)
-✓ Mobile (iOS, Android via Aero runtime)
-✓ Server (headless mode)
++ Native desktop (optimal performance)
++ Web browser (via WASM compilation)
++ Mobile (iOS, Android via Aero runtime)
++ Server (headless mode)
 
 ONE codebase, EVERYWHERE
 ```

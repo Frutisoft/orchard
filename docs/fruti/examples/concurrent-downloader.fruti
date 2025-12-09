@@ -35,7 +35,7 @@ async fn download_file(url: String, filename: String) -> Result<()> {
     fs.write_bytes(&filename, &bytes)
         .map_err(|e| "Failed to write {filename}: {e}")?
     
-    println("✓ Downloaded {filename} ({bytes.len()} bytes)")
+    println("Downloaded {filename} ({bytes.len()} bytes)")
     Ok(())
 }
 

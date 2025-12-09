@@ -18,7 +18,7 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           issue-message: |
-            👋 Thanks for opening your first issue in Frutisoft! 
+            Thanks for opening your first issue in Frutisoft! 
             
             We appreciate your interest in the project. Please note that Frutisoft is currently a passion project in early development.
             
@@ -29,7 +29,7 @@ jobs:
             A maintainer will review your issue soon. Thank you for helping make Frutisoft better!
             
           pr-message: |
-            🎉 Thanks for your first pull request to Frutisoft!
+            Thanks for your first pull request to Frutisoft!
             
             Before your PR can be reviewed, please ensure:
             - [ ] All tests pass locally (`cargo test`)

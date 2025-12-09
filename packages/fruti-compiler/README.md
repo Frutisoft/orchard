@@ -8,15 +8,15 @@
 
 The Fruti compiler is a **passion project** by Jameson Jones (Illinois Mathematics and Science Academy) translating Fruti source code to LLVM IR. Phase 1 MVP is complete with a functional compilation pipeline. This is a **personal project** demonstrating compiler construction principles.
 
-### Current Status: Phase 1 MVP Complete ✅
+### Current Status: Phase 1 MVP Complete
 
 **Phase 1 Implemented:**
-- ✅ Lexer - Complete tokenization (~553 lines)
-- ✅ Parser - Full AST generation (~1,096 lines)
-- ✅ Semantic Analyzer - Type checking (~653 lines)
-- ✅ Code Generator - LLVM IR output (~308 lines)
-- ✅ CLI - Compile, check, analyze commands
-- ✅ Tests - 7 passing unit tests
+- Lexer - Complete tokenization (~553 lines)
+- Parser - Full AST generation (~1,096 lines)
+- Semantic Analyzer - Type checking (~653 lines)
+- Code Generator - LLVM IR output (~308 lines)
+- CLI - Compile, check, analyze commands
+- Tests - 7 passing unit tests
 
 **Total:** ~2,600 lines of compiler code + ~1,200 lines supporting code
 
@@ -190,7 +190,7 @@ cargo bench
 
 ## Development Roadmap
 
-### Phase 1: MVP ✅ COMPLETE
+### Phase 1: MVP COMPLETE
 - [x] Complete lexer with comprehensive tests
 - [x] Implement parser for basic language constructs
 - [x] Basic type checking

@@ -12,49 +12,49 @@ This document describes the recommended GitHub repository settings for the Fruti
 **Topics:** `programming-language`, `compiler`, `operating-system`, `rust`, `llvm`, `microkernel`, `systems-programming`, `language-design`
 
 **Features:**
-- ✅ Issues
-- ✅ Discussions (Enable for community Q&A)
-- ✅ Projects (Optional - for roadmap tracking)
-- ✅ Wiki (Optional - for additional documentation)
+- Issues
+- Discussions (Enable for community Q&A)
+- Projects (Optional - for roadmap tracking)
+- Wiki (Optional - for additional documentation)
 
 **Pull Requests:**
-- ✅ Allow merge commits
-- ✅ Allow squash merging
-- ✅ Allow rebase merging
-- ✅ Always suggest updating pull request branches
-- ✅ Automatically delete head branches
+- Allow merge commits
+- Allow squash merging
+- Allow rebase merging
+- Always suggest updating pull request branches
+- Automatically delete head branches
 
 ### Branch Protection Rules
 
 **Branch:** `main`
 
 **Protect matching branches:**
-- ✅ Require a pull request before merging
+- Require a pull request before merging
   - Required approvals: 1 (for when you have collaborators)
-  - ✅ Dismiss stale pull request approvals when new commits are pushed
-  - ❌ Require review from Code Owners (not needed for solo project)
-- ✅ Require status checks to pass before merging
-  - ✅ Require branches to be up to date before merging
+  - Dismiss stale pull request approvals when new commits are pushed
+  - Require review from Code Owners: No (not needed for solo project)
+- Require status checks to pass before merging
+  - Require branches to be up to date before merging
   - Required status checks:
     - `Test Fruti Compiler (ubuntu-latest, stable)`
     - `Test Fruti Compiler (windows-latest, stable)`
     - `Test Fruti Compiler (macos-latest, stable)`
     - `Lint`
-- ✅ Require conversation resolution before merging
-- ❌ Require signed commits (optional - enable if you use GPG)
-- ✅ Require linear history
-- ❌ Require deployments to succeed (not needed yet)
-- ✅ Lock branch (prevents deletion)
-- ❌ Do not allow bypassing the above settings (you can bypass as maintainer)
+- Require conversation resolution before merging
+- Require signed commits: Optional (enable if you use GPG)
+- Require linear history
+- Require deployments to succeed: No (not needed yet)
+- Lock branch (prevents deletion)
+- Do not allow bypassing: No (you can bypass as maintainer)
 
 ### GitHub Actions
 
 **Actions permissions:**
-- ✅ Allow all actions and reusable workflows
+- Allow all actions and reusable workflows
 
 **Workflow permissions:**
-- ✅ Read and write permissions
-- ✅ Allow GitHub Actions to create and approve pull requests
+- Read and write permissions
+- Allow GitHub Actions to create and approve pull requests
 
 ### GitHub Pages
 
@@ -67,15 +67,15 @@ Alternatively, use the website deployment workflow which deploys from the `websi
 ### Security
 
 **Dependabot:**
-- ✅ Enabled (via `.github/dependabot.yml`)
-- ✅ Dependabot alerts
-- ✅ Dependabot security updates
+- Enabled (via `.github/dependabot.yml`)
+- Dependabot alerts
+- Dependabot security updates
 
 **Code scanning:**
-- ⏳ Enable CodeQL (optional - add `.github/workflows/codeql.yml`)
+- Enable CodeQL (optional - add `.github/workflows/codeql.yml`)
 
 **Secret scanning:**
-- ✅ Enabled (automatic for public repos)
+- Enabled (automatic for public repos)
 
 ### Discussions (Recommended)
 

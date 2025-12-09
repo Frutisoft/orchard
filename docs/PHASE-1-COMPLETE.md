@@ -218,7 +218,7 @@ fn main() {
 }
 ```
 
-**Status:** ✅ Parses successfully, generates valid LLVM IR structure (stub implementation)
+**Status:** Parses successfully, generates valid LLVM IR structure (stub implementation)
 
 ### `basic-features.fruti` - Feature Demo
 
@@ -231,7 +231,7 @@ fn main() {
 - Function calls (parsed)
 - Return values (parsed)
 
-**Status:** ✅ All syntax parses correctly, type checking passes, LLVM IR structure generated
+**Status:** All syntax parses correctly, type checking passes, LLVM IR structure generated
 
 **Note:** Phase 1 generates valid IR structure but function bodies contain placeholder returns. Actual code generation for expressions, control flow, and operations is planned for Phase 2.
 
@@ -245,7 +245,7 @@ fn main() {
 - Edge cases (error handling)
 - Error conditions (comprehensive testing)
 
-**Status:** ✅ Comprehensive parsing and type checking validation complete
+**Status:** Comprehensive parsing and type checking validation complete
 
 ## Phase 1 Pipeline Status
 

@@ -22,7 +22,7 @@ build:
 	@echo "Building Aero kernel..."
 	@mkdir -p $(BUILD_DIR)
 	$(CARGO) build --target x86_64-unknown-none
-	@echo "✓ Kernel built successfully"
+	@echo "Kernel built successfully"
 
 iso: build
 	@echo "Creating bootable ISO..."
@@ -35,7 +35,7 @@ iso: build
 	@echo "    boot" >> $(BOOT_DIR)/grub/grub.cfg
 	@echo "}" >> $(BOOT_DIR)/grub/grub.cfg
 	@grub-mkrescue -o $(ISO) $(ISO_DIR) 2>/dev/null || echo "Note: grub-mkrescue not available, ISO creation skipped"
-	@echo "✓ ISO created: $(ISO)"
+	@echo "ISO created: $(ISO)"
 
 run: build
 	@echo "Starting Aero in QEMU..."
@@ -52,14 +52,14 @@ debug-gdb: build
 test:
 	@echo "Running kernel tests..."
 	$(CARGO) test
-	@echo "✓ All tests passed"
+	@echo "All tests passed"
 
 clean:
 	@echo "Cleaning build artifacts..."
 	$(CARGO) clean
 	rm -rf $(BUILD_DIR)
 	rm -f $(ISO)
-	@echo "✓ Clean complete"
+	@echo "Clean complete"
 
 help:
 	@echo "Aero Kernel Build System"

@@ -4,9 +4,9 @@
 
 Frutisoft is currently in early development (Phase 1 MVP). Security updates will be provided for:
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 0.1.x   | :white_check_mark: |
+| Version | Supported |
+| ------- | --------- |
+| 0.1.x   | Yes       |
 
 ## Reporting a Vulnerability
 
