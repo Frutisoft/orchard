@@ -1,11 +1,6 @@
 name: Check Links
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - '**.md'
-      - 'website/**'
   pull_request:
     branches: [ main ]
     paths:
