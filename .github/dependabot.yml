@@ -1,31 +1,56 @@
-# Dependabot configuration for automatic dependency updates
 version: 2
 updates:
-  # Update GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "monthly"
-    labels:
-      - "dependencies"
-      - "github-actions"
-
-  # Update Cargo dependencies for fruti-compiler
+  # Fruti Compiler dependencies
   - package-ecosystem: "cargo"
     directory: "/packages/fruti-compiler"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 3
+    groups:
+      fruti-compiler-dependencies:
+        patterns:
+          - "*"
     labels:
       - "dependencies"
-      - "rust"
-    open-pull-requests-limit: 5
-    
-  # Update workspace root Cargo dependencies
+      - "fruti-compiler"
+
+  # Aero Kernel dependencies
+  - package-ecosystem: "cargo"
+    directory: "/packages/aero-kernel"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3
+    groups:
+      aero-kernel-dependencies:
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"
+      - "aero-kernel"
+
+  # Workspace root dependencies
   - package-ecosystem: "cargo"
     directory: "/"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 3
+    groups:
+      workspace-dependencies:
+        patterns:
+          - "*"
     labels:
       - "dependencies"
-      - "rust"
-    open-pull-requests-limit: 5
+      - "workspace"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"
+      - "github-actions"
