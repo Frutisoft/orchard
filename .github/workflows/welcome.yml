@@ -16,8 +16,8 @@ jobs:
     steps:
       - uses: actions/first-interaction@v3
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          issue-message: |
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_message: |
             Thanks for opening your first issue in Frutisoft! 
             
             We appreciate your interest in the project. Please note that Frutisoft is currently a passion project in early development.
@@ -28,7 +28,7 @@ jobs:
             
             A maintainer will review your issue soon. Thank you for helping make Frutisoft better!
             
-          pr-message: |
+          pr_message: |
             Thanks for your first pull request to Frutisoft!
             
             Before your PR can be reviewed, please ensure:
